@@ -1,0 +1,53 @@
+.content-body{
+    margin-top:2em;
+    margin-left:2em;
+    
+    margin-right: 2em;
+}
+.login-logo{
+    max-width: 400px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:5em;
+}
+.login-logo h1{
+    color:#FFFFFF;
+    text-align: center;
+}
+.analyze{
+    background-color:#009688;
+    text-align:center;
+    color:#FFFFFF;
+}
+.analyze h3{
+    line-height: 2.4em;
+}
+.analyze p{
+    line-height: 2em;
+}
+.analyze a{
+    color:#FFFFFF;
+}
+
+.item{
+	/*height:8em;*/
+	/* background-color: #F0F0F0; */
+    /*border:1px solid #e2e2e2;*/
+    border-radius: 2px;
+    background-color: #009688;
+    color:#FFFFFF;
+    text-align:center;
+    margin-bottom:1em;
+    line-height:3em;
+    
+}
+.item a{
+	color:#F2F2F2;
+}
+.item:hover{
+	-webkit-box-shadow: 2px 2px 8px 1px rgba(20, 20, 20, 0.15); -moz-box-shadow: 2px 2px 8px 1px rgba(20, 20, 20, 0.15);box-shadow: 2px 2px 8px 1px rgba(20, 20, 20, 0.15);
+}
+.item i{
+    font-size: 1em;
+}
