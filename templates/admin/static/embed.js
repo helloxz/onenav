@@ -264,6 +264,7 @@ layui.use(['element','table','layer','form'], function(){
   });
   //识别链接信息
   form.on('submit(get_link_info)', function(data){
+    //是用ajax异步加载
     $.post('/index.php?c=api&method=get_link_info',data.field.url,function(data,status){
       //如果添加成功
       if(data.code == 0) {
