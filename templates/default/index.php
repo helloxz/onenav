@@ -76,7 +76,7 @@
                         </a>
                     </li> -->
                     <li>
-                        <a href="https://www.xiaoz.me/about">
+                        <a href="https://www.xiaoz.me/about" target="_blank">
                             <span class="title">&nbsp;<i class="fa fa-user-circle"></i> 关于本站</span>
                         </a>
                     </li>
