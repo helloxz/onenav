@@ -39,7 +39,7 @@
                     <div class="logo">
                         <a href="/" class="logo-expanded">
                             <!-- <img src="templates/default/assets/images/logo@2x.png" width="100%" alt="" /> -->
-                            <h1 style = "color:#0099FF;">OneNav</h1>
+                            <h1 style = "color:#0099FF;"><?php echo $site_setting['logo']; ?></h1>
                         </a>
                         <a href="/" class="logo-collapsed">
                             <img src="templates/default/assets/images/logo-collapsed@2x.png" width="40" alt="" />

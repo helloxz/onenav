@@ -25,6 +25,8 @@ $site_setting['password']       =   PASSWORD;
 
 //站点标题
 $site_setting['title']          =   'OneNav';
+//文字Logo
+$site_setting['logo']          =   'OneNav';
 //站点关键词
 $site_setting['keywords']       =   'OneNav,简洁导航,云链接,个人书签';
 //站点描述

@@ -283,12 +283,17 @@ layui.use(['element','table','layer','form'], function(){
 
 function get_link_info() {
     var url = $("#url").val();
+    var index = layer.load(1);
     $.post('/index.php?c=api&method=get_link_info',{url:url},function(data,status){
-      var index = layer.load(1);
       //如果添加成功
       if(data.code == 0) {
-        $("#title").val(data.data.title);
-        $("#description").val(data.data.description);
+        if(data.data.title != null) {
+          $("#title").val(data.data.title);
+        }
+        if(data.data.description != null) {
+          $("#description").val(data.data.description);
+        }
+        
         layer.close(index);
       }
       else{
