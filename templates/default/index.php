@@ -166,7 +166,7 @@
                             <span class="label label-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="Hello I am a Tooltip"></span>
                             <div class="xe-comment">
                                 <a href="#" class="xe-user-name overflowClip_1">
-                                <img src="https://favicon.rss.ink/?url=<?php echo $link['url']; ?>" alt="HUAN" width="16" height="16" />
+                                <img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16" />
                                     <strong><?php echo $link['title']; ?></strong>
                                 </a>
                                 <p class="overflowClip_2"><?php echo $link['description']; ?></p>

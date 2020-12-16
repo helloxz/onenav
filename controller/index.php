@@ -76,6 +76,20 @@ function is_login(){
         return false;
     }
 }
+//将URL转换为base64编码
+function base64($url){
+    $urls = parse_url($url);
+
+    //获取请求协议
+    $scheme = empty( $urls['scheme'] ) ? 'http://' : $urls['scheme'].'://';
+    //获取主机名
+    $host = $urls['host'];
+    //获取端口
+    $port = empty( $urls['port'] ) ? '' : ':'.$urls['port'];
+
+    $new_url = $scheme.$host.$port;
+    return base64_encode($new_url);
+}
 // 载入前台首页模板
 require('templates/'.TEMPLATE.'/index.php');
 ?>
