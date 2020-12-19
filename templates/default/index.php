@@ -112,7 +112,7 @@
 						</div>
 						<?php } ?>
 						<!-- 角标END -->
-						<a href="<?php echo $link['url']; ?>" target="_blank" title = "<?php echo $link['description']; ?>" class="xe-user-name overflowClip_1">
+						<a id = "id_<?php echo $link['id']; ?>" href="/index.php?c=click&id=<?php echo $link['id']; ?>" target="_blank" title = "<?php echo $link['description']; ?>">
 							<div class="mdui-card-primary" style = "padding-top:16px;">
 									<div class="mdui-card-primary-title link-title">
 										<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
@@ -123,7 +123,7 @@
 						</a>
 						
 					
-					<!-- 卡片的内容 -->
+					<!-- 卡片的内容end -->
 					<div class="mdui-card-content mdui-text-color-black-disabled" style="padding-top:0px;"><span class="link-content"><?php echo $link['description']; ?></span></div>
 				</div>
 				<!--卡片END-->
