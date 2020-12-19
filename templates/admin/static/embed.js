@@ -74,17 +74,17 @@ layui.use(['element','table','layer','form'], function(){
       {type:'checkbox'} //开启复选框
       ,{field: 'id', title: 'ID', width:80, sort: true}
       // ,{field: 'fid', title: '分类ID',sort:true, width:90}
-      ,{field: 'category_name', title: '所属分类',width:140}
+      ,{field: 'category_name', title: '所属分类',sort:true,width:120}
       ,{field: 'url', title: 'URL',width:140,templet:function(d){
         var url = '<a target = "_blank" href = "' + d.url + '" title = "' + d.url + '">' + d.url + '</a>';
         return url;
       }}
       ,{field: 'title', title: '链接标题', width:140}
-      ,{field: 'add_time', title: '添加时间', width:150, sort: true,templet:function(d){
+      ,{field: 'add_time', title: '添加时间', width:148, sort: true,templet:function(d){
         var add_time = timestampToTime(d.add_time);
         return add_time;
       }}
-      ,{field: 'up_time', title: '修改时间', width:150,sort:true,templet:function(d){
+      ,{field: 'up_time', title: '修改时间', width:148,sort:true,templet:function(d){
           if(d.up_time == null){
             return '';
           }

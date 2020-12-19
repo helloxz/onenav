@@ -1,135 +1,84 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html lang="zh-ch" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    </script>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="viggo" />
-    <title><?php echo $site_setting['title']; ?></title>
-    <meta name="keywords" content="<?php echo $site_setting['title']; ?>">
-    <meta name="description" content="<?php echo $site_setting['description']; ?>">
-    <link rel="shortcut icon" href="templates/default/assets/images/favicon.ico">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arimo:400,700,400italic">
-    <link rel="stylesheet" href="templates/default/assets/css/fonts/linecons/css/linecons.css">
-    <link rel='stylesheet' href='https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css'>
-    <link rel="stylesheet" href="templates/default/assets/css/fonts/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="templates/default/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="templates/default/assets/css/xenon-core.css">
-    <link rel="stylesheet" href="templates/default/assets/css/xenon-components.css">
-    <link rel="stylesheet" href="templates/default/assets/css/xenon-skins.css">
-    <link rel="stylesheet" href="templates/default/assets/css/nav.css">
-    <script src="templates/default/assets/js/jquery-1.11.1.min.js"></script>
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <!-- / FB Open Graph -->
+	<meta charset="utf-8" />
+	<title><?php echo $site_setting['title']; ?></title>
+	<meta name="generator" content="EverEdit" />
+	<meta name="author" content="xiaoz<www.xiaoz.me>" />
+	<meta name="keywords" content="<?php echo $site_setting['keywords']; ?>" />
+	<meta name="description" content="<?php echo $site_setting['description']; ?>" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel='stylesheet' href='https://libs.xiaoz.top/mdui/v1.0.1/css/mdui.min.css'>
+	<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css">
+	<script src = 'https://libs.xiaoz.top/mdui/v1.0.1/js/mdui.min.js'></script>
 </head>
+<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-theme-layout-auto mdui-loaded">
+	<!--导航工具-->
+	<header class = "mdui-appbar mdui-appbar-fixed">
+		<div class="mdui-toolbar mdui-color-theme">
+		<!-- <button class="mdui-btn" mdui-drawer="{target: '#drawer'}"><i class="mdui-icon material-icons">home</i></button> -->
+		<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-drawer="{target: '#drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></span>
+		  <!-- <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">home</i></a> -->
+		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site_setting['description'] ?>"><span class="mdui-typo-title"><?php echo $site_setting['logo']; ?></span></a>
+		  <div class="mdui-toolbar-spacer"></div>
+		  <!-- 搜索框 -->
+		  <!-- <div class="mdui-col-lg-3">
+			  <div class="mdui-textfield mdui-textfield-expandable mdui-float-right">
+			<button class="mdui-textfield-icon mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></button>
+			<input class="mdui-textfield-input" type="text" placeholder="Search"/>
+			<button class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">close</i></button>
+			</div>
+		</div> -->
+		  <!-- 搜索框END -->
+		  <a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '查看 Github'}">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">
+        <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffffff" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
+	c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
+	c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
+	c-0.2-0.4-0.7-2.1,0.2-4.3c0,0,1.4-0.4,4.5,1.7c1.3-0.4,2.7-0.5,4.1-0.5c1.4,0,2.8,0.2,4.1,0.5c3.1-2.1,4.5-1.7,4.5-1.7
+	c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
+	c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z"></path>
+	  </svg>
+	  <a href="/index.php?c=login" title = "登录OneNav" target="_blank" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
+    </a>
+		</div>
+	</header>
+	<!--导航工具END-->
+	<!-- 返回顶部按钮 -->
+	<div id="top"></div>
+	<div class="top mdui-shadow-10"><a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i></div>
+	<!-- 返回顶部END -->
+		<!--左侧抽屉导航-->
+	<!-- 默认抽屉栏在左侧 -->
+	<div class="mdui-drawer" id="drawer">
+	  <ul class="mdui-list">
+	  	<?php
+			//遍历分类目录并显示
+			foreach ($categorys as $category) {
+			//var_dump($category);
+			
+		?>
+		<a href="#category-<?php echo $category['id']; ?>">
+			<li class="mdui-list-item mdui-ripple">
+				<div class="mdui-list-item-content category-name"><?php echo $category['name']; ?></div>
+			</li>
+		</a>
+	    
+		<?php } ?>
+		<a href="https://www.xiaoz.me/" target="_blank" title="小z博客">
+			<li class="mdui-list-item mdui-ripple">
+			<div class="mdui-list-item-content category-name"><i class="fa fa-user-circle"></i> About</div>
+			</li>
+		</a>
+	  </ul>
+	</div>
+	<!--左侧抽屉导航END-->
 
-<body class="page-body">
-    <!-- skin-white -->
-    <div class="page-container">
-        <div class="sidebar-menu toggle-others fixed">
-            <div class="sidebar-menu-inner">
-                <header class="logo-env">
-                    <!-- logo -->
-                    <div class="logo">
-                        <a href="/" class="logo-expanded">
-                            <!-- <img src="templates/default/assets/images/logo@2x.png" width="100%" alt="" /> -->
-                            <h1 style = "color:#0099FF;"><?php echo $site_setting['logo']; ?></h1>
-                        </a>
-                        <a href="/" class="logo-collapsed">
-                            <img src="templates/default/assets/images/logo-collapsed@2x.png" width="40" alt="" />
-                        </a>
-                    </div>
-                    <div class="mobile-menu-toggle visible-xs">
-                        <a href="#" data-toggle="user-info-menu">
-                            <i class="linecons-cog"></i>
-                        </a>
-                        <a href="#" data-toggle="mobile-menu">
-                            <i class="fa-bars"></i>
-                        </a>
-                    </div>
-                </header>
-                
-                <ul id="main-menu" class="main-menu">
-                    <?php
-                        //遍历分类目录并显示
-                        foreach ($categorys as $category) {
-                        //var_dump($category);
-                        
-                    ?>
-                    <li>
-                        <a href="#category-<?php echo $category['id']; ?>" class="smooth">
-                            
-                            <span class="title">&nbsp; <?php echo $category['name']; ?></span>
-                        </a>
-                    </li>
-                    <?php } ?>
-                    <!-- <li>
-                        <a href="#社区资讯" class="smooth">
-                            <i class="linecons-doc"></i>
-                            <span class="title">社区资讯</span>
-                        </a>
-                    </li> -->
-                    <li>
-                        <a href="https://www.xiaoz.me/about" target="_blank">
-                            <span class="title">&nbsp;<i class="fa fa-user-circle"></i> 关于本站</span>
-                        </a>
-                    </li>
-                    <!-- <div class="submit-tag">
-                        <a href="about.html">
-                            <i class="linecons-heart"></i>
-                            <span class="tooltip-blue">关于本站</span>
-                            <span class="label label-Primary pull-right hidden-collapsed">♥︎</span>
-                        </a>
-                    </div> -->
-                </ul>
-            </div>
-        </div>
-        <div class="main-content">
-            <nav class="navbar user-info-navbar" role="navigation">
-                <!-- User Info, Notifications and Menu Bar -->
-                <!-- Left links for user info navbar -->
-                <!-- <ul class="user-info-menu left-links list-inline list-unstyled">
-                    <li class="hidden-sm hidden-xs">
-                        <a href="#" data-toggle="sidebar">
-                            <i class="fa-bars"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown hover-line language-switcher">
-                        <a href="../cn/index.html" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="templates/default/assets/images/flags/flag-cn.png" alt="flag-cn" /> Chinese
-                        </a>
-                        <ul class="dropdown-menu languages">
-                            <li>
-                                <a href="../en/index.html">
-                                    <img src="templates/default/assets/images/flags/flag-us.png" alt="flag-us" /> English
-                                </a>
-                            </li>
-                            <li class="active">
-                                <a href="../cn/index.html">
-                                    <img src="templates/default/assets/images/flags/flag-cn.png" alt="flag-cn" /> Chinese
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="user-info-menu right-links list-inline list-unstyled">
-                    <li class="hidden-sm hidden-xs">
-                        <a href="https://github.com/WebStackPage/WebStackPage.github.io" target="_blank">
-                            <i class="fa-github"></i>  GitHub
-                        </a>
-                    </li>
-                </ul> -->
-                <!-- <a href="https://github.com/WebStackPage/WebStackPage.github.io" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a> -->
-
-            </nav>
-            <!-- 常用推荐 -->
-            <!-- 遍历分类目录 -->
+	<!--正文内容部分-->
+	<div class="mdui-container">
+		<div class="mdui-row">
+			<!-- 遍历分类目录 -->
             <?php foreach ( $categorys as $category ) {
                 $fid = $category['id'];
                 $links = get_links($fid);
@@ -141,149 +90,60 @@
                     $property = '';
                 }
             ?>
-            <h4 class="text-gray" id = "category-<?php echo $fid ?>"><?php echo $category['name']; ?> <?php echo $property; ?></h4>
-            <!-- 遍历链接 -->
-            <div class="row">
-                <?php
-                    foreach ($links as $link) {
-                        //判断是否是私有项目
-                        if( $link['property'] == 1 ) {
-                            $privacy_class = 'property';
-                        }
-                        else {
-                            $privacy_class = '';
-                        }
-                        
-                    //var_dump($link);
-                ?>
-                <div class="col-sm-3">
-                    <div class="<?php echo $privacy_class; ?> xe-widget xe-conversations box2 label-info" onclick="window.open('/index.php?c=click&id=<?php echo $link['id']; ?>', '_blank')" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="<?php echo $link['url']; ?>">
-                        <div class="xe-comment-entry">
-                            <!-- <a class="xe-user-img">
-                                <img data-src="templates/default/assets/images/logos/uisdc.png" class="lozad img-circle" width="40">
-                            </a> -->
-                            
-                            <span class="label label-info" data-toggle="tooltip" data-placement="left" title="" data-original-title="Hello I am a Tooltip"></span>
-                            <div class="xe-comment">
-                                <a href="#" class="xe-user-name overflowClip_1">
-                                <img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16" />
-                                    <strong><?php echo $link['title']; ?></strong>
-                                </a>
-                                <p class="overflowClip_2"><?php echo $link['description']; ?></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-            <div class="placeholder" style = "height:2em;"></div> 
-            <?php } ?>
-            
-            <br />
-            
-            <!-- END 常用推荐 -->
-                
-            
-            
-            
+			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title" style = "margin-top:1.5em;">
+				<?php echo $category['name']; ?> <?php echo $property; ?>
+				<span class = "mdui-typo-caption"><?php echo $category['description']; ?></span>
+			</div>
+			<!-- 遍历链接 -->
+			<?php
+				foreach ($links as $link) {
+					//默认描述
+					$link['description'] = empty($link['description']) ? '作者很懒，没有填写描述。' : $link['description'];
+					
+				//var_dump($link);
+			?>
+			<div class="mdui-col-lg-3 mdui-col-xs-12 link-space">
+				<!--定义一个卡片-->
+				<div class="mdui-card link-line mdui-hoverable">
+						<!-- 如果是私有链接，则显示角标 -->
+						<?php if($link['property'] == 1 ) { ?>
+						<div class="angle">
+							<span> </span>
+						</div>
+						<?php } ?>
+						<!-- 角标END -->
+						<a href="<?php echo $link['url']; ?>" target="_blank" title = "<?php echo $link['description']; ?>" class="xe-user-name overflowClip_1">
+							<div class="mdui-card-primary" style = "padding-top:16px;">
+									<div class="mdui-card-primary-title link-title">
+										<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
+										<span><?php echo $link['title']; ?></span> 
+									</div>
 
-            <!-- Main Footer -->
-            <!-- Choose between footer styles: "footer-type-1" or "footer-type-2" -->
-            <!-- Add class "sticky" to  always stick the footer to the end of page (if page contents is small) -->
-            <!-- Or class "fixed" to  always fix the footer to the end of page -->
-            <footer class="main-footer sticky footer-type-1">
-                <div class="footer-inner">
-                    <!-- Add your copyright text here -->
-                    <div class="footer-text">
-                        &copy; 2020
-                        Theme design by Viggo.
-                        Powered by <a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank"><strong>OneNav</strong></a> | 
-                        <a href="/index.php?c=login">login</a>
-                        <!--  - Purchase for only <strong>23$</strong> -->
-                    </div>
-                    <!-- Go to Top Link, just add rel="go-top" to any link to add this functionality -->
-                    <div class="go-up">
-                        <a href="#" rel="go-top">
-                            <i class="fa-angle-up"></i>
-                        </a>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-    <!-- 锚点平滑移动 -->
-    <script type="text/javascript">
-    $(document).ready(function() {
-         //img lazy loaded
-         const observer = lozad();
-         observer.observe();
-
-        $(document).on('click', '.has-sub', function(){
-            var _this = $(this)
-            if(!$(this).hasClass('expanded')) {
-               setTimeout(function(){
-                    _this.find('ul').attr("style","")
-               }, 300);
-              
-            } else {
-                $('.has-sub ul').each(function(id,ele){
-                    var _that = $(this)
-                    if(_this.find('ul')[0] != ele) {
-                        setTimeout(function(){
-                            _that.attr("style","")
-                        }, 300);
-                    }
-                })
-            }
-        })
-        $('.user-info-menu .hidden-sm').click(function(){
-            if($('.sidebar-menu').hasClass('collapsed')) {
-                $('.has-sub.expanded > ul').attr("style","")
-            } else {
-                $('.has-sub.expanded > ul').show()
-            }
-        })
-        $("#main-menu li ul li").click(function() {
-            $(this).siblings('li').removeClass('active'); // 删除其他兄弟元素的样式
-            $(this).addClass('active'); // 添加当前元素的样式
-        });
-        $("a.smooth").click(function(ev) {
-            ev.preventDefault();
-
-            public_vars.$mainMenu.add(public_vars.$sidebarProfile).toggleClass('mobile-is-visible');
-            ps_destroy();
-            $("html, body").animate({
-                scrollTop: $($(this).attr("href")).offset().top - 30
-            }, {
-                duration: 500,
-                easing: "swing"
-            });
-        });
-        return false;
-    });
-
-    var href = "";
-    var pos = 0;
-    $("a.smooth").click(function(e) {
-        $("#main-menu li").each(function() {
-            $(this).removeClass("active");
-        });
-        $(this).parent("li").addClass("active");
-        e.preventDefault();
-        href = $(this).attr("href");
-        pos = $(href).position().top - 30;
-    });
-    </script>
-    <!-- Bottom Scripts -->
-    <script src="templates/default/assets/js/bootstrap.min.js"></script>
-    <script src="templates/default/assets/js/TweenMax.min.js"></script>
-    <script src="templates/default/assets/js/resizeable.js"></script>
-    <script src="templates/default/assets/js/joinable.js"></script>
-    <script src="templates/default/assets/js/xenon-api.js"></script>
-    <script src="templates/default/assets/js/xenon-toggles.js"></script>
-    <!-- JavaScripts initializations and stuff -->
-    <script src="templates/default/assets/js/xenon-custom.js"></script>
-    <script src="templates/default/assets/js/lozad.js"></script>
+							</div>
+						</a>
+						
+					
+					<!-- 卡片的内容 -->
+					<div class="mdui-card-content mdui-text-color-black-disabled" style="padding-top:0px;"><span class="link-content"><?php echo $link['description']; ?></span></div>
+				</div>
+				<!--卡片END-->
+			</div>
+			<?php } ?>
+			<!-- 遍历链接END -->
+			<?php } ?>
+		</div>
+	</div>
+	<div class="mdui-divider" style = "margin-top:2em;"></div>
+	<!--正文内容部分END-->
+	<!-- footer部分 -->
+	<footer>
+		© 2020 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
+	</footer>
+	<!-- footerend -->
 </body>
-
+<script>
+	//var inst = new mdui.Drawer(selector, options);
+</script>
+<script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
+<script src="templates/<?php echo TEMPLATE; ?>/static/embed.js"></script>
 </html>

@@ -196,7 +196,7 @@ class Api {
         $count = $this->db->count('on_links',[ 'id' => $id]);
         //如果id不存在
         if( (empty($id)) || ($count == false) ) {
-            $this->err_msg(-1010,'link id not exists!');
+            $this->err_msg(-1012,'link id not exists!');
         }
         //合并数据
         $data = [
