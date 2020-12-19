@@ -1,7 +1,13 @@
 # onenav
 使用PHP + SQLite 3开发的简约导航/书签管理器，xiaoz新作，欢迎体验。
 
+![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
+
+
+
 ![](https://i.bmp.ovh/imgs/2020/12/7a1eee25c16d2d81.png)
+
+
 
 ![](https://i.bmp.ovh/imgs/2020/12/abba0af566f3c16a.png)
 
@@ -11,6 +17,7 @@
 
 * 支持后台管理
 * 支持私有链接
+* 支持多种主题风格（默认内置2套模板）
 * 支持链接信息自动识别
 * 支持API
 
@@ -31,8 +38,9 @@
 
 ## 鸣谢
 
-OneNav诞生离不开以下项目，在此表示感谢。
+OneNav诞生离不开以下项目，在此表示感谢（排名不分先后）。
 
-* [WebStackPage.github.io](https://github.com/WebStackPage/WebStackPage.github.io)
+* [WebStackPage](https://github.com/WebStackPage/WebStackPage.github.io)
 * [LayUI](https://github.com/sentsin/layui)
 * [Medoo](https://github.com/catfan/Medoo)
+* [MDUI](https://github.com/zdhxiong/mdui)
