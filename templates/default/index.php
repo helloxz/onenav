@@ -156,5 +156,5 @@
 </script>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
 <script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
-<script src="templates/<?php echo TEMPLATE; ?>/static/embed.js<?php echo $version; ?>"></script>
+<script src="templates/<?php echo TEMPLATE; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 </html>
