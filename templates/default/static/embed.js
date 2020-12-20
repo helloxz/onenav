@@ -3,9 +3,9 @@ function gotop(){
 }
 $(".search").blur(function(data,status){
 	var keywords = $(".search").val();
-	console.log(keywords);
+	
 	if( keywords == ''){
-		$(".mdui-typo-title").removeClass("mdui-hidden");
+		$(".cat-title").removeClass("mdui-hidden");
 	}
 	
 });
@@ -26,16 +26,16 @@ var h = holmes({
     },
     onFound(el) {
 	//   console.log('found', el);
-	  $(".mdui-typo-title").addClass("mdui-hidden");
+	  $(".cat-title").addClass("mdui-hidden");
     },
     onInput(el) {
-		$(".mdui-typo-title").addClass("mdui-hidden");
+		$(".cat-title").addClass("mdui-hidden");
     },
     onVisible(el) {
-		$(".mdui-typo-title").removeClass("mdui-hidden");
+		$(".cat-title").removeClass("mdui-hidden");
     },
     onEmpty(el) {
-		$(".mdui-typo-title").removeClass("mdui-hidden");
+		$(".cat-title").removeClass("mdui-hidden");
     }
   });
 //鼠标移动到链接修改为原始URL
