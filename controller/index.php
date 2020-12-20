@@ -62,7 +62,18 @@ function getIP() {
       $ip = $_SERVER['REMOTE_ADDR']; 
   } 
       return $ip; 
-  } 
+  }
+//获取版本号
+function get_version(){
+    if( file_exists('version.txt') ) {
+        $version = @file_get_contents('version.txt');
+        return $version;
+    }
+    else{
+        $version = 'null';
+        return $version;
+    }
+} 
 //判断用户是否已经登录
 function is_login(){
     $key = md5(USER.PASSWORD.getIP().'onenav');
@@ -90,6 +101,9 @@ function base64($url){
     $new_url = $scheme.$host.$port;
     return base64_encode($new_url);
 }
+
+//获取版本号
+$version = get_version();
 // 载入前台首页模板
 require('templates/'.TEMPLATE.'/index.php');
 ?>

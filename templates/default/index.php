@@ -10,7 +10,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel='stylesheet' href='https://libs.xiaoz.top/mdui/v1.0.1/css/mdui.min.css'>
 	<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
-	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css">
+	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css?v=<?php echo $version; ?>">
 	<script src = 'https://libs.xiaoz.top/mdui/v1.0.1/js/mdui.min.js'></script>
 </head>
 <body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-theme-layout-auto mdui-loaded">
@@ -26,7 +26,7 @@
 		  <!-- <div class="mdui-col-lg-3">
 			  <div class="mdui-textfield mdui-textfield-expandable mdui-float-right">
 			<button class="mdui-textfield-icon mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></button>
-			<input class="mdui-textfield-input" type="text" placeholder="Search"/>
+			<input class="mdui-textfield-input search" type="text" placeholder="Search"/>
 			<button class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">close</i></button>
 			</div>
 		</div> -->
@@ -77,6 +77,16 @@
 
 	<!--正文内容部分-->
 	<div class="mdui-container">
+		<!-- 搜索框 -->
+		<div class="mdui-row">
+			<div class="mdui-col-xs-12">
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<label class="mdui-textfield-label">输入书签关键词进行搜索</label>
+					<input class="mdui-textfield-input search" type="text" />
+				</div>
+			</div>
+		</div>
+		<!-- 搜索框END -->
 		<div class="mdui-row">
 			<!-- 遍历分类目录 -->
             <?php foreach ( $categorys as $category ) {
@@ -145,5 +155,6 @@
 	//var inst = new mdui.Drawer(selector, options);
 </script>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
-<script src="templates/<?php echo TEMPLATE; ?>/static/embed.js"></script>
+<script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
+<script src="templates/<?php echo TEMPLATE; ?>/static/embed.js<?php echo $version; ?>"></script>
 </html>

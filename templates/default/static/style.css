@@ -85,3 +85,6 @@ footer a{
     font-size: 40px; color: #1E9FFF;
     font-weight: bold;
 }
+.hidden {
+    display: none;
+}
