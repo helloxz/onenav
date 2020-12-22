@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css?v=<?php echo $version; ?>">
 	<script src = 'https://libs.xiaoz.top/mdui/v1.0.1/js/mdui.min.js'></script>
 </head>
-<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-theme-layout-auto mdui-loaded">
+<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
 	<!--导航工具-->
 	<header class = "mdui-appbar mdui-appbar-fixed">
 		<div class="mdui-toolbar mdui-color-theme">
@@ -112,7 +112,7 @@
 					
 				//var_dump($link);
 			?>
-			<div class="mdui-col-lg-3 mdui-col-xs-12 link-space">
+			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space">
 				<!--定义一个卡片-->
 				<div class="mdui-card link-line mdui-hoverable">
 						<!-- 如果是私有链接，则显示角标 -->
