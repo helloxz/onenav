@@ -104,6 +104,13 @@ function base64($url){
 
 //获取版本号
 $version = get_version();
+//载入js扩展
+if( file_exists('templates/admin/static/extend.js') ) {
+    $onenav['extend'] = '<script src = "templates/admin/static/extend.js"></script>';
+}
+else{
+    $onenav['extend'] = '';
+}
 // 载入前台首页模板
 require('templates/'.TEMPLATE.'/index.php');
 ?>
