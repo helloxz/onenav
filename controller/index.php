@@ -19,6 +19,8 @@ if( is_login() ){
             ]);
         return $links;
     }
+    //右键菜单标识
+    $onenav['right_menu'] = 'admin_menu();';
 }
 //如果没有登录，只获取公有链接
 else{
@@ -38,6 +40,8 @@ else{
         ]);
         return $links;
     }
+    //右键菜单标识
+    $onenav['right_menu'] = 'user_menu();';
 }
 
 
@@ -111,6 +115,8 @@ if( file_exists('templates/admin/static/extend.js') ) {
 else{
     $onenav['extend'] = '';
 }
+
+
 // 载入前台首页模板
 require('templates/'.TEMPLATE.'/index.php');
 ?>

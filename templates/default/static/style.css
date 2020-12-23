@@ -88,3 +88,14 @@ footer a{
 .hidden {
     display: none;
 }
+/* 显示二维码 */
+.show_qrcode{
+    height: 300px;
+    width: 260px;
+    text-align: center;
+}
+.show_qrcode img{
+    text-align: center;
+    max-height: 200px;
+    max-width: 200px;
+}

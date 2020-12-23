@@ -115,7 +115,7 @@
 					
 				//var_dump($link);
 			?>
-			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>">
+			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>" link-title = "<?php echo $link['title']; ?>">
 				<!--定义一个卡片-->
 				<div class="mdui-card link-line mdui-hoverable">
 						<!-- 如果是私有链接，则显示角标 -->
@@ -129,7 +129,7 @@
 							<div class="mdui-card-primary" style = "padding-top:16px;">
 									<div class="mdui-card-primary-title link-title">
 										<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
-										<span><?php echo $link['title']; ?></span> 
+										<span class="link_title"><?php echo $link['title']; ?></span> 
 									</div>
 
 							</div>
@@ -147,20 +147,7 @@
 		</div>
 		<!-- row end -->
 
-		<!-- 删除提示框 -->
-		<div class="mdui-row">
-			<!-- 删除提示框 -->
-			<div class="mdui-dialog" id="link_delete">
-				<div class="mdui-dialog-title">确认删除？</div>
-				<div class="mdui-dialog-content">一旦删除将无法恢复，请确认。</div>
-				<div class="mdui-dialog-actions">
-				<button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
-				<button class="mdui-btn mdui-ripple" mdui-dialog-confirm>确认</button>
-				</div>
-			</div>
-			<!-- 删除提示框END -->
-		</div>
-		<!-- 删除提示框 -->
+		
 	</div>
 	<div class="mdui-divider" style = "margin-top:2em;"></div>
 	<!--正文内容部分END-->
@@ -177,4 +164,7 @@
 <script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
 <script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
 <script src="templates/<?php echo TEMPLATE; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
+<script>
+<?php echo $onenav['right_menu']; ?>
+</script>
 </html>
