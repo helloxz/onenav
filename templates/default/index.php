@@ -9,6 +9,7 @@
 	<meta name="description" content="<?php echo $site_setting['description']; ?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel='stylesheet' href='https://libs.xiaoz.top/mdui/v1.0.1/css/mdui.min.css'>
+	<link rel='stylesheet' href='https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.css'>
 	<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css?v=<?php echo $version; ?>">
 	<script src = 'https://libs.xiaoz.top/mdui/v1.0.1/js/mdui.min.js'></script>
@@ -114,7 +115,7 @@
 					
 				//var_dump($link);
 			?>
-			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space">
+			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>">
 				<!--定义一个卡片-->
 				<div class="mdui-card link-line mdui-hoverable">
 						<!-- 如果是私有链接，则显示角标 -->
@@ -124,7 +125,7 @@
 						</div>
 						<?php } ?>
 						<!-- 角标END -->
-						<a id = "id_<?php echo $link['id']; ?>" href="/index.php?c=click&id=<?php echo $link['id']; ?>" target="_blank" title = "<?php echo $link['description']; ?>">
+						<a href="/index.php?c=click&id=<?php echo $link['id']; ?>" target="_blank" title = "<?php echo $link['description']; ?>">
 							<div class="mdui-card-primary" style = "padding-top:16px;">
 									<div class="mdui-card-primary-title link-title">
 										<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
@@ -144,6 +145,22 @@
 			<!-- 遍历链接END -->
 			<?php } ?>
 		</div>
+		<!-- row end -->
+
+		<!-- 删除提示框 -->
+		<div class="mdui-row">
+			<!-- 删除提示框 -->
+			<div class="mdui-dialog" id="link_delete">
+				<div class="mdui-dialog-title">确认删除？</div>
+				<div class="mdui-dialog-content">一旦删除将无法恢复，请确认。</div>
+				<div class="mdui-dialog-actions">
+				<button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
+				<button class="mdui-btn mdui-ripple" mdui-dialog-confirm>确认</button>
+				</div>
+			</div>
+			<!-- 删除提示框END -->
+		</div>
+		<!-- 删除提示框 -->
 	</div>
 	<div class="mdui-divider" style = "margin-top:2em;"></div>
 	<!--正文内容部分END-->
@@ -157,6 +174,7 @@
 	//var inst = new mdui.Drawer(selector, options);
 </script>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
+<script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
 <script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
 <script src="templates/<?php echo TEMPLATE; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 </html>
