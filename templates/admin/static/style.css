@@ -51,3 +51,13 @@
 .item i{
     font-size: 1em;
 }
+/* msg弹窗提醒 */
+.msg{
+    width:auto;
+    line-height: 16px;
+    position: fixed;
+    top:2em;
+    border: 1px #009933 solid;
+    border-radius: 3px;
+    display: none;
+}

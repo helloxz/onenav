@@ -54,6 +54,14 @@ function get_domain(){
   domain = protocol + port + hostname;
   return domain;
 }
+//弹窗
+function msg(text){
+  $html = '<div class = "msg">' + text + '</div>';
+  $("body").append($html);
+  $(".msg").fadeIn();
+  $(".msg").fadeOut(5000);
+  $(".msg").remove();
+}
 
 function admin_menu() {
   // 加载管理员右键菜单
@@ -140,6 +148,25 @@ $.contextMenu({
         tempwindow.location='index.php?c=click&id='+link_id;
       }},
       "sep1": "---------",
+      "copy":{name:"复制链接",icon:"copy",callback:function(){
+        link_url = $(this).attr('link-url');
+        // 复制按钮
+        var copy = new clipBoard($(".context-menu-icon-copy"), {
+          beforeCopy: function() {
+            
+          },
+          copy: function() {
+            return link_url;
+            
+          },
+          afterCopy: function() {
+            // msg('链接已复制！');
+            mdui.alert('链接已复制！');
+          }
+      });
+        // 复制按钮END
+
+      }},
       "qrcode": {name: "二维码", icon:"fa-qrcode",callback:function(data,status){
           var link_title = $(this).attr('link-title');
           

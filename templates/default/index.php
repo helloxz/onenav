@@ -115,7 +115,7 @@
 					
 				//var_dump($link);
 			?>
-			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>" link-title = "<?php echo $link['title']; ?>">
+			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>" link-title = "<?php echo $link['title']; ?>" link-url = "<?php echo $link['url']; ?>">
 				<!--定义一个卡片-->
 				<div class="mdui-card link-line mdui-hoverable">
 						<!-- 如果是私有链接，则显示角标 -->
@@ -162,6 +162,7 @@
 </script>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
 <script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
+<script src = 'https://libs.xiaoz.top/clipBoard.js/clipBoard.min.js'></script>
 <script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
 <script src="templates/<?php echo TEMPLATE; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 <script>

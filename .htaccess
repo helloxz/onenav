@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteRule '^click\/(.*)$' /index.php?c=click&id=$1 [L] 
+RewriteRule '^api\/(.*)?(.*)$' /index.php?c=api&method=$1&$2 [L] 
+RewriteRule login /index.php?c=login [NC,L]
