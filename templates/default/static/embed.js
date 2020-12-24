@@ -113,12 +113,12 @@ function admin_menu() {
           "qrcode": {name: "二维码", icon:"fa-qrcode",callback:function(data,status){
               var link_title = $(this).attr('link-title');
               
-              link_title = link_title.substr(0,8);
+              //link_title = link_title.substr(0,8);
               // link_title = link_title + '...';
               var link_id = $(this).attr('id');
               link_id = link_id.replace('id_','');
               var domain = get_domain();
-              var url = domain + '/index.php?c=click&id=' + link_id;
+              var url = domain + '/click/' + link_id;
               mdui.dialog({
                 'title':link_title,
                 'cssClass':'show_qrcode',
