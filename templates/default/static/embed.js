@@ -56,11 +56,12 @@ function get_domain(){
 }
 //弹窗
 function msg(text){
+  // alert('dfd');
   $html = '<div class = "msg">' + text + '</div>';
   $("body").append($html);
   $(".msg").fadeIn();
-  $(".msg").fadeOut(5000);
-  $(".msg").remove();
+  $(".msg").fadeOut(3000);
+  // $(".msg").remove();
 }
 
 function admin_menu() {
@@ -123,7 +124,27 @@ function admin_menu() {
                 'cssClass':'show_qrcode',
                 'content':'<img src = "https://qr.png.pub/v1/?text=' + url + '" />'
               });
+          }},
+          "copy":{name:"复制链接",icon:"copy",callback:function(){
+            link_url = $(this).attr('link-url');
+            // 复制按钮
+            var copy = new clipBoard($(".context-menu-icon-copy"), {
+              beforeCopy: function() {
+                
+              },
+              copy: function() {
+                return link_url;
+                
+              },
+              afterCopy: function() {
+                //msg('链接已复制！');
+                mdui.alert('链接已复制！');
+              }
+          });
+            // 复制按钮END
+    
           }}
+
       }
   });
       // 加载右键菜单END
@@ -148,6 +169,21 @@ $.contextMenu({
         tempwindow.location='index.php?c=click&id='+link_id;
       }},
       "sep1": "---------",
+      "qrcode": {name: "二维码", icon:"fa-qrcode",callback:function(data,status){
+          var link_title = $(this).attr('link-title');
+          
+          // link_title = link_title.substr(0,8);
+          // link_title = link_title + '...';
+          var link_id = $(this).attr('id');
+          link_id = link_id.replace('id_','');
+          var domain = get_domain();
+          var url = domain + '/click/' + link_id;
+          mdui.dialog({
+            'title':link_title,
+            'cssClass':'show_qrcode',
+            'content':'<img src = "https://qr.png.pub/v1/?text=' + url + '" />'
+          });
+      }},
       "copy":{name:"复制链接",icon:"copy",callback:function(){
         link_url = $(this).attr('link-url');
         // 复制按钮
@@ -160,28 +196,14 @@ $.contextMenu({
             
           },
           afterCopy: function() {
-            // msg('链接已复制！');
+            //msg('链接已复制！');
             mdui.alert('链接已复制！');
           }
       });
         // 复制按钮END
 
-      }},
-      "qrcode": {name: "二维码", icon:"fa-qrcode",callback:function(data,status){
-          var link_title = $(this).attr('link-title');
-          
-          link_title = link_title.substr(0,8);
-          link_title = link_title + '...';
-          var link_id = $(this).attr('id');
-          link_id = link_id.replace('id_','');
-          var domain = get_domain();
-          var url = domain + '/index.php?c=click&id=' + link_id;
-          mdui.dialog({
-            'title':link_title,
-            'cssClass':'show_qrcode',
-            'content':'<img src = "https://qr.png.pub/v1/?text=' + url + '" />'
-          });
       }}
+
   }
 });
     // 加载游客右键菜单END

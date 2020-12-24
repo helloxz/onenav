@@ -99,3 +99,26 @@ footer a{
     max-height: 200px;
     max-width: 200px;
 }
+
+/* msg弹窗提醒 */
+.msg{
+    width:40%;
+    line-height: 16px;
+    text-align: center;
+    padding:16px;
+    position: fixed;
+    top:30%;
+    left:30%;
+    /* color:#FFFFFF; */
+    /* border: 1px #009933 solid; */
+    background-color:rgba(0, 0, 0, 0.3);
+    /* box-shadow:2px 2px 2px #aaa; */
+    border-radius: 2px;
+    display: none;
+}
+.mdui-dialog-title{
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow:ellipsis;
+}

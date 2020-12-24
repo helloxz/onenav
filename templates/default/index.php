@@ -157,9 +157,6 @@
 	</footer>
 	<!-- footerend -->
 </body>
-<script>
-	//var inst = new mdui.Drawer(selector, options);
-</script>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
 <script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
 <script src = 'https://libs.xiaoz.top/clipBoard.js/clipBoard.min.js'></script>
