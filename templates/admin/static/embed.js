@@ -8,7 +8,7 @@ layui.use(['element','table','layer','form'], function(){
   table.render({
     elem: '#category_list'
     ,height: 500
-    ,url: 'index.php?c=api&method=category_list' //数据接口
+    ,url: './index.php?c=api&method=category_list' //数据接口
     ,page: true //开启分页
     ,cols: [[ //表头
       {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
@@ -48,7 +48,7 @@ layui.use(['element','table','layer','form'], function(){
     //console.log(obj)
     if(obj.event === 'del'){
       layer.confirm('确认删除？',{icon: 3, title:'温馨提示！'}, function(index){
-        $.post('/index.php?c=api&method=del_category',{'id':obj.data.id},function(data,status){
+        $.post('./index.php?c=api&method=del_category',{'id':obj.data.id},function(data,status){
             
             if(data.code == 0){
                 obj.del();
@@ -60,14 +60,14 @@ layui.use(['element','table','layer','form'], function(){
         layer.close(index);
       });
     } else if(obj.event === 'edit'){
-      window.location.href = '/index.php?c=admin&page=edit_category&id=' + obj.data.id;
+      window.location.href = './index.php?c=admin&page=edit_category&id=' + obj.data.id;
     }
   });
   //渲染链接列表
   table.render({
     elem: '#link_list'
     ,height: 520
-    ,url: 'index.php?c=api&method=link_list' //数据接口
+    ,url: './index.php?c=api&method=link_list' //数据接口
     ,page: true //开启分页
     ,toolbar: '#linktool'
     ,cols: [[ //表头
@@ -123,7 +123,7 @@ layui.use(['element','table','layer','form'], function(){
           layer.confirm('确认删除？',{icon: 3, title:'温馨提示！'}, function(index){
             for (let i = 0; i < data.length; i++) {
 
-              $.post('/index.php?c=api&method=del_link',{'id':data[i].id},function(data,status){
+              $.post('./index.php?c=api&method=del_link',{'id':data[i].id},function(data,status){
                 if(data.code == 0){
                   console.log(obj);
                     obj.del();
@@ -160,7 +160,7 @@ layui.use(['element','table','layer','form'], function(){
     //console.log(obj)
     if(obj.event === 'del'){
       layer.confirm('确认删除？',{icon: 3, title:'温馨提示！'}, function(index){
-        $.post('/index.php?c=api&method=del_link',{'id':obj.data.id},function(data,status){
+        $.post('./index.php?c=api&method=del_link',{'id':obj.data.id},function(data,status){
             if(data.code == 0){
                 obj.del();
             }
@@ -171,17 +171,17 @@ layui.use(['element','table','layer','form'], function(){
         layer.close(index);
       });
     } else if(obj.event === 'edit'){
-      window.location.href = '/index.php?c=admin&page=edit_link&id=' + obj.data.id;
+      window.location.href = './index.php?c=admin&page=edit_link&id=' + obj.data.id;
     }
   });
 
   //登录
   //添加链接
   form.on('submit(login)', function(data){
-    $.post('/index.php?c=login&check=login',data.field,function(data,status){
+    $.post('./index.php?c=login&check=login',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
-        window.location.href = '/index.php?c=admin';
+        window.location.href = './index.php?c=admin';
       }
       else{
         layer.msg(data.err_msg, {icon: 5});
@@ -193,7 +193,7 @@ layui.use(['element','table','layer','form'], function(){
 
   //添加分类目录
   form.on('submit(add_category)', function(data){
-    $.post('/index.php?c=api&method=add_category',data.field,function(data,status){
+    $.post('./index.php?c=api&method=add_category',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         layer.msg('已添加！', {icon: 1});
@@ -207,7 +207,7 @@ layui.use(['element','table','layer','form'], function(){
   });
   //修改分类目录
   form.on('submit(edit_category)', function(data){
-    $.post('/index.php?c=api&method=edit_category',data.field,function(data,status){
+    $.post('./index.php?c=api&method=edit_category',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         layer.msg('已修改！', {icon: 1});
@@ -222,7 +222,7 @@ layui.use(['element','table','layer','form'], function(){
 
   //添加链接
   form.on('submit(add_link)', function(data){
-    $.post('/index.php?c=api&method=add_link',data.field,function(data,status){
+    $.post('./index.php?c=api&method=add_link',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         layer.msg('已添加！', {icon: 1});
@@ -236,7 +236,7 @@ layui.use(['element','table','layer','form'], function(){
   });
   //识别链接信息
   form.on('submit(get_link_info)', function(data){
-    $.post('/index.php?c=api&method=get_link_info',data.field.url,function(data,status){
+    $.post('./index.php?c=api&method=get_link_info',data.field.url,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         console.log(data);
@@ -250,7 +250,7 @@ layui.use(['element','table','layer','form'], function(){
   });
   //更新链接
   form.on('submit(edit_link)', function(data){
-    $.post('/index.php?c=api&method=edit_link',data.field,function(data,status){
+    $.post('./index.php?c=api&method=edit_link',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         layer.msg('已更新！', {icon: 1});
@@ -265,7 +265,7 @@ layui.use(['element','table','layer','form'], function(){
   //识别链接信息
   form.on('submit(get_link_info)', function(data){
     //是用ajax异步加载
-    $.post('/index.php?c=api&method=get_link_info',data.field.url,function(data,status){
+    $.post('./index.php?c=api&method=get_link_info',data.field.url,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         console.log(data);
@@ -284,7 +284,7 @@ layui.use(['element','table','layer','form'], function(){
 function get_link_info() {
     var url = $("#url").val();
     var index = layer.load(1);
-    $.post('/index.php?c=api&method=get_link_info',{url:url},function(data,status){
+    $.post('./index.php?c=api&method=get_link_info',{url:url},function(data,status){
       //如果添加成功
       if(data.code == 0) {
         if(data.data.title != null) {

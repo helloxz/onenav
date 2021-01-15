@@ -79,20 +79,20 @@ function admin_menu() {
             var link_id = $(this).attr('id');
             link_id = link_id.replace('id_','');
             var tempwindow=window.open('_blank');
-            tempwindow.location='index.php?c=click&id='+link_id;
+            tempwindow.location='./index.php?c=click&id='+link_id;
           }},
           "edit": {name: "编辑", icon: "edit",callback:function(key,opt){
             var link_id = $(this).attr('id');
             link_id = link_id.replace('id_','');
             var tempwindow=window.open('_blank');
-            tempwindow.location='index.php?c=admin&page=edit_link&id='+link_id;
+            tempwindow.location='./index.php?c=admin&page=edit_link&id='+link_id;
           }},
           "delete": {name: "删除", icon: "delete",callback:function(){
               var link_id = $(this).attr('id');
               link_id = link_id.replace('id_','');
               mdui.confirm('确认删除？',
               function(){
-                  $.post("index.php?c=api&method=del_link",{id:link_id},function(data,status){
+                  $.post("./index.php?c=api&method=del_link",{id:link_id},function(data,status){
                     //如果删除成功，则移除元素
                     if(data.code == 0) {
                       $("#id_" + link_id).remove();
@@ -166,7 +166,7 @@ $.contextMenu({
         var link_id = $(this).attr('id');
         link_id = link_id.replace('id_','');
         var tempwindow=window.open('_blank');
-        tempwindow.location='index.php?c=click&id='+link_id;
+        tempwindow.location='./index.php?c=click&id='+link_id;
       }},
       "sep1": "---------",
       "qrcode": {name: "二维码", icon:"fa-qrcode",callback:function(data,status){

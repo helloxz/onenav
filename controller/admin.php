@@ -64,7 +64,7 @@ if ($page == 'logout') {
     //清除cookie
     setcookie("key", $key, -(time()+7 * 24 * 60 * 60),"/");
     //跳转到首页
-    header('location:/');
+    header('location:'.dirname($_SERVER['PHP_SELF']));
     exit;
 }
 
@@ -104,7 +104,7 @@ function check_auth($user,$password){
     $cookie = $_COOKIE['key'];
     //如果cookie的值和计算的key不一致，则没有权限
     if( $cookie != $key ){
-        exit("<h3>认证失败，请<a href = 'index.php?c=login'>重新登录</a>！</h3>");
+        exit("<h3>认证失败，请<a href = './index.php?c=login'>重新登录</a>！</h3>");
     }
 }
 

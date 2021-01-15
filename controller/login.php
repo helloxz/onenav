@@ -12,7 +12,9 @@ $cookie = $_COOKIE['key'];
 
 //如果已经登录，直接跳转
 if( $cookie == $key ){
-    header('location:index.php?c=admin');
+    $phpSelf = dirname($_SERVER['PHP_SELF']);
+    $phpSelf = ($phpSelf == "/" || $phpSelf == "\\") ? "" : $phpSelf;
+    header('location:'.$phpSelf.'/index.php?c=admin');
     exit;
 }
 
