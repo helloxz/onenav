@@ -101,9 +101,8 @@ function base64($url){
     $host = $urls['host'];
     //获取端口
     $port = empty( $urls['port'] ) ? '' : ':'.$urls['port'];
-    $dir = dirname($_SERVER['PHP_SELF']);
 
-    $new_url = $scheme.$host.$port.$dir;
+    $new_url = $scheme.$host.$port;
     return base64_encode($new_url);
 }
 
