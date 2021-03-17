@@ -23,7 +23,7 @@ if( $_GET['check'] == 'login' ) {
     header('Content-Type:application/json; charset=utf-8');
     if( ($user == $username) && ($pass == $password) ) {
         $key = md5($username.$password.$ip.'onenav');
-        setcookie("key", $key, time()+7 * 24 * 60 * 60,"/");
+        setcookie("key", $key, time()+30 * 24 * 60 * 60,"/");
         $data = [
             'code'      =>  0,
             'msg'   =>  'successful'
