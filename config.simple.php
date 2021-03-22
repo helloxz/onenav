@@ -4,7 +4,7 @@ require 'class/Medoo.php';
 use Medoo\Medoo;
 $db = new medoo([
     'database_type' => 'sqlite',
-    'database_file' => 'db/onenav.db3'
+    'database_file' => 'data/onenav.db3'
 ]);
 
 //用户名
