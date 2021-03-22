@@ -35,14 +35,14 @@
 		</div> -->
 		  <!-- 搜索框END -->
 		  <!-- 新版搜索框 -->
-		  	<div class="mdui-col-xs-4">
+		  	<div class="mdui-col-md-4 mdui-col-xs-6">
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
 					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
 				</div>
 			</div>
 			<!-- 新版搜索框END -->
-		  <a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '查看 Github'}">
+		  <a class = "mdui-hidden-xs" href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '查看 Github'}">
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">
         <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffffff" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
 	c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
@@ -51,7 +51,7 @@
 	c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
 	c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z"></path>
 	  </svg>
-	  <a href="/index.php?c=login" title = "登录OneNav" target="_blank" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
+	  <a class = "mdui-hidden-xs" href="/index.php?c=login" title = "登录OneNav" target="_blank" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
     </a>
 		</div>
 	</header>
