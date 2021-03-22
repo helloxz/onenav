@@ -11,16 +11,17 @@ $c = strip_tags($c);
 //读取版本号
 //$version = @file_get_contents("./functions/version.txt");
 //载入配置文件
-if( !file_exists('./config.php') ) {
+if( !file_exists('./data/config.php') ) {
 	exit('<h3>配置文件不存在，请将config.simple.php复制一份并命名为config.php</h3>');
 }
 //检查数据库是否存在，不存在则复制数据库
-if( !file_exists('./db/onenav.db3') ) {
-	copy('db/onenav.simple.db3','db/onenav.db3');
+if( !file_exists('./data/onenav.db3') ) {
+	copy('db/onenav.simple.db3','data/onenav.db3');
+	// copy('db/.htaccess','data/.htaccess');
 }
 
 //载入配置文件
-require("./config.php");
+require("./data/config.php");
 
 //根据不同的请求载入不同的方法
 //如果没有请求控制器

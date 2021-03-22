@@ -34,6 +34,14 @@
 			</div>
 		</div> -->
 		  <!-- 搜索框END -->
+		  <!-- 新版搜索框 -->
+		  	<div class="mdui-col-xs-4">
+				<div class="mdui-textfield mdui-textfield-floating-label">
+					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
+					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
+				</div>
+			</div>
+			<!-- 新版搜索框END -->
 		  <a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '查看 Github'}">
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">
         <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffffff" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
@@ -81,14 +89,14 @@
 	<!--正文内容部分-->
 	<div class="mdui-container">
 		<!-- 搜索框 -->
-		<div class="mdui-row">
+		<!-- <div class="mdui-row">
 			<div class="mdui-col-xs-12">
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<label class="mdui-textfield-label">输入书签关键词进行搜索</label>
 					<input class="mdui-textfield-input search" type="text" />
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- 搜索框END -->
 		<div class="mdui-row">
 			<!-- 遍历分类目录 -->
@@ -153,7 +161,7 @@
 	<!--正文内容部分END-->
 	<!-- footer部分 -->
 	<footer>
-		© 2020 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
+		© 2021 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
 	</footer>
 	<!-- footerend -->
 </body>
