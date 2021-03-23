@@ -61,3 +61,13 @@
     border-radius: 3px;
     display: none;
 }
+.admin-msg{
+    background-color: #f2f2f2;
+    line-height: 14px;
+    padding:1em;
+    border-radius: 5px;
+    color:#888888;
+}
+.admin-msg a{
+    color:#01AAED;
+}
