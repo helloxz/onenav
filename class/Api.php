@@ -344,7 +344,7 @@ class Api {
      * 验证是否登录
      */
     protected function is_login(){
-        $key = md5(USER.PASSWORD.$this->getIP().'onenav');
+        $key = md5(USER.PASSWORD.'onenav');
         //获取session
         $session = $_COOKIE['key'];
         //如果已经成功登录

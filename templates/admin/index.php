@@ -8,6 +8,9 @@
       <div class="layui-container" style = "margin-top:2em;">
         <div class="layui-row layui-col-space18">
           <div class="layui-col-lg4">
+            <div class = "admin-msg">当前版本：<?php echo file_get_contents('version.txt'); ?></div>
+          </div>
+          <div class="layui-col-lg4">
             <div class = "admin-msg">QQ群1：147687134</div>
           </div>
           <div class="layui-col-lg4">

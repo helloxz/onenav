@@ -1,3 +1,14 @@
+body{
+    /* 增加锚点跳转过度效果 */
+    scroll-behavior: smooth;
+}
+/* 锚点元素位置 */
+.anchor-element {
+    position: absolute;
+    /*控制距离顶部 100px*/
+    top: -180px;
+    visibility: hidden;
+}
 .link-line {
     font-size: 16px;
     border-bottom: 1px solid #dddddd;
@@ -121,4 +132,7 @@ footer a{
     white-space: nowrap;
     text-overflow: ellipsis;
     -o-text-overflow:ellipsis;
+}
+.mdui-snackbar-top{
+    background-color: #FF2377;
 }
