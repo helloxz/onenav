@@ -1,4 +1,4 @@
-# onenav
+# OneNav
 使用PHP + SQLite 3开发的简约导航/书签管理器，xiaoz新作，欢迎体验。
 
 ![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
@@ -44,6 +44,14 @@ docker run -itd --name="onenav" -p 80:80 \
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
 
 > 更多说明，请参考帮助文档：https://www.yuque.com/helloz/onenav
+
+## Demo
+
+以下是OneNav部分用户演示站，排名不分先后。
+
+* OneNav：[https://nav.rss.ink/](https://nav.rss.ink/)
+* 千行书签：[http://www.52qx.club/](http://www.52qx.club/)
+* 纽及书签：[http://www.1006788.com/](http://www.1006788.com/)
 
 ## 联系我
 
