@@ -66,7 +66,7 @@
 	<?php
 		if( is_login() ) {
 	?>	
-	<div class="right-button" style="position: fixed;right:10px;bottom:80px;z-index:99;">
+	<div class="right-button mdui-hidden-xs" style="position: fixed;right:10px;bottom:80px;z-index:99;">
 		<div>
 		<button title = "快速添加链接" id = "add" class="mdui-fab mdui-color-theme-accent mdui-ripple mdui-fab-mini"><i class="mdui-icon material-icons">add</i></button>
 		</div>

@@ -7,7 +7,9 @@ $id = intval($_GET['id']);
 
 //如果链接为空
 if(empty($id)) {
-    exit('无效ID！');
+    $msg = '<p>无效ID！</p>';
+    require('templates/admin/403.php');
+    exit();
 }
 
 //查询链接信息
@@ -17,7 +19,9 @@ $link = $db->get('on_links',['id','fid','url','property','click'],[
 
 //如果查询失败
 if( !$link ){
-    exit('无效ID！');
+    $msg = '<p>无效ID！</p>';
+    require('templates/admin/403.php');
+    exit();
 }
 
 //查询该ID的父及ID信息
@@ -61,5 +65,8 @@ elseif( is_login() ) {
 }
 //其它情况则没有权限
 else{
-    exit('无权限！');
+    $msg = '<p>很抱歉，该页面是私有的，您无权限访问此页面。</p>
+    <p>如果您是管理员，请尝试登录OneNav后台并重新访问。</p>';
+    require('templates/admin/403.php');
+    exit();
 }
