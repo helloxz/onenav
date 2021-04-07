@@ -6,7 +6,7 @@ $username = $site_setting['user'];
 $password = $site_setting['password'];
 $ip = getIP();
 //如果认证通过，直接跳转到后台管理
-$key = md5($username.$password.$ip.'onenav');
+$key = md5($username.$password.'onenav');
 //获取cookie
 $cookie = $_COOKIE['key'];
 
@@ -22,7 +22,7 @@ if( $_GET['check'] == 'login' ) {
     $pass = $_POST['password'];
     header('Content-Type:application/json; charset=utf-8');
     if( ($user == $username) && ($pass == $password) ) {
-        $key = md5($username.$password.$ip.'onenav');
+        $key = md5($username.$password.'onenav');
         setcookie("key", $key, time()+30 * 24 * 60 * 60,"/");
         $data = [
             'code'      =>  0,

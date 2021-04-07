@@ -51,14 +51,33 @@
 	c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
 	c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z"></path>
 	  </svg>
-	  <a class = "mdui-hidden-xs" href="/index.php?c=login" title = "登录OneNav" target="_blank" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
+	  <?php
+		if( is_login() ) {
+	  ?>	
+	  <a class = "mdui-hidden-xs" href="/index.php?c=admin" title = "后台管理" target="_blank" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
+	  <?php }else{ ?>
+		<a class = "mdui-hidden-xs" href="/index.php?c=login" title = "登录OneNav" target="_blank" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
+	  <?php } ?>
     </a>
 		</div>
 	</header>
 	<!--导航工具END-->
+	<!-- 添加按钮 -->
+	<?php
+		if( is_login() ) {
+	?>	
+	<div class="right-button mdui-hidden-xs" style="position: fixed;right:10px;bottom:80px;z-index:99;">
+		<div>
+		<button title = "快速添加链接" id = "add" class="mdui-fab mdui-color-theme-accent mdui-ripple mdui-fab-mini"><i class="mdui-icon material-icons">add</i></button>
+		</div>
+	</div>
+	<?php } ?>
+	<!-- 添加按钮END -->
 	<!-- 返回顶部按钮 -->
 	<div id="top"></div>
-	<div class="top mdui-shadow-10"><a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i></div>
+	<div class="top mdui-shadow-10">
+	<a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i>
+	</div>
 	<!-- 返回顶部END -->
 		<!--左侧抽屉导航-->
 	<!-- 默认抽屉栏在左侧 -->
@@ -166,6 +185,7 @@
 	<!-- footerend -->
 </body>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
+<script src="/static//layer/layer.js"></script>
 <script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
 <script src = 'https://libs.xiaoz.top/clipBoard.js/clipBoard.min.js'></script>
 <script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>

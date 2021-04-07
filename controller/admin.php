@@ -46,7 +46,7 @@ if ($page == 'edit_link') {
 }
 
 //如果页面是添加链接页面
-if ($page == 'add_link') {
+if ( ($page == 'add_link') || ($page == 'add_link_tpl') ) {
     //查询所有分类信息
     $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weigth'    =>  'DESC'] ]);
     //checked按钮
@@ -99,12 +99,14 @@ function getIP() {
 
 function check_auth($user,$password){
     $ip = getIP();
-    $key = md5($user.$password.$ip.'onenav');
+    $key = md5($user.$password.'onenav');
     //获取cookie
     $cookie = $_COOKIE['key'];
     //如果cookie的值和计算的key不一致，则没有权限
     if( $cookie != $key ){
-        exit("<h3>认证失败，请<a href = 'index.php?c=login'>重新登录</a>！</h3>");
+        $msg = "<h3>认证失败，请<a href = 'index.php?c=login'>重新登录</a>！</h3>";
+        require('templates/admin/403.php');
+        exit;
     }
 }
 

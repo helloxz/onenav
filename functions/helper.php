@@ -24,7 +24,7 @@ function getIP() {
 
 
 function is_login(){
-    $key = md5(USER.PASSWORD.getIP().'onenav');
+    $key = md5(USER.PASSWORD.'onenav');
     //获取session
     $session = $_COOKIE['key'];
     //如果已经成功登录
