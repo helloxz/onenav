@@ -68,6 +68,17 @@ if ($page == 'logout') {
     exit;
 }
 
+//如果是自定义js页面
+if ($page == 'ext_js') {
+    //判断文件是否存在
+    if (is_file('data/extend.js')) {
+        $content = file_get_contents('data/extend.js');
+    }
+    else{
+        $content = '';
+    }
+}
+
 $page = $page.'.php';
 
 //获取访客IP

@@ -392,6 +392,28 @@ class Api {
         exit(json_encode($data));
     }
     /**
+     * 自定义js
+     */
+    public function add_js($token,$content){
+        $this->auth($token);
+        //如果内容为空
+        // if( $content == '' ){
+        //     $this->err_msg(-1013,'The content cannot be empty!');
+        // }
+        //写入文件
+        try{
+            file_put_contents("data/extend.js",$content);
+            $data = [
+                'code'      =>  0,
+                'data'      =>  'success'
+            ];
+            exit(json_encode($data));
+        }
+        catch(Exception $e){
+            $this->err_msg(-2000,$e->getMessage());
+        }
+    }
+    /**
      * 获取IP
      */
     //获取访客IP

@@ -211,6 +211,10 @@ $.contextMenu({
 
 // 添加链接按钮
 $("#add").click(function(){
+  open_add_link();
+});
+
+function open_add_link(){
   layer.open({
     type: 2,
     title: '添加链接',
@@ -219,4 +223,24 @@ $("#add").click(function(){
     area : ['800px' , '520px'],
     content: '/index.php?c=admin&page=add_link_tpl'
   });
+}
+//搜索框失去焦点
+function clean_search(){
+  $(".search").val('');
+  $(".search").blur();
+}
+//搜索框得到焦点
+function on_search(){
+  $(".search").focus();
+  $(".search").val('');
+}
+hotkeys('a,esc', function (event, handler){
+  switch (handler.key) {
+    case 'a': open_add_link();
+      break;
+    case 'esc': clean_search();
+      break;
+    
+    default: alert(event);
+  }
 });

@@ -1,5 +1,5 @@
 <?php
-$content = file_get_contents('./bookmarks_2021_4_8.html');
+$content = file_get_contents('./bookmarks.html');
 
 $pattern = "/<A.*<\/A>/i";
 

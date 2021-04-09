@@ -43,6 +43,9 @@ switch ($method) {
     case 'get_link_info':
         get_link_info($api);
         break;
+    case 'add_js':
+        add_js($api);
+        break;
     default:
         # code...
         break;
@@ -174,4 +177,14 @@ function get_link_info($api) {
     //获取URL
     $url = @$_POST['url'];
     $api->get_link_info($token,$url);
+}
+
+/**
+ * 添加自定义js
+ */
+function add_js($api) {
+    //获取token
+    $token = $_POST['token'];
+    $content = @$_POST['content'];
+    $api->add_js($token,$content);
 }

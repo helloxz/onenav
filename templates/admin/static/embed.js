@@ -205,6 +205,20 @@ layui.use(['element','table','layer','form'], function(){
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
+  //添加自定义js
+  form.on('submit(add_js)', function(data){
+    $.post('/index.php?c=api&method=add_js',data.field,function(data,status){
+      //如果添加成功
+      if(data.code == 0) {
+        layer.msg('已添加！', {icon: 1});
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
   //修改分类目录
   form.on('submit(edit_category)', function(data){
     $.post('/index.php?c=api&method=edit_category',data.field,function(data,status){
