@@ -46,6 +46,12 @@ switch ($method) {
     case 'add_js':
         add_js($api);
         break;
+    case 'upload':
+        upload($api);
+        break;
+    case 'imp_link':
+        imp_link($api);
+        break;
     default:
         # code...
         break;
@@ -187,4 +193,22 @@ function add_js($api) {
     $token = $_POST['token'];
     $content = @$_POST['content'];
     $api->add_js($token,$content);
+}
+// 上传书签
+function upload($api){
+    //获取token
+    $token = $_POST['token'];
+    //获取上传类型
+    $type = $_GET['type'];
+    $api->upload($token,$type);
+}
+//书签导入
+function imp_link($api) {
+    //获取token
+    $token = $_POST['token'];
+    //获取书签路径
+    $filename = trim($_POST['filename']);
+    $fid = intval($_POST['fid']);
+    $property = intval(@$_POST['property']);
+    $api->imp_link($token,$filename,$fid,$property);
 }

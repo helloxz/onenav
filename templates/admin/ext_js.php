@@ -5,11 +5,11 @@
 <!-- 内容主体区域 -->
 <div class="layui-row content-body">
     <div class="layui-col-lg12">
-    <form class="layui-form">
-  <div style = "margin-bottom:1.6em;"><h3>自定义JavaScript，仅对默认主题有效：</h3></div>
+    <form class="layui-form layui-form-pane">
+  <!-- <div style = "margin-bottom:1.6em;"><h3>自定义JavaScript，仅对默认主题有效：</h3></div> -->
   <div class="layui-form-item layui-form-text">
-    
-  <textarea name="content" rows="20" required placeholder="请输入" class="layui-textarea"><?php echo $content; ?></textarea>
+  <label class="layui-form-label">自定义JavaScript，仅对默认主题有效：</label>
+  <textarea name="content" rows="20" required placeholder="请输入JavaScript代码" class="layui-textarea"><?php echo $content; ?></textarea>
   </div>
   <div class="layui-form-item">
     <div>

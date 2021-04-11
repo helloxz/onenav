@@ -1,7 +1,8 @@
-layui.use(['element','table','layer','form'], function(){
+layui.use(['element','table','layer','form','upload'], function(){
     var element = layui.element;
     var table = layui.table;
     var form = layui.form;
+    var upload = layui.upload;
     layer = layui.layer;
 
     //第一个实例
@@ -120,24 +121,38 @@ layui.use(['element','table','layer','form'], function(){
         }
         //遍历删除数据
         else{
-          layer.confirm('确认删除？',{icon: 3, title:'温馨提示！'}, function(index){
+          layer.confirm('确认删除选中数据？',{icon: 3, title:'温馨提示！'}, function(index){
             for (let i = 0; i < data.length; i++) {
-
-              $.post('/index.php?c=api&method=del_link',{'id':data[i].id},function(data,status){
-                if(data.code == 0){
-                  console.log(obj);
-                    obj.del();
-                }
-                else{
-                    layer.msg(data.err_msg);
-                }
-            });
+              // $.post('/index.php?c=api&method=del_link',{'id':data[i].id},function(data,status){
+              //   if(data.code == 0){
+                  
+              //   }
+              //   else{
+              //       layer.msg(data.err_msg);
+              //   }
+              // });
+              $.ajax({
+                'url': '/index.php?c=api&method=del_link',
+                'type': 'POST',
+                'async': false,
+                'data':{'id':data[i].id}
+              });
               
             }
-            layer.close(index);
+            layer.open({
+              title: '温馨提醒'
+              ,content: '选中数据已删除！',
+              yes: function(index, layero){
+                window.location.reload();
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+              }
+            });
+            
           });
         }
         //console.log(data[0].id);
+        //刷新当前页面
+        //window.location.reload();
       break;
       case 'getCheckLength':
         var data = checkStatus.data;
@@ -279,7 +294,7 @@ layui.use(['element','table','layer','form'], function(){
   //识别链接信息
   form.on('submit(get_link_info)', function(data){
     //是用ajax异步加载
-    $.post('/index.php?c=api&method=get_link_info',data.field.url,function(data,status){
+    $.post('/index.php?c=api&method=get_link_info',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         console.log(data);
@@ -291,7 +306,49 @@ layui.use(['element','table','layer','form'], function(){
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
+  //导入书签
+  //识别链接信息
+  form.on('submit(imp_link)', function(data){
+    //用ajax异步加载
+    $.post('/index.php?c=api&method=imp_link',data.field,function(data,status){
+      //如果添加成功
+      if(data.code == 0) {
+        layer.open({
+          title: '导入完成'
+          ,content: data.msg
+        });
+        //layer.msg('已添加！', {icon: 1});
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
   
+  //书签上传
+  //执行实例
+  upload.render({
+    elem: '#up_html' //绑定元素
+    ,url: 'index.php?c=api&method=upload' //上传接口
+    ,exts: 'html|HTML'
+    ,done: function(res){
+      //console.log(res);
+      //上传完毕回调
+      if( res.code == 0 ) {
+        $("#filename").val(res.file_name);
+      }
+      else if( res.code < 0) {
+        layer.msg(res.err_msg, {icon: 5});
+        layer.close();
+      }
+      
+    }
+    ,error: function(){
+      //请求异常回调
+    }
+  });
 
 });
 

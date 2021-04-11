@@ -16,7 +16,7 @@ if( !file_exists('./data/config.php') ) {
 }
 //检查数据库是否存在，不存在则复制数据库
 if( !file_exists('./data/onenav.db3') ) {
-	copy('data/onenav.simple.db3','data/onenav.db3');
+	copy('db/onenav.simple.db3','data/onenav.db3');
 	// copy('db/.htaccess','data/.htaccess');
 }
 

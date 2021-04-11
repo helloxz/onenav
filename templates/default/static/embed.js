@@ -234,13 +234,14 @@ function on_search(){
   $(".search").focus();
   $(".search").val('');
 }
-hotkeys('a,esc', function (event, handler){
-  switch (handler.key) {
-    case 'a': open_add_link();
-      break;
-    case 'esc': clean_search();
-      break;
+//快捷键支持
+// hotkeys('a,esc', function (event, handler){
+//   switch (handler.key) {
+//     case 'a': open_add_link();
+//       break;
+//     case 'esc': clean_search();
+//       break;
     
-    default: alert(event);
-  }
-});
+//     default: alert(event);
+//   }
+// });

@@ -185,6 +185,114 @@ class Api {
         }
     }
     /**
+     * 批量导入链接
+     */
+    public function imp_link($token,$filename,$fid,$property = 0){
+        $this->auth($token);
+        //检查文件是否存在
+        if ( !file_exists($filename) ) {
+            $this->err_msg(-1016,'File does not exist!');
+        }
+        //解析HTML数据
+        $content = file_get_contents($filename);
+
+        $pattern = "/<A.*<\/A>/i";
+
+        preg_match_all($pattern,$content,$arr);
+        //失败次数
+        $fail = 0;
+        //成功次数
+        $success = 0;
+        //总数
+        $total = count($arr[0]);
+        foreach( $arr[0] as $link )
+        {
+            $pattern = "/http.*\"? ADD_DATE/i";
+            preg_match($pattern,$link,$urls);
+            $url = str_replace('" ADD_DATE','',$urls[0]);
+            $pattern = "/>.*<\/a>$/i";
+            preg_match($pattern,$link,$titles);
+            
+            $title = str_replace('>','',$titles[0]);
+            $title = str_replace('</A','',$title);
+            
+            //如果标题或者链接为空，则不导入
+            if( ($title == '') || ($url == '') ) {
+                $fail++;
+                continue;
+            }
+            $data = [
+                'fid'           =>  $fid,
+                'description'   =>  '',
+                'add_time'      =>  time(),
+                'weight'        =>  0,
+                'property'      =>  $property
+            ];
+            $data['title'] = $title;
+            $data['url']    = $url;
+            
+            //插入数据库
+            $re = $this->db->insert('on_links',$data);
+            //返回影响行数
+            $row = $re->rowCount();
+            //如果为真
+            if( $row ){
+                $id = $this->db->id();
+                $data = [
+                    'code'      =>  0,
+                    'id'        =>  $id
+                ];
+                $success++;
+                
+            }
+            //如果插入失败
+            else{
+                $fail++;
+            }
+        }
+        //删除书签
+        unlink($filename);
+        $data = [
+            'code'      =>  0,
+            'msg'       =>  '总数：'.$total.' 成功：'.$success.' 失败：'.$fail
+        ];
+        exit(json_encode($data));
+    }
+    /**
+     * 书签上传
+     * type:上传类型，默认为上传书签，后续类型保留使用
+     */
+    public function upload($token,$type){
+        $this->auth($token);
+        if ($_FILES["file"]["error"] > 0)
+        {
+            $this->err_msg(-1015,'File upload failed!');
+        }
+        else
+        {
+            $filename = $_FILES["file"]["name"];
+            //获取文件后缀
+            $suffix = explode('.',$filename);
+            $suffix = strtolower(end($suffix));
+            
+            //临时文件位置
+            $temp = $_FILES["file"]["tmp_name"];
+            if( $suffix != 'html' ) {
+                //删除临时文件
+                unlink($filename);
+                $this->err_msg(-1014,'Unsupported file suffix name!');
+            }
+            
+            if( copy($temp,'data/'.$filename) ) {
+                $data = [
+                    'code'      =>  0,
+                    'file_name' =>  'data/'.$filename
+                ];
+                exit(json_encode($data));
+            }
+        }
+    }
+    /**
      * name:修改链接
      */
     public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0){
@@ -226,6 +334,7 @@ class Api {
             $this->err_msg(-1011,'The URL already exists!');
         }
     }
+    
     /**
      * 删除链接
      */

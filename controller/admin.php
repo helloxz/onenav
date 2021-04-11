@@ -6,7 +6,19 @@
 //检查认证
 check_auth($site_setting['user'],$site_setting['password']);
 
-
+//获取版本号
+function get_version(){
+    if( file_exists('version.txt') ) {
+        $version = @file_get_contents('version.txt');
+        return $version;
+    }
+    else{
+        $version = 'null';
+        return $version;
+    }
+}
+//获取版本号
+$version = get_version();
 
 $page = empty($_GET['page']) ? 'index' : $_GET['page'];
 //如果页面是修改edit_category
@@ -46,9 +58,22 @@ if ($page == 'edit_link') {
 }
 
 //如果页面是添加链接页面
-if ( ($page == 'add_link') || ($page == 'add_link_tpl') ) {
+if ( ($page == 'add_link') || ($page == 'add_link_tpl') || ($page == 'add_quick_tpl') ) {
     //查询所有分类信息
-    $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weigth'    =>  'DESC'] ]);
+    $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weight'    =>  'DESC'] ]);
+    //checked按钮
+    if( $category['property'] == 1 ) {
+        $category['checked'] = 'checked';
+    }
+    else{
+        $category['checked'] = '';
+    }
+}
+
+//导入书签页面
+if ( $page == 'imp_link' ) {
+    //查询所有分类信息
+    $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weight'    =>  'DESC'] ]);
     //checked按钮
     if( $category['property'] == 1 ) {
         $category['checked'] = 'checked';

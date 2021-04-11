@@ -9,7 +9,7 @@
         <!-- 开启表格头部工具栏 -->
         <script type="text/html" id="linktool">
         <div class="layui-btn-container">
-            <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckData">批量删除</button> -->
+            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="getCheckData">删除选中</button>
             <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
             <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
         </div>
