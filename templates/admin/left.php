@@ -17,9 +17,19 @@
           <dl class="layui-nav-child">
             <dd><a href="/index.php?c=admin&page=link_list">我的链接</a></dd>
             <dd><a href="/index.php?c=admin&page=add_link">添加链接</a></dd>
+            <dd><a href="/index.php?c=admin&page=imp_link">书签导入</a></dd>
           </dl>
         </li>
-        
       </ul>
+
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;">高级功能</a>
+          <dl class="layui-nav-child">
+            <dd><a href="/index.php?c=admin&page=ext_js">自定义JavaScript</a></dd>
+          </dl>
+        </li>
+      </ul>
+
     </div>
   </div>

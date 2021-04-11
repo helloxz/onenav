@@ -1,0 +1,168 @@
+/*
+ * BaiSu
+ * 1099116749@qq.com
+ */
+ @charset "utf-8";
+ * {
+     padding: 0;
+     margin: 0;
+     font-family: "microsoft yahei", Arial, 'PingFang SC', SimHei, SimSun;
+     box-sizing: border-box;
+     font-size: 14px;
+ }
+ input:focus,
+ button:focus {
+     outline: none;
+ }
+ 
+ textarea:focus {
+     outline: none;
+ }
+ 
+ input {}
+ 
+ body {
+     background-color: #f2f3fa;
+ }
+ 
+ img {
+     border: none;
+ }
+ 
+ li {
+     list-style: none;
+ }
+ 
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6 {
+     font-weight: normal;
+ }
+ 
+ a {
+     color: inherit;
+     text-decoration: none;
+ }
+ 
+ .cl {
+     clear: both;
+ }
+ 
+ /*快速添加页面*/
+ /*边距调整*/
+ .layui-form,
+ .layui-unselect,
+ .layui-unselect *{
+     box-sizing: content-box;
+ }
+ .quick-main{
+     width: 400px;
+     height: 460px;
+     margin: auto;
+     padding: 20px;
+     background-color: white;
+     border-radius: 10px;
+ }
+ .quick-main .title{
+     width: 100%;
+     display: flex;
+     justify-content: flex-start;
+     line-height: 45px;
+     font-weight: bold;
+     font-size: 15px;
+     margin-bottom: 10px;
+ }
+ .quick-main .title i{
+     display: block;
+     margin-top: 1px;
+     line-height: 45px;
+     font-size: 22px;
+     margin-right: 6px;
+     color: #3b75fb;
+ }
+ .quick-main .list{
+     width: 100%;
+     margin-bottom: 15px;
+ }
+ .quick-main .list input{
+     width: 100%;
+     padding: 0 12px;
+     height: 38px;
+     border-radius: 6px;
+     color: #1c2a39;
+     background-color: #f2f3fa;
+     border: none;
+     font-size: 13px;
+ }
+ .quick-main .list textarea{
+     width: 100%;
+     padding: 12px;
+     height: 80px;
+     border-radius: 6px;
+     color: #1c2a39; 
+     background-color: #f2f3fa;
+     border: none;
+     font-size: 13px;
+ }
+ /**/
+ .quick-main .layui-form-select dl dd.layui-this{
+     background-color: #3b75fb;
+     color: white;
+ }
+ .quick-main .layui-form-select dl{
+     padding: 0 0;
+ }
+ .quick-main .list-2{
+     display: flex;
+     justify-content: space-between;
+ }
+ .quick-main .list-2 .li{
+     width: 48%;
+     border-radius: 6px;
+     display: flex;
+     justify-content: flex-start;
+     padding: 0 12px;
+     line-height: 38px;
+     color: #1c2a39;
+     background-color: #f2f3fa;
+     font-size: 13px;
+ }
+ .quick-main .list-2 .li .layui-unselect{
+     margin-left: 10px;
+ }
+ .quick-main .list-2 input[type=text]{
+     width: 70%;
+     margin-left: 10px;
+ }
+ .quick-main .layui-form-onswitch {
+     border-color: #3b75fb;
+     background-color: #3b75fb;
+ }
+ 
+ .quick-main .list-3{
+     display: flex;
+     justify-content: space-between;
+ }
+ .quick-main .list-3 button{
+     width: 48%;
+     background-color: #3b75fb;
+     color: white;
+     height: 38px;
+     border: none;
+     border-radius: 6px;
+     cursor: pointer;
+     transition: 0.3 all;
+ }
+ .quick-main .list-3 button.close{
+     color: #1c2a39;
+     background-color: #f2f3fa;
+ }
+ .quick-main .list-3 button:hover{
+     box-shadow: 0px 0px 5px #CCCCCC;
+     opacity: .7;
+     transition: 0.3 all;
+ }
+ 

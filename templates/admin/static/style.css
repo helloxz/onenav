@@ -71,3 +71,35 @@
 .admin-msg a{
     color:#01AAED;
 }
+/* 上传按钮 */
+#up_html{
+    margin-left:auto;
+    margin-right:auto;
+    width: 100%;
+    margin-bottom: 2em;
+    -moz-box-sizing: border-box; /*Firefox3.5+*/
+	-webkit-box-sizing: border-box; /*Safari3.2+*/
+	-o-box-sizing: border-box; /*Opera9.6*/
+	-ms-box-sizing: border-box; /*IE8*/
+	box-sizing: border-box; 
+    left:0%;
+}
+
+/* 后台设置提醒 */
+.setting-msg{
+    width:100%;
+    color: #FF5722;
+    border-left: 3px solid #FF5722;
+    background-color: #F0F0F0;
+    padding:0.8em;
+    border-radius: 1px;
+    margin-bottom:2em;
+    -moz-box-sizing: border-box; /*Firefox3.5+*/
+	-webkit-box-sizing: border-box; /*Safari3.2+*/
+	-o-box-sizing: border-box; /*Opera9.6*/
+	-ms-box-sizing: border-box; /*IE8*/
+	box-sizing: border-box; 
+}
+.setting-msg a{
+    color:#01AAED;
+}
