@@ -8,11 +8,11 @@
 	<meta name="keywords" content="<?php echo $site_setting['keywords']; ?>" />
 	<meta name="description" content="<?php echo $site_setting['description']; ?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel='stylesheet' href='https://libs.xiaoz.top/mdui/v1.0.1/css/mdui.min.css'>
-	<link rel='stylesheet' href='https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.css'>
-	<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
+	<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css'>
+	<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/jquery-contextmenu@2.9.2/dist/jquery.contextMenu.min.css'>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css?v=<?php echo $version; ?>">
-	<script src = 'https://libs.xiaoz.top/mdui/v1.0.1/js/mdui.min.js'></script>
+	<script src = 'https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js'></script>
 	<!-- <script src="https://cdn.jsdelivr.net/npm/hotkeys-js@3.7.3/dist/hotkeys.min.js"></script> -->
 </head>
 <body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
@@ -183,10 +183,10 @@
 	</footer>
 	<!-- footerend -->
 </body>
-<script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
+<script src = 'https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js'></script>
 <script src="/static//layer/layer.js"></script>
-<script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
-<script src = 'https://libs.xiaoz.top/clipBoard.js/clipBoard.min.js'></script>
+<script src = 'https://cdn.jsdelivr.net/npm/jquery-contextmenu@2.9.2/dist/jquery.contextMenu.min.js'></script>
+<script src = 'https://cdn.jsdelivr.net/gh/siliushi/clipBoard.js@master/clipBoard.min.js'></script>
 <script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
 <script src="templates/<?php echo TEMPLATE; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 <script>
