@@ -7,3 +7,19 @@
 2. 修复分类目录不按权重排序的问题
 3. 书签导入
 4. 书签批量删除
+
+20210412
+CREATE TABLE on_options (
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"key" TEXT(64) NOT NULL,
+	value TEXT,
+	extend TEXT
+);
+
+CREATE INDEX on_options_id_IDX ON on_options (id,"key");
+CREATE INDEX on_options_key_IDX ON on_options ("key");
+
+20210726
+1. 修复后台QQ群2
+2. 后台添加社区支持链接
+3. 修复默认主题顶部遮挡问题

@@ -14,7 +14,10 @@
             <div class = "admin-msg">QQ群1：147687134</div>
           </div>
           <div class="layui-col-lg4">
-            <div class = "admin-msg">QQ群2：147687134</div>
+            <div class = "admin-msg">QQ群2：932795364</div>
+          </div>
+          <div class="layui-col-lg4">
+            <div class = "admin-msg">社区支持：<a href="https://dwz.ovh/vd0bw" rel = "nofollow" target="_blank" title="访问下问社区">https://dwz.ovh/vd0bw</a></div>
           </div>
           <div class="layui-col-lg4">
             <div class = "admin-msg">项目地址：<a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank">https://github.com/helloxz/onenav</a></div>

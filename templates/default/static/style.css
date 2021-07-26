@@ -136,3 +136,13 @@ footer a{
 .mdui-snackbar-top{
     background-color: #FF2377;
 }
+.cat-title{
+    margin-top: -50px;
+    padding-top:68px;
+    /* margin-bottom: 0; */
+}
+
+/* :target {
+    padding-top: 70px;
+    margin-top: -70px;
+  } */
