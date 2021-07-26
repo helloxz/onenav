@@ -129,7 +129,7 @@
                     $property = '';
                 }
             ?>
-			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title" style = "margin-top:1.5em;">
+			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title">
 				<?php echo $category['name']; ?> <?php echo $property; ?>
 				<span class = "mdui-typo-caption"><?php echo $category['description']; ?></span>
 			</div>

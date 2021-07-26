@@ -118,5 +118,12 @@ else{
 
 
 // 载入前台首页模板
-require('templates/'.TEMPLATE.'/index.php');
+//判断文件夹是否存在
+if( is_dir('templates/'.TEMPLATE) ){
+    $tpl_dir = 'templates/';
+}
+else{
+    $tpl_dir = 'data/templates/';
+}
+require($tpl_dir.TEMPLATE.'/index.php');
 ?>
