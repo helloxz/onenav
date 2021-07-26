@@ -18,9 +18,11 @@
 * 支持后台管理
 * 支持私有链接
 * 支持书签批量导入
-* 支持多种主题风格（默认内置2套模板）
+* 支持多种主题风格
 * 支持链接信息自动识别
 * 支持API
+* 支持Docker部署
+* 支持uTools插件
 
 ## 安装
 
@@ -59,6 +61,7 @@ docker run -itd --name="onenav" -p 80:80 \
 * Blog:https://www.xiaoz.me/
 * QQ:337003006
 * QQ群：147687134
+* 社区支持：[https://dwz.ovh/vd0bw](https://dwz.ovh/vd0bw)
 
 ## 鸣谢
 
