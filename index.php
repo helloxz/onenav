@@ -15,8 +15,9 @@ if( !file_exists('./data/config.php') ) {
 	echo "<p>正在准备安装，请稍等...</p>";
 	//复制配置文件
 	if ( copy('config.simple.php','data/config.php') ) {
+		echo "安装完毕，默认用户名：xiaoz，密码：xiaoz.me，5s后跳转到登录页面。";
 		//跳转到登录页面
-		header("Refresh:3;url=/index.php?c=login");
+		header("Refresh:5;url=/index.php?c=login");
 		exit();
 	} else{
 		exit("<p>复制配置文件失败，请检查权限是否正常，或手动将站点目录下的config.simple.php复制为data/config.php</p>");
