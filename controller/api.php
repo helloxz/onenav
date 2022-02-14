@@ -14,7 +14,7 @@ $api = new Api($db);
 
 //获取请求方法
 $method = $_GET['method'];
-//对方法进行判断
+//对方法进行判断，对应URL路由：/index.php?c=api&method=xxx
 switch ($method) {
     case 'add_category':
         add_category($api);
@@ -51,6 +51,8 @@ switch ($method) {
         break;
     case 'imp_link':
         imp_link($api);
+    case 'check_weak_password':
+        check_weak_password($api);
         break;
     default:
         # code...
@@ -211,4 +213,10 @@ function imp_link($api) {
     $fid = intval($_POST['fid']);
     $property = intval(@$_POST['property']);
     $api->imp_link($token,$filename,$fid,$property);
+}
+//检查弱密码
+function check_weak_password($api) {
+    //获取token
+    $token = $_POST['token'];
+    $api->check_weak_password($token);
 }

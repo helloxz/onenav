@@ -18,11 +18,11 @@ class Api {
     public function add_category($token,$name,$property = 0,$weight = 0,$description = ''){
         $this->auth($token);
         $data = [
-            'name'          =>  $name,
+            'name'          =>  htmlspecialchars($name,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
             'property'      =>  $property,
-            'description'   =>  $description
+            'description'   =>  htmlspecialchars($description,ENT_QUOTES)
         ];
         //插入分类目录
         $this->db->insert("on_categorys",$data);
@@ -59,11 +59,11 @@ class Api {
         //更新数据库
         else{
             $data = [
-                'name'          =>  $name,
+                'name'          =>  htmlspecialchars($name,ENT_QUOTES),
                 'up_time'      =>  time(),
                 'weight'        =>  $weight,
                 'property'      =>  $property,
-                'description'   =>  $description
+                'description'   =>  htmlspecialchars($description,ENT_QUOTES)
             ];
             $re = $this->db->update('on_categorys',$data,[ 'id' => $id]);
             //var_dump( $this->db->log() );
@@ -159,9 +159,9 @@ class Api {
         //合并数据
         $data = [
             'fid'           =>  $fid,
-            'title'         =>  $title,
+            'title'         =>  htmlspecialchars($title,ENT_QUOTES),
             'url'           =>  $url,
-            'description'   =>  $description,
+            'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
             'property'      =>  $property
@@ -309,9 +309,9 @@ class Api {
         //合并数据
         $data = [
             'fid'           =>  $fid,
-            'title'         =>  $title,
+            'title'         =>  htmlspecialchars($title,ENT_QUOTES),
             'url'           =>  $url,
-            'description'   =>  $description,
+            'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'up_time'       =>  time(),
             'weight'        =>  $weight,
             'property'      =>  $property
@@ -548,6 +548,16 @@ class Api {
         return $ip; 
     } 
 
-    //
+    /**
+     * name:检查弱密码
+     */
+    public function check_weak_password($token){
+        $this->auth($token);
+        //如果用户名、密码为初始密码，则提示修改
+        if ( ( USER == 'xiaoz' ) && ( PASSWORD == 'xiaoz.me' ) ) {
+            $this->err_msg(-1,'Weak password!');
+        }
+    }
+
 }
 

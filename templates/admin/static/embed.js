@@ -191,12 +191,25 @@ layui.use(['element','table','layer','form','upload'], function(){
   });
 
   //登录
-  //添加链接
   form.on('submit(login)', function(data){
     $.post('/index.php?c=login&check=login',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         window.location.href = '/index.php?c=admin';
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+  //手机登录
+  form.on('submit(mobile_login)', function(data){
+    $.post('/index.php?c=login&check=login',data.field,function(data,status){
+      //如果登录成功
+      if(data.code == 0) {
+        window.location.href = '/';
       }
       else{
         layer.msg(data.err_msg, {icon: 5});
@@ -400,4 +413,20 @@ function del_category(id){
     
     layer.close(index);
     });
+}
+
+//弱密码检查
+function check_weak_password(){
+  $.get("/index.php?c=api&method=check_weak_password",function(data,status){
+    if (data.err_msg === 'Weak password!') {
+      layui.use('layer', function(){
+        var layer = layui.layer;
+        
+        layer.open({
+          title:'风险提示！',
+          content: '系统检测到您使用的默认密码，请参考<a href = "https://dwz.ovh/ze1ts" target = "_blank" style = "color:#01AAED;">帮助文档</a>尽快修改！' //这里content是一个普通的String
+        });
+      });   
+    }
+  });
 }

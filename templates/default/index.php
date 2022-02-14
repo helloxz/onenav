@@ -100,6 +100,22 @@
 			<div class="mdui-list-item-content category-name"><i class="fa fa-user-circle"></i> About</div>
 			</li>
 		</a>
+		
+		<?php
+			if ( !is_login() ) {
+		?>
+		<a href="/index.php?c=login" title="手机登录" class="mdui-hidden-sm-up">
+			<li class="mdui-list-item mdui-ripple">
+			<div class="mdui-list-item-content category-name"><i class="fa fa-dashboard"></i> 登录</div>
+			</li>
+		</a>
+		<?php } else { ?>
+		<a href="/index.php?c=admin&page=logout" title="退出" class="mdui-hidden-sm-up">
+			<li class="mdui-list-item mdui-ripple">
+			<div class="mdui-list-item-content category-name"><i class="fa fa-dashboard"></i> 退出</div>
+		</li>
+		</a>
+		<?php } ?>
 	  </ul>
 	</div>
 	<!--左侧抽屉导航END-->
@@ -179,7 +195,7 @@
 	<!--正文内容部分END-->
 	<!-- footer部分 -->
 	<footer>
-		© 2021 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
+		© 2022 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
 	</footer>
 	<!-- footerend -->
 </body>

@@ -12,7 +12,17 @@ $c = strip_tags($c);
 //$version = @file_get_contents("./functions/version.txt");
 //载入配置文件
 if( !file_exists('./data/config.php') ) {
-	exit('<h3>配置文件不存在，请将站点目录下的config.simple.php复制为data/config.php</h3>');
+	echo "<p>正在准备安装，请稍等...</p>";
+	//复制配置文件
+	if ( copy('config.simple.php','data/config.php') ) {
+		//跳转到登录页面
+		header("Refresh:3;url=/index.php?c=login");
+		exit();
+	} else{
+		exit("<p>复制配置文件失败，请检查权限是否正常，或手动将站点目录下的config.simple.php复制为data/config.php</p>");
+	}
+	
+	//exit('<h3>配置文件不存在，请将站点目录下的config.simple.php复制为data/config.php</h3>');
 }
 //检查数据库是否存在，不存在则复制数据库
 if( !file_exists('./data/onenav.db3') ) {
