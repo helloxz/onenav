@@ -1,6 +1,6 @@
 <div class="layui-footer">
     <!-- 底部固定区域 -->
-    © Copyright 2021.Powered by <a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank">OneNav</a>.
+    © Copyright 2022.Powered by <a href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank">OneNav</a>.
   </div>
 </div>
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>

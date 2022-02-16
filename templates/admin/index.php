@@ -40,3 +40,6 @@
   </div>
   
 <?php include_once('footer.php'); ?>
+<script>
+  check_weak_password();
+</script>

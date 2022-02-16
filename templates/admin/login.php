@@ -44,6 +44,10 @@
   <div class="layui-form-item">
     <button class="layui-btn" lay-submit lay-filter="login" style = "width:100%;">登录</button>
   </div>
+  
+  <div class="layui-form-item layui-hide-sm layui-hide-md layui-hide-lg">
+    <button class="layui-btn" lay-submit lay-filter="mobile_login" style = "width:100%;">手机登录</button>
+  </div>
 
   
 </form>
