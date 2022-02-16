@@ -11,7 +11,7 @@ $key = md5($username.$password.'onenav');
 $cookie = $_COOKIE['key'];
 
 //如果已经登录，直接跳转
-if( $cookie == $key ){
+if( $cookie === $key ){
     header('location:index.php?c=admin');
     exit;
 }
@@ -21,7 +21,7 @@ if( $_GET['check'] == 'login' ) {
     $user = $_POST['user'];
     $pass = $_POST['password'];
     header('Content-Type:application/json; charset=utf-8');
-    if( ($user == $username) && ($pass == $password) ) {
+    if( ($user === $username) && ($pass === $password) ) {
         $key = md5($username.$password.'onenav');
         setcookie("key", $key, time()+30 * 24 * 60 * 60,"/");
         $data = [
