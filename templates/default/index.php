@@ -90,7 +90,7 @@
 		?>
 		<a href="#category-<?php echo $category['id']; ?>">
 			<li class="mdui-list-item mdui-ripple">
-				<div class="mdui-list-item-content category-name"><?php echo $category['name']; ?></div>
+				<div class="mdui-list-item-content category-name"><?php echo htmlspecialchars_decode($category['name']); ?></div>
 			</li>
 		</a>
 	    
@@ -146,7 +146,7 @@
                 }
             ?>
 			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title">
-				<?php echo $category['name']; ?> <?php echo $property; ?>
+				<?php echo htmlspecialchars_decode($category['name']); ?> <?php echo $property; ?>
 				<span class = "mdui-typo-caption"><?php echo $category['description']; ?></span>
 			</div>
 			<!-- 遍历链接 -->
