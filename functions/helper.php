@@ -28,7 +28,7 @@ function is_login(){
     //获取session
     $session = $_COOKIE['key'];
     //如果已经成功登录
-    if($session == $key) {
+    if($session === $key) {
         return true;
     }
     else{
