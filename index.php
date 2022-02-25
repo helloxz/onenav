@@ -2,7 +2,6 @@
 /**
  * name:入口文件
  */
-
 error_reporting(E_ALL^E_NOTICE^E_WARNING^E_DEPRECATED);
 //获取控制器
 $c = @$_GET['c'];
@@ -43,5 +42,15 @@ if((!isset($c)) || ($c == '')){
 }
 
 else{
-	include_once("./controller/".$c.'.php');
+	//对请求参数进行过滤，同时检查文件是否存在
+	$c = str_replace('../','',$c);
+	$c = str_replace('./','',$c);
+	//控制器文件
+	$controller_file = "./controller/".$c.'.php';
+	if( file_exists($controller_file) ) {
+		include_once($controller_file);
+	} else{
+		exit('Controller not exist!');
+	}
+	
 }

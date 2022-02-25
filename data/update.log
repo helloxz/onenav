@@ -35,3 +35,6 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 
 20220221
 1. 修复默认主题字体图标不显示
+
+20220225
+1. 修复一处安全漏洞
