@@ -194,6 +194,7 @@
 	<div class="mdui-divider" style = "margin-top:2em;"></div>
 	<!--正文内容部分END-->
 	<!-- footer部分 -->
+	<!-- 未经作者授权，请勿去掉版权，否则可能影响作者更新代码的积极性或直接放弃维护此项目。 -->
 	<footer>
 		© 2022 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
 	</footer>

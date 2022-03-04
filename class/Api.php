@@ -417,27 +417,59 @@ class Api {
     }
     /**
      * 查询链接
+     * 接收一个数组作为参数
      */
-    public function link_list($page,$limit,$token = ''){
-        $offset = ($page - 1) * $limit;
+    public function link_list($data){
+        $limit = $data['limit'];
+        $token = $data['token'];
+        $offset = ($data['page'] - 1) * $data['limit'];
+        $fid = @$data['category_id'];
+        
+        //如果存在分类ID，则根据分类ID进行查询
+        if ($data['category_id'] != null) {
+            
+            $cid_sql = "WHERE fid = $fid";
+            //统计链接总数
+            $count = $this->db->count('on_links','*',[
+                'fid'   =>  $fid
+            ]);
+        }
+        else{
+            //统计链接总数，没有分类ID的情况
+            $count = $this->db->count('on_links','*');
+        }
         //如果成功登录，但token为空
         if( ($this->is_login()) && (empty($token)) ){
-            //统计总数
-            $count = $this->db->count('on_links','*');
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ${cid_sql} ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         
         //如果token验证通过
         elseif( (!empty($token)) && ($this->auth($token)) ) {
-            //统计总数
-            $count = $this->db->count('on_links','*');
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ${cid_sql} ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
+        //如果即没有登录成功，又没有token，则默认为游客
         else{
-            //统计总数
-            $count = $this->db->count('on_links','*',[ 'property'   =>  0 ]);
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $cid_sql = empty($fid) ? null : "AND fid = $fid";
+            if($cid_sql == null) {
+                //统计链接总数，不存在分类ID的情况
+                $count = $this->db->count('on_links','*',[ 'property'   =>  0 ]);
+            }
+            else{
+                //统计链接总数，存在分类ID的情况
+                $count = $this->db->count('on_links','*',[ 
+                    'property'  =>  0,
+                    'fid'       =>  $fid 
+                ]);
+            }
+            
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 ${cid_sql} ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
+
+        //打印SQL
+        //echo $sql;
+
+        //如果查询的总数大于limit，则以limit为准
+        $count = ( $count > $limit) ? $limit : $count;
        
         //原生查询
         $datas = $this->db->query($sql)->fetchAll();
@@ -447,6 +479,47 @@ class Api {
             'count'     =>  $count,
             'data'      =>  $datas
         ];
+        exit(json_encode($datas));
+    }
+    /**
+     * 查询单个链接
+     * 此函数接收一个数组
+     */
+    public function get_a_link($data) {
+        $id = $data['id'];
+        $token = $data['token'];
+        $link_info = $this->db->get("on_links","*",[
+            "id"    =>  $id
+        ]);
+        //打印链接信息
+        //var_dump($link_info);
+        //如果是公开链接，则直接返回
+        if ( $link_info['property'] == "0" ) {
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  $link_info
+            ];
+            
+        }
+        //如果是私有链接，并且认证通过
+        elseif( $link_info['property'] == "1" ) {
+            if ( $this->auth($token) ) {
+                $datas = [
+                    'code'      =>  0,
+                    'data'      =>  $link_info
+                ];
+            }
+            
+            //exit(json_encode($datas));
+        }
+        //如果是其它情况，则显示为空
+        else{
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  []
+            ];
+            //exit(json_encode($datas));
+        }
         exit(json_encode($datas));
     }
     /**

@@ -23,7 +23,8 @@ if( $_GET['check'] == 'login' ) {
     header('Content-Type:application/json; charset=utf-8');
     if( ($user === $username) && ($pass === $password) ) {
         $key = md5($username.$password.'onenav');
-        setcookie("key", $key, time()+30 * 24 * 60 * 60,"/");
+        //开启httponly支持
+        setcookie("key", $key, time()+30 * 24 * 60 * 60,"/",NULL,false,TRUE);
         $data = [
             'code'      =>  0,
             'msg'   =>  'successful'

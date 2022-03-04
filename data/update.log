@@ -38,3 +38,8 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 
 20220225
 1. 修复一处安全漏洞
+
+20220304
+1. 新增HttpOnly支持
+2. API新增查询单个链接信息get_a_link
+3. API支持查询指定分类下的链接link_list，传递参数category_id
