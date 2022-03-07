@@ -631,6 +631,76 @@ class Api {
             $this->err_msg(-1,'Weak password!');
         }
     }
+    /**
+     * 获取SQL更新列表
+     * 循环读取db/sql/目录下的.sql文件
+     */
+    public function get_sql_update_list($data) {
+        //待升级的数据库文件目录
+        $sql_dir = 'db/sql/';
+        //sql文件列表，默认为空
+        $sql_files_all = [];
+        //打开一个目录，读取里面的文件列表
+        if (is_dir($sql_dir)){
+            if ($dh = opendir($sql_dir)){
+                while (($file = readdir($dh)) !== false){
+                //排除.和..
+                if ( ($file != ".") && ($file != "..") ) {
+                    array_push($sql_files_all,$file);
 
+                }
+            }
+                //关闭句柄
+                closedir($dh);
+            }
+        }
+        //判断数据库日志表是否存在
+        $sql = "SELECT count(*) AS num FROM sqlite_master WHERE type='table' AND name='on_db_logs'";
+        //查询结果
+        $q_result = $this->db->query($sql)->fetchAll();
+        //如果数量为0，则说明on_db_logs这个表不存在，需要提前导入
+        $num = intval($q_result[0]['num']);
+        if ( $num === 0 ) {
+            $data = [
+                "code"      =>  0,
+                "data"      =>  ['on_db_logs']
+            ];
+            exit(json_encode($data));
+        }
+
+    }
+    /**
+     * 执行SQL更新语句，只执行单条更新
+     */
+    public function exe_sql($data) {
+        //数据库sql目录
+        $sql_dir = 'db/sql/';
+        $name = $data['name'];
+        $sql_name = $sql_dir.$name.'.sql';
+        //如果文件不存在，直接返回错误
+        if ( !file_exists($sql_name) ) {
+            $this->err_msg(-2000,$name.'.sql不存在!');
+        }
+        //读取需要更新的SQL内容
+        try {
+            $sql_content = file_get_contents($sql_name);
+            $result = $this->db->query($sql_content);
+            //如果SQL执行成功，则返回
+            if( $result ) {
+                $data = [
+                    "code"      =>  0,
+                    "data"      =>  $name.".sql更新完成！"
+                ];
+                exit(json_encode($data));
+            }
+            else{
+                //如果执行失败
+                $this->err_msg(-2000,$name.".sql更新失败，请人工检查！");
+            }
+        } catch(Exception $e){
+            $this->err_msg(-2000,$e->getMessage());
+        }
+    }
+    
 }
 

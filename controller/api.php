@@ -57,6 +57,12 @@ switch ($method) {
     case 'get_a_link':
         get_a_link($api);
         break;
+    case 'get_sql_update_list':
+        get_sql_update_list($api);
+        break;
+    case 'exe_sql':
+        exe_sql($api);
+        break;
     default:
         # code...
         break;
@@ -241,4 +247,16 @@ function check_weak_password($api) {
     //获取token
     $token = $_POST['token'];
     $api->check_weak_password($token);
+}
+
+//获取sql更新列表
+function get_sql_update_list($api){
+    $data = [];
+    $api->get_sql_update_list($data);
+}
+
+//执行SQL更新
+function exe_sql($api) {
+    $data['name'] = htmlspecialchars(trim($_GET['name']));
+    $api->exe_sql($data);
 }
