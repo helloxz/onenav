@@ -4,7 +4,7 @@ CREATE TABLE on_db_logs (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	sql_name TEXT(32) NOT NULL,
 	update_time NUMERIC NOT NULL,
-	status TEXT(5) DEFAULT true NOT NULL,
+	status TEXT(5) DEFAULT "TRUE" NOT NULL,
 	extra TEXT(512),
 	CONSTRAINT on_db_logs_UN UNIQUE (sql_name)
 );

@@ -666,6 +666,25 @@ class Api {
                 "data"      =>  ['on_db_logs']
             ];
             exit(json_encode($data));
+        }else{
+            //如果不为0，则需要进行比对
+            $get_on_db_logs = $this->db->select("on_db_logs",[
+                "sql_name"
+            ],[
+                "status"    =>  "TRUE"
+            ]);
+            //声明一个空数组，存储已更新的数据库
+            $already_dbs = [];
+            foreach ($get_on_db_logs as $key => $value) {
+                array_push($already_dbs,$value['sql_name']);
+            }
+            //array_diff() 函数返回两个数组的差集数组
+            $diff_result = array_diff($sql_files_all,$already_dbs);
+            $data = [
+                "code"      =>  0,
+                "data"      =>  $diff_result
+            ];
+            exit(json_encode($data));
         }
 
     }
@@ -687,11 +706,22 @@ class Api {
             $result = $this->db->query($sql_content);
             //如果SQL执行成功，则返回
             if( $result ) {
-                $data = [
-                    "code"      =>  0,
-                    "data"      =>  $name.".sql更新完成！"
-                ];
-                exit(json_encode($data));
+                //将更新信息写入数据库
+                $insert_re = $this->db->insert("on_db_logs",[
+                    "sql_name"      =>  $name.'.sql',
+                    "update_time"   =>  time()
+                ]);
+                if( $insert_re ) {
+                    $data = [
+                        "code"      =>  0,
+                        "data"      =>  $name.".sql更新完成！"
+                    ];
+                    exit(json_encode($data));
+                }
+                else {
+                    $this->err_msg(-2000,$name.".sql更新失败，请人工检查！");
+                }
+                
             }
             else{
                 //如果执行失败
