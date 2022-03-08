@@ -54,6 +54,15 @@ switch ($method) {
     case 'check_weak_password':
         check_weak_password($api);
         break;
+    case 'get_a_link':
+        get_a_link($api);
+        break;
+    case 'get_sql_update_list':
+        get_sql_update_list($api);
+        break;
+    case 'exe_sql':
+        exe_sql($api);
+        break;
     default:
         # code...
         break;
@@ -75,7 +84,9 @@ function add_category($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     //描述过滤
     $description = htmlspecialchars($description);
-    $api->add_category($token,$name,$property,$weight,$description);
+    //获取字体图标
+    $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    $api->add_category($token,$name,$property,$weight,$description,$font_icon);
 }
 /**
  * 修改分类目录入口
@@ -96,7 +107,9 @@ function edit_category($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     //描述过滤
     $description = htmlspecialchars($description);
-    $api->edit_category($token,$id,$name,$property,$weight,$description);
+    //字体图标
+    $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon);
 }
 /**
  * 删除分类目录
@@ -173,11 +186,19 @@ function link_list($api){
     $limit = empty(intval($_GET['limit'])) ? 10 : intval($_GET['limit']);
     //获取token
     $token = $_POST['token'];
-    $api->link_list($page,$limit,$token);
+    //获取分类ID
+    $category_id = empty($_POST['category_id']) ? null : intval($_POST['category_id']);
+    $data = [
+        'page'          =>  $page,
+        'limit'         =>  $limit,
+        'token'         =>  $token,
+        'category_id'   =>  $category_id
+    ];
+    $api->link_list($data);
 }
 
 /**
- * 获取链接信息
+ * 获取链接标题、描述等信息
  */
 function get_link_info($api) {
     //获取token
@@ -185,6 +206,17 @@ function get_link_info($api) {
     //获取URL
     $url = @$_POST['url'];
     $api->get_link_info($token,$url);
+}
+
+/**
+ * 获取一个链接的信息，指存储在数据库的信息
+ */
+function get_a_link($api) {
+    //获取token
+    $data['token'] = htmlspecialchars($_POST['token']);
+    //获取链接的ID
+    $data['id'] = intval(htmlspecialchars($_GET['id']));
+    $api->get_a_link($data);
 }
 
 /**
@@ -219,4 +251,16 @@ function check_weak_password($api) {
     //获取token
     $token = $_POST['token'];
     $api->check_weak_password($token);
+}
+
+//获取sql更新列表
+function get_sql_update_list($api){
+    $data = [];
+    $api->get_sql_update_list($data);
+}
+
+//执行SQL更新
+function exe_sql($api) {
+    $data['name'] = htmlspecialchars(trim($_GET['name']));
+    $api->exe_sql($data);
 }

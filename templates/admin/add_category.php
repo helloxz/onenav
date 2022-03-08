@@ -12,6 +12,14 @@
       <input type="text" name="name" required  lay-verify="required" placeholder="请输入分类名称" autocomplete="off" class="layui-input">
     </div>
   </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">字体图标</label>
+    <div class="layui-input-block">
+      <input type="text" name="font_icon" placeholder="请输入字体图标，如：fa fa-bookmark-o" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+
   <div class="layui-form-item">
     <label class="layui-form-label">权重</label>
     <div class="layui-input-block">
@@ -40,6 +48,7 @@
     </div>
   </div>
 </form>
+<p>关于字体图标的说明请参考帮助文档：<a href="https://dwz.ovh/7nr1f" target = "_blank" title = "字体图标使用说明">https://dwz.ovh/7nr1f</a></p>
     </div>
     
 </div>

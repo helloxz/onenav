@@ -86,11 +86,11 @@
 			//遍历分类目录并显示
 			foreach ($categorys as $category) {
 			//var_dump($category);
-			
+			$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
 		?>
 		<a href="#category-<?php echo $category['id']; ?>">
 			<li class="mdui-list-item mdui-ripple">
-				<div class="mdui-list-item-content category-name"><?php echo htmlspecialchars_decode($category['name']); ?></div>
+				<div class="mdui-list-item-content category-name"><?php echo $font_icon; ?><?php echo htmlspecialchars_decode($category['name']); ?></div>
 			</li>
 		</a>
 	    
@@ -137,6 +137,7 @@
             <?php foreach ( $categorys as $category ) {
                 $fid = $category['id'];
                 $links = get_links($fid);
+				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
                 //如果分类是私有的
                 if( $category['property'] == 1 ) {
                     $property = '<i class="fa fa-expeditedssl" style = "color:#5FB878"></i>';
@@ -146,6 +147,7 @@
                 }
             ?>
 			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title">
+				<?php echo $font_icon; ?>
 				<?php echo htmlspecialchars_decode($category['name']); ?> <?php echo $property; ?>
 				<span class = "mdui-typo-caption"><?php echo $category['description']; ?></span>
 			</div>
@@ -194,6 +196,7 @@
 	<div class="mdui-divider" style = "margin-top:2em;"></div>
 	<!--正文内容部分END-->
 	<!-- footer部分 -->
+	<!-- 未经作者授权，请勿去掉版权，否则可能影响作者更新代码的积极性或直接放弃维护此项目。 -->
 	<footer>
 		© 2022 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
 	</footer>

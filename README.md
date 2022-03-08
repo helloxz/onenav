@@ -42,7 +42,7 @@ docker run -itd --name="onenav" -p 80:80 \
 * `PASSWORD`：设置密码，上述设置为`xiaoz.me`
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
 
-> 更多说明，请参考帮助文档：https://www.yuque.com/helloz/onenav
+> 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
 ## Demo
 

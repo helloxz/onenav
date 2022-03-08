@@ -430,3 +430,40 @@ function check_weak_password(){
     }
   });
 }
+
+//获取待更新数据库列表,http://onenav.com/index.php?c=api&method=exe_sql&name=on_db_logs.sql
+function get_sql_update_list() {
+  $("#console_log").append("正在检查数据库更新...\n");
+  $.get("index.php?c=api&method=get_sql_update_list",function(data,status){
+
+    if ( data.code == 0 ) {
+      //如果没有可用更新，直接结束
+      if ( data.data.length == 0 ) {
+        $("#console_log").append("当前无可用更新！\n");
+        return false;
+      }
+      else{
+        $("#console_log").append("检查到可更新SQL列表：\n");
+        $("#console_log").append("正在准备更新...\n");
+        for(i in data.data) {
+          sqlname = data.data[i];
+          //$("#console_log").append(data.data[i] + "\n");
+          exe_sql(sqlname);
+        }
+      }
+    }
+  });
+}
+
+//更新SQL函数
+function exe_sql(sqlname) {
+  $.ajax({ url: "index.php?c=api&method=exe_sql&name=" + sqlname, async:false, success: function(data,status){
+    if( data.code == 0 ){
+      $("#console_log").append(sqlname + "更新完毕！\n");
+    }
+    else {
+      $("#console_log").append(sqlname + "更新失败！\n");
+    }
+  }});
+}
+
