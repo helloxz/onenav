@@ -1,11 +1,14 @@
 # OneNav
-使用PHP + SQLite 3开发的简约导航/书签管理器，xiaoz新作，欢迎体验。
+
+使用PHP + SQLite 3开发的书签管理器（导航），界面简洁，安装简单，使用方便。
 
 ![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
 
 ![](https://i.bmp.ovh/imgs/2021/04/5c46f84f158d8d3a.png)
 
-![](https://i.bmp.ovh/imgs/2020/12/7a1eee25c16d2d81.png)
+![](https://img.rss.ink/imgs/2022/03/cba9f1946776a8f0.png)
+
+![](https://img.rss.ink/imgs/2022/03/4b1d6c95484e69bc.png)
 
 ![](https://i.bmp.ovh/imgs/2020/12/abba0af566f3c16a.png)
 
@@ -13,7 +16,7 @@
 
 * 支持后台管理
 * 支持私有链接
-* 支持书签批量导入
+* 支持Chrome/Firefox/Edge书签批量导入
 * 支持多种主题风格
 * 支持链接信息自动识别
 * 支持API
