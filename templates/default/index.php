@@ -137,6 +137,7 @@
             <?php foreach ( $categorys as $category ) {
                 $fid = $category['id'];
                 $links = get_links($fid);
+				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
                 //如果分类是私有的
                 if( $category['property'] == 1 ) {
                     $property = '<i class="fa fa-expeditedssl" style = "color:#5FB878"></i>';
