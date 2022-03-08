@@ -34,6 +34,14 @@
           <div class="layui-col-lg4">
             <div class = "admin-msg">捐赠地址: <a href="https://dwz.ovh/donation" rel = "nofollow" target="_blank">https://dwz.ovh/donation</a></div>
           </div>
+
+          <!-- 日志输出窗口 -->
+          <div class="layui-col-lg12">
+            <p><h3 style = "padding-bottom:1em;">日志输出：</h3></p>
+            <textarea id = "console_log" name="desc" rows="20" placeholder="日志输出控制台" class="layui-textarea" readonly="readonly"></textarea>
+          </div>
+          <!-- 日志输出窗口END -->
+
         </div>
       </div>
     </div>
@@ -42,4 +50,5 @@
 <?php include_once('footer.php'); ?>
 <script>
   check_weak_password();
+  get_sql_update_list();
 </script>

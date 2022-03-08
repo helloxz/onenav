@@ -86,11 +86,11 @@
 			//遍历分类目录并显示
 			foreach ($categorys as $category) {
 			//var_dump($category);
-			
+			$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
 		?>
 		<a href="#category-<?php echo $category['id']; ?>">
 			<li class="mdui-list-item mdui-ripple">
-				<div class="mdui-list-item-content category-name"><?php echo htmlspecialchars_decode($category['name']); ?></div>
+				<div class="mdui-list-item-content category-name"><?php echo $font_icon; ?><?php echo htmlspecialchars_decode($category['name']); ?></div>
 			</li>
 		</a>
 	    
@@ -146,6 +146,7 @@
                 }
             ?>
 			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title">
+				<?php echo $font_icon; ?>
 				<?php echo htmlspecialchars_decode($category['name']); ?> <?php echo $property; ?>
 				<span class = "mdui-typo-caption"><?php echo $category['description']; ?></span>
 			</div>

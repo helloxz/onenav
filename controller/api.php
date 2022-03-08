@@ -84,7 +84,9 @@ function add_category($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     //描述过滤
     $description = htmlspecialchars($description);
-    $api->add_category($token,$name,$property,$weight,$description);
+    //获取字体图标
+    $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    $api->add_category($token,$name,$property,$weight,$description,$font_icon);
 }
 /**
  * 修改分类目录入口
@@ -105,7 +107,9 @@ function edit_category($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     //描述过滤
     $description = htmlspecialchars($description);
-    $api->edit_category($token,$id,$name,$property,$weight,$description);
+    //字体图标
+    $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon);
 }
 /**
  * 删除分类目录

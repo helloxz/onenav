@@ -15,14 +15,15 @@ class Api {
     /**
      * name:创建分类目录
      */
-    public function add_category($token,$name,$property = 0,$weight = 0,$description = ''){
+    public function add_category($token,$name,$property = 0,$weight = 0,$description = '',$font_icon = ''){
         $this->auth($token);
         $data = [
             'name'          =>  htmlspecialchars($name,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
             'property'      =>  $property,
-            'description'   =>  htmlspecialchars($description,ENT_QUOTES)
+            'description'   =>  htmlspecialchars($description,ENT_QUOTES),
+            'font_icon'     =>  $font_icon
         ];
         //插入分类目录
         $this->db->insert("on_categorys",$data);
@@ -46,7 +47,7 @@ class Api {
      * 修改分类目录
      * 
      */
-    public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = ''){
+    public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = '',$font_icon = ''){
         $this->auth($token);
         //如果id为空
         if( empty($id) ){
@@ -63,7 +64,8 @@ class Api {
                 'up_time'      =>  time(),
                 'weight'        =>  $weight,
                 'property'      =>  $property,
-                'description'   =>  htmlspecialchars($description,ENT_QUOTES)
+                'description'   =>  htmlspecialchars($description,ENT_QUOTES),
+                'font_icon'     =>  $font_icon
             ];
             $re = $this->db->update('on_categorys',$data,[ 'id' => $id]);
             //var_dump( $this->db->log() );
@@ -636,9 +638,13 @@ class Api {
      * 循环读取db/sql/目录下的.sql文件
      */
     public function get_sql_update_list($data) {
-        //待升级的数据库文件目录
+        //鉴权
+        if( !$this->is_login() ) {
+            $this->err_msg(-1002,'Authorization failure!');
+        }
+        //待更新的数据库文件目录
         $sql_dir = 'db/sql/';
-        //sql文件列表，默认为空
+        //待更新的sql文件列表，默认为空
         $sql_files_all = [];
         //打开一个目录，读取里面的文件列表
         if (is_dir($sql_dir)){
@@ -663,23 +669,28 @@ class Api {
         if ( $num === 0 ) {
             $data = [
                 "code"      =>  0,
-                "data"      =>  ['on_db_logs']
+                "data"      =>  ['on_db_logs.sql']
             ];
             exit(json_encode($data));
         }else{
-            //如果不为0，则需要进行比对
+            //如果不为0，则需要查询数据库更新表里面的数据进行差集比对
             $get_on_db_logs = $this->db->select("on_db_logs",[
                 "sql_name"
             ],[
                 "status"    =>  "TRUE"
             ]);
-            //声明一个空数组，存储已更新的数据库
+            //声明一个空数组，存储已更新的数据库列表
             $already_dbs = [];
-            foreach ($get_on_db_logs as $key => $value) {
+            foreach ($get_on_db_logs as $value) {
                 array_push($already_dbs,$value['sql_name']);
             }
+            
             //array_diff() 函数返回两个数组的差集数组
             $diff_result = array_diff($sql_files_all,$already_dbs);
+            //去掉键
+            $diff_result = array_values($diff_result);
+            sort($diff_result);
+            
             $data = [
                 "code"      =>  0,
                 "data"      =>  $diff_result
@@ -692,13 +703,17 @@ class Api {
      * 执行SQL更新语句，只执行单条更新
      */
     public function exe_sql($data) {
+        //鉴权
+        if( !$this->is_login() ) {
+            $this->err_msg(-1002,'Authorization failure!');
+        }
         //数据库sql目录
         $sql_dir = 'db/sql/';
         $name = $data['name'];
-        $sql_name = $sql_dir.$name.'.sql';
+        $sql_name = $sql_dir.$name;
         //如果文件不存在，直接返回错误
         if ( !file_exists($sql_name) ) {
-            $this->err_msg(-2000,$name.'.sql不存在!');
+            $this->err_msg(-2000,$name.'不存在!');
         }
         //读取需要更新的SQL内容
         try {
@@ -708,24 +723,24 @@ class Api {
             if( $result ) {
                 //将更新信息写入数据库
                 $insert_re = $this->db->insert("on_db_logs",[
-                    "sql_name"      =>  $name.'.sql',
+                    "sql_name"      =>  $name,
                     "update_time"   =>  time()
                 ]);
                 if( $insert_re ) {
                     $data = [
                         "code"      =>  0,
-                        "data"      =>  $name.".sql更新完成！"
+                        "data"      =>  $name."更新完成！"
                     ];
                     exit(json_encode($data));
                 }
                 else {
-                    $this->err_msg(-2000,$name.".sql更新失败，请人工检查！");
+                    $this->err_msg(-2000,$name."更新失败，请人工检查！");
                 }
                 
             }
             else{
                 //如果执行失败
-                $this->err_msg(-2000,$name.".sql更新失败，请人工检查！");
+                $this->err_msg(-2000,$name."更新失败，请人工检查！");
             }
         } catch(Exception $e){
             $this->err_msg(-2000,$e->getMessage());
