@@ -535,9 +535,13 @@ a {
 	display: block;
 	width: 25px;
 	height: 25px;
+	margin: auto;
 	text-align: center;
 	line-height: 25px;
-	margin-right: 10px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
 }
 
 .site-main .site-list .list span i {

@@ -193,7 +193,7 @@
 			© 2022 BaiSu,Powered by
 			<a target="_blank" href="https://github.com/helloxz/onenav" title="简约导航/书签管理器" rel="nofollow">OneNav</a>
 			<br> The theme author is
-			<a href="https://gitee.com/baisucode/onenav-theme" target="_blank">BaiSu</a>
+			<a href="https://gitee.com/baisucode/onenav" target="_blank">BaiSu</a>
 
 		</footer>
 		<!--底部版权 E-->
