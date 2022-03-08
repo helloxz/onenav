@@ -724,7 +724,8 @@ class Api {
                 //将更新信息写入数据库
                 $insert_re = $this->db->insert("on_db_logs",[
                     "sql_name"      =>  $name,
-                    "update_time"   =>  time()
+                    "update_time"   =>  time(),
+                    "status"        =>  "TRUE"
                 ]);
                 if( $insert_re ) {
                     $data = [
