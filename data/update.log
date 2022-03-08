@@ -48,3 +48,4 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 1. 新增数据库更新功能
 2. 初始数据库更新
 3. 分离分类图标字体设置
+4. 集成baisuTwo主题
