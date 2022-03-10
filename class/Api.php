@@ -471,7 +471,7 @@ class Api {
         //echo $sql;
 
         //如果查询的总数大于limit，则以limit为准
-        $count = ( $count > $limit) ? $limit : $count;
+        //$count = ( $count > $limit) ? $limit : $count;
        
         //原生查询
         $datas = $this->db->query($sql)->fetchAll();

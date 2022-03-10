@@ -1,7 +1,7 @@
 <?php
 /**
- * name:API入口文件
- * update:2020/12
+ * name:API入口文件，也可以称之为中间件
+ * update:2022/03
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
@@ -14,59 +14,17 @@ $api = new Api($db);
 
 //获取请求方法
 $method = $_GET['method'];
-//对方法进行判断，对应URL路由：/index.php?c=api&method=xxx
-switch ($method) {
-    case 'add_category':
-        add_category($api);
-        break;
-    case 'edit_category':
-        edit_category($api);
-        break;
-    case 'del_category':
-        del_category($api);
-        break;
-    case 'add_link':
-        add_link($api);
-        break;
-    case 'edit_link':
-        edit_link($api);
-        break;
-    case 'del_link':
-        del_link($api);
-        break;
-    case 'category_list':
-        category_list($api);
-        break;
-    case 'link_list':
-        link_list($api);
-        break;
-    case 'get_link_info':
-        get_link_info($api);
-        break;
-    case 'add_js':
-        add_js($api);
-        break;
-    case 'upload':
-        upload($api);
-        break;
-    case 'imp_link':
-        imp_link($api);
-    case 'check_weak_password':
-        check_weak_password($api);
-        break;
-    case 'get_a_link':
-        get_a_link($api);
-        break;
-    case 'get_sql_update_list':
-        get_sql_update_list($api);
-        break;
-    case 'exe_sql':
-        exe_sql($api);
-        break;
-    default:
-        # code...
-        break;
+//可变函数变量
+$var_func = htmlspecialchars(trim($method),ENT_QUOTES);
+//判断函数是否存在，存在则条用可变函数，否则抛出错误
+if ( function_exists($var_func) ) {
+    //调用可变函数
+    $var_func($api);
+}else{
+    exit('method not found!');
 }
+
+
 
 /**
  * 添加分类目录入口
