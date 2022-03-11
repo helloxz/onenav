@@ -430,6 +430,24 @@ function check_weak_password(){
     }
   });
 }
+//检测数据库是否可能被下载
+function check_db_down(){
+  $("#console_log").append("正则检查数据库是否可被下载...\n");
+  $.ajax({
+    type:"HEAD",
+    async:false,
+    url:"/data/onenav.db3",
+    statusCode: {
+      200: function() {
+        $("#console_log").append("危险！！！危险！！！危险！！！数据库可被下载，请尽快参考帮助文档：https://dwz.ovh/jvr2t 加固安全设置！\n\n");
+      },
+      403:function() {
+        $("#console_log").append("您的数据库看起来是安全的！\n\n");
+      }
+    }
+  });
+}
+
 
 //获取待更新数据库列表,http://onenav.com/index.php?c=api&method=exe_sql&name=on_db_logs.sql
 function get_sql_update_list() {
@@ -459,7 +477,7 @@ function get_sql_update_list() {
 function exe_sql(sqlname) {
   $.ajax({ url: "index.php?c=api&method=exe_sql&name=" + sqlname, async:false, success: function(data,status){
     if( data.code == 0 ){
-      $("#console_log").append(sqlname + "更新完毕！\n");
+      $("#console_log").append(data.data);
     }
     else {
       $("#console_log").append(sqlname + "更新失败！\n");

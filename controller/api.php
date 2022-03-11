@@ -91,11 +91,12 @@ function add_link($api){
     $fid = intval(@$_POST['fid']);
     $title = $_POST['title'];
     $url = $_POST['url'];
+    $url_standby = $_POST['url_standby'];
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
     
-    $api->add_link($token,$fid,$title,$url,$description,$weight,$property);
+    $api->add_link($token,$fid,$title,$url,$description,$weight,$property,$url_standby);
     
 }
 /**
@@ -111,11 +112,12 @@ function edit_link($api){
     $fid = intval(@$_POST['fid']);
     $title = $_POST['title'];
     $url = $_POST['url'];
+    $url_standby = $_POST['url_standby'];
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
     
-    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property);
+    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby);
     
 }
 
