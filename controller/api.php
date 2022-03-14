@@ -1,7 +1,7 @@
 <?php
 /**
- * name:API入口文件
- * update:2020/12
+ * name:API入口文件，也可以称之为中间件
+ * update:2022/03
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
@@ -14,59 +14,17 @@ $api = new Api($db);
 
 //获取请求方法
 $method = $_GET['method'];
-//对方法进行判断，对应URL路由：/index.php?c=api&method=xxx
-switch ($method) {
-    case 'add_category':
-        add_category($api);
-        break;
-    case 'edit_category':
-        edit_category($api);
-        break;
-    case 'del_category':
-        del_category($api);
-        break;
-    case 'add_link':
-        add_link($api);
-        break;
-    case 'edit_link':
-        edit_link($api);
-        break;
-    case 'del_link':
-        del_link($api);
-        break;
-    case 'category_list':
-        category_list($api);
-        break;
-    case 'link_list':
-        link_list($api);
-        break;
-    case 'get_link_info':
-        get_link_info($api);
-        break;
-    case 'add_js':
-        add_js($api);
-        break;
-    case 'upload':
-        upload($api);
-        break;
-    case 'imp_link':
-        imp_link($api);
-    case 'check_weak_password':
-        check_weak_password($api);
-        break;
-    case 'get_a_link':
-        get_a_link($api);
-        break;
-    case 'get_sql_update_list':
-        get_sql_update_list($api);
-        break;
-    case 'exe_sql':
-        exe_sql($api);
-        break;
-    default:
-        # code...
-        break;
+//可变函数变量
+$var_func = htmlspecialchars(trim($method),ENT_QUOTES);
+//判断函数是否存在，存在则条用可变函数，否则抛出错误
+if ( function_exists($var_func) ) {
+    //调用可变函数
+    $var_func($api);
+}else{
+    exit('method not found!');
 }
+
+
 
 /**
  * 添加分类目录入口
@@ -133,11 +91,12 @@ function add_link($api){
     $fid = intval(@$_POST['fid']);
     $title = $_POST['title'];
     $url = $_POST['url'];
+    $url_standby = $_POST['url_standby'];
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
     
-    $api->add_link($token,$fid,$title,$url,$description,$weight,$property);
+    $api->add_link($token,$fid,$title,$url,$description,$weight,$property,$url_standby);
     
 }
 /**
@@ -153,11 +112,12 @@ function edit_link($api){
     $fid = intval(@$_POST['fid']);
     $title = $_POST['title'];
     $url = $_POST['url'];
+    $url_standby = $_POST['url_standby'];
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
     
-    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property);
+    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby);
     
 }
 
@@ -206,6 +166,18 @@ function get_link_info($api) {
     //获取URL
     $url = @$_POST['url'];
     $api->get_link_info($token,$url);
+}
+
+/**
+ * 根据ID获取单个分类信息
+ */
+function get_a_category($api) {
+    //获取token
+    $data['token'] = @$_POST['token'];
+    //获取分类ID
+    $data['id'] = intval(trim($_POST['id']));
+    //var_dump($data);
+    $api->get_a_category($data);
 }
 
 /**

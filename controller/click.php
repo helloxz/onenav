@@ -13,7 +13,7 @@ if(empty($id)) {
 }
 
 //查询链接信息
-$link = $db->get('on_links',['id','fid','url','property','click'],[
+$link = $db->get('on_links',['id','fid','url','url_standby','property','click','title','description'],[
     'id'    =>  $id
 ]);
 
@@ -29,6 +29,11 @@ $category = $db->get('on_categorys',['id','property'],[
     'id'    =>  $link['fid']
 ]);
 
+//判断用户是否登录
+if( is_login() ) {
+    $is_login = TRUE;
+}
+
 //link.id为公有，且category.id为公有
 if( ( $link['property'] == 0 ) && ($category['property'] == 0) ){
     //增加link.id的点击次数
@@ -42,7 +47,9 @@ if( ( $link['property'] == 0 ) && ($category['property'] == 0) ){
     //如果更新成功
     if($update) {
         //进行header跳转
-        header('location:'.$link['url']);
+        //header('location:'.$link['url']);
+        #加载跳转模板
+        require('templates/admin/click.php');
         exit;
     }
 }
@@ -56,10 +63,13 @@ elseif( is_login() ) {
     ],[
         'id'    =>  $id
     ]);
+    
     //如果更新成功
     if($update) {
         //进行header跳转
-        header('location:'.$link['url']);
+        //header('location:'.$link['url']);
+        #加载跳转模板
+        require('templates/admin/click.php');
         exit;
     }
 }

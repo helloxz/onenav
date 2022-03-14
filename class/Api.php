@@ -153,16 +153,24 @@ class Api {
     /**
      * name:添加链接
      */
-    public function add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0){
+    public function add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = ''){
         $this->auth($token);
         $fid = intval($fid);
         //检测链接是否合法
-        $this->check_link($fid,$title,$url);
+        //$this->check_link($fid,$title,$url);
+        $this->check_link([
+            'fid'           =>  $fid,
+            'title'         =>  $title,
+            'url'           =>  $url,
+            'url_standby'   =>  $url_standby
+        ]);
+        
         //合并数据
         $data = [
             'fid'           =>  $fid,
             'title'         =>  htmlspecialchars($title,ENT_QUOTES),
             'url'           =>  $url,
+            'url_standby'   =>  $url_standby,
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
@@ -190,6 +198,9 @@ class Api {
      * 批量导入链接
      */
     public function imp_link($token,$filename,$fid,$property = 0){
+        //过滤$filename
+        $filename = str_replace('../','',$filename);
+        $filename = str_replace('./','',$filename);
         $this->auth($token);
         //检查文件是否存在
         if ( !file_exists($filename) ) {
@@ -297,11 +308,17 @@ class Api {
     /**
      * name:修改链接
      */
-    public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0){
+    public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = ''){
         $this->auth($token);
         $fid = intval($fid);
         //检测链接是否合法
-        $this->check_link($fid,$title,$url);
+        //$this->check_link($fid,$title,$url);
+        $this->check_link([
+            'fid'           =>  $fid,
+            'title'         =>  $title,
+            'url'           =>  $url,
+            'url_standby'   =>  $url_standby
+        ]);
         //查询ID是否存在
         $count = $this->db->count('on_links',[ 'id' => $id]);
         //如果id不存在
@@ -313,6 +330,7 @@ class Api {
             'fid'           =>  $fid,
             'title'         =>  htmlspecialchars($title,ENT_QUOTES),
             'url'           =>  $url,
+            'url_standby'   =>  $url_standby,
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'up_time'       =>  time(),
             'weight'        =>  $weight,
@@ -365,8 +383,14 @@ class Api {
     }
     /**
      * 验证链接合法性
+     * 接收一个数组作为参数
      */
-    protected function check_link($fid,$title,$url){
+    protected function check_link($data){
+        $fid = $data['fid'];
+        $title = $data['title'];
+        $url = $data['url'];
+        $url_standby = @$data['url_standby'];
+
         //如果父及（分类）ID不存在
         if( empty($fid )) {
             $this->err_msg(-1007,'The category id(fid) not exist!');
@@ -389,6 +413,10 @@ class Api {
         }
         //链接不合法
         if( !filter_var($url, FILTER_VALIDATE_URL) ) {
+            $this->err_msg(-1010,'URL is not valid!');
+        }
+        //备用链接不合法
+        if ( ( !empty($url_standby) ) && ( !filter_var($url_standby, FILTER_VALIDATE_URL) ) ) {
             $this->err_msg(-1010,'URL is not valid!');
         }
         return true;
@@ -471,7 +499,7 @@ class Api {
         //echo $sql;
 
         //如果查询的总数大于limit，则以limit为准
-        $count = ( $count > $limit) ? $limit : $count;
+        //$count = ( $count > $limit) ? $limit : $count;
        
         //原生查询
         $datas = $this->db->query($sql)->fetchAll();
@@ -505,10 +533,53 @@ class Api {
         }
         //如果是私有链接，并且认证通过
         elseif( $link_info['property'] == "1" ) {
-            if ( $this->auth($token) ) {
+            if ( ( $this->auth($token) ) || ( $this->is_login() ) ) {
                 $datas = [
                     'code'      =>  0,
                     'data'      =>  $link_info
+                ];
+            }
+            
+            //exit(json_encode($datas));
+        }
+        //如果是其它情况，则显示为空
+        else{
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  []
+            ];
+            //exit(json_encode($datas));
+        }
+        exit(json_encode($datas));
+    }
+    /**
+     * 查询单个分类信息
+     * 此函数接收一个数组
+     */
+    public function get_a_category($data) {
+        $id = $data['id'];
+        $token = $data['token'];
+
+        $category_info = $this->db->get("on_categorys","*",[
+            "id"    =>  $id
+        ]);
+
+        //var_dump($category_info);
+
+        //如果是公开分类，则直接返回
+        if ( $category_info['property'] == "0" ) {
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  $category_info
+            ];
+            
+        }
+        //如果是私有链接，并且认证通过
+        elseif( $category_info['property'] == "1" ) {
+            if ( ( $this->auth($token) ) || ( $this->is_login() ) ) {
+                $datas = [
+                    'code'      =>  0,
+                    'data'      =>  $category_info
                 ];
             }
             
@@ -717,32 +788,42 @@ class Api {
         }
         //读取需要更新的SQL内容
         try {
-            $sql_content = file_get_contents($sql_name);
-            $result = $this->db->query($sql_content);
-            //如果SQL执行成功，则返回
-            if( $result ) {
-                //将更新信息写入数据库
-                $insert_re = $this->db->insert("on_db_logs",[
-                    "sql_name"      =>  $name,
-                    "update_time"   =>  time(),
-                    "status"        =>  "TRUE"
-                ]);
-                if( $insert_re ) {
-                    $data = [
-                        "code"      =>  0,
-                        "data"      =>  $name."更新完成！"
-                    ];
-                    exit(json_encode($data));
+            //读取一个SQL温江，并将单个SQL文件拆分成单条SQL语句循环执行
+            $sql_content = explode(';',file_get_contents($sql_name));
+            //计算SQL总数
+            $num = count($sql_content) - 1;
+            //初始数量设置为0
+            $init_num = 0;
+            //遍历执行SQL语句
+            foreach ($sql_content as $sql) {
+                //如果SQL为空，则跳过此次循环不执行
+                if( empty($sql) ) {
+                    continue;
                 }
-                else {
-                    $this->err_msg(-2000,$name."更新失败，请人工检查！");
+                $result = $this->db->query($sql);
+                //只要单条SQL执行成功了就增加初始数量
+                if( $result ) {
+                    $init_num++;
                 }
-                
             }
-            else{
-                //如果执行失败
+
+            //无论最后结果如何，都将更新信息写入数据库
+            $insert_re = $this->db->insert("on_db_logs",[
+                "sql_name"      =>  $name,
+                "update_time"   =>  time(),
+                "status"        =>  "TRUE"
+            ]);
+            if( $insert_re ) {
+                $data = [
+                    "code"      =>  0,
+                    "data"      =>  $name."更新完成！总数${num}，成功：${init_num}"
+                ];
+                exit(json_encode($data));
+            }
+            else {
                 $this->err_msg(-2000,$name."更新失败，请人工检查！");
             }
+            
         } catch(Exception $e){
             $this->err_msg(-2000,$e->getMessage());
         }

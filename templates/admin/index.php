@@ -49,6 +49,7 @@
   
 <?php include_once('footer.php'); ?>
 <script>
+  check_db_down();
   check_weak_password();
   get_sql_update_list();
 </script>
