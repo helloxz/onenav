@@ -1,3 +1,4 @@
+// 2022014
 layui.use(['element','table','layer','form','upload'], function(){
     var element = layui.element;
     var table = layui.table;
@@ -345,6 +346,7 @@ layui.use(['element','table','layer','form','upload'], function(){
   upload.render({
     elem: '#up_html' //绑定元素
     ,url: 'index.php?c=api&method=upload' //上传接口
+    ,accept:'file'
     ,exts: 'html|HTML'
     ,done: function(res){
       //console.log(res);
@@ -432,7 +434,7 @@ function check_weak_password(){
 }
 //检测数据库是否可能被下载
 function check_db_down(){
-  $("#console_log").append("正则检查数据库是否可被下载...\n");
+  $("#console_log").append("检查数据库是否可被下载...\n");
   $.ajax({
     type:"HEAD",
     async:false,
@@ -485,3 +487,14 @@ function exe_sql(sqlname) {
   }});
 }
 
+//获取GET参数，参考：https://www.runoob.com/w3cnote/js-get-url-param.html
+function getQueryVariable(variable)
+{
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if(pair[0] == variable){return pair[1];}
+  }
+  return(false);
+}

@@ -37,7 +37,7 @@
     </div>
   </div>
   <div class="layui-form-item">
-    <label class="layui-form-label">选择框</label>
+    <label class="layui-form-label">所属分类</label>
     <div class="layui-input-block">
       <select name="fid" lay-verify="required" lay-search>
         <option value="<?php echo $link['fid'] ?>"><?php echo $cat_name; ?></option>

@@ -198,6 +198,9 @@ class Api {
      * 批量导入链接
      */
     public function imp_link($token,$filename,$fid,$property = 0){
+        //过滤$filename
+        $filename = str_replace('../','',$filename);
+        $filename = str_replace('./','',$filename);
         $this->auth($token);
         //检查文件是否存在
         if ( !file_exists($filename) ) {
@@ -534,6 +537,49 @@ class Api {
                 $datas = [
                     'code'      =>  0,
                     'data'      =>  $link_info
+                ];
+            }
+            
+            //exit(json_encode($datas));
+        }
+        //如果是其它情况，则显示为空
+        else{
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  []
+            ];
+            //exit(json_encode($datas));
+        }
+        exit(json_encode($datas));
+    }
+    /**
+     * 查询单个分类信息
+     * 此函数接收一个数组
+     */
+    public function get_a_category($data) {
+        $id = $data['id'];
+        $token = $data['token'];
+
+        $category_info = $this->db->get("on_categorys","*",[
+            "id"    =>  $id
+        ]);
+
+        //var_dump($category_info);
+
+        //如果是公开分类，则直接返回
+        if ( $category_info['property'] == "0" ) {
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  $category_info
+            ];
+            
+        }
+        //如果是私有链接，并且认证通过
+        elseif( $category_info['property'] == "1" ) {
+            if ( ( $this->auth($token) ) || ( $this->is_login() ) ) {
+                $datas = [
+                    'code'      =>  0,
+                    'data'      =>  $category_info
                 ];
             }
             

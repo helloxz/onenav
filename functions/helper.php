@@ -35,3 +35,14 @@ function is_login(){
         return false;
     }
 }
+
+//后续全局函数全部以g_命名开头
+function g_extend_js() {
+    //载入js扩展
+    if( file_exists('data/extend.js') ) {
+        echo '<script src = "data/extend.js"></script>';
+    }
+    else{
+        echo '';
+    }
+}

@@ -169,6 +169,18 @@ function get_link_info($api) {
 }
 
 /**
+ * 根据ID获取单个分类信息
+ */
+function get_a_category($api) {
+    //获取token
+    $data['token'] = @$_POST['token'];
+    //获取分类ID
+    $data['id'] = intval(trim($_POST['id']));
+    //var_dump($data);
+    $api->get_a_category($data);
+}
+
+/**
  * 获取一个链接的信息，指存储在数据库的信息
  */
 function get_a_link($api) {
