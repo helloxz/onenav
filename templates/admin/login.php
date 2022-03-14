@@ -58,6 +58,6 @@
 
 <script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
 <script src = 'https://libs.xiaoz.top/layui/v2.5.4/layui.js'></script>
-<script src="templates/admin/static/embed.js></script>
+<script src="templates/admin/static/embed.js"></script>
 </body>
 </html>
