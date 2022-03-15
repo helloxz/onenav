@@ -29,8 +29,8 @@
 
 1. 需安装PHP环境，并确保支持SQLite3
 2. 下载源码解压到站点根目录
-3. 将`config.simple.php`复制为`data/config.php`并填写自己的站点信息
-5. 访问后台：`http://IP/index.php?c=login`
+3. 访问首页自动完成安装
+4. 访问后台：`http://IP/index.php?c=login`
 
 **Docker部署：**
 

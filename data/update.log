@@ -63,3 +63,7 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 1. 新增API：根据ID查询单个分类信息
 2. 修复后台编辑链接，分类信息显示不正确
 3. 书签导入时文件名过滤
+
+20220315
+1. 修复一个任意文件漏洞
+2. baisuTwo主题更新
