@@ -98,27 +98,41 @@ a {
 	padding: 0 25px 100px;
 	overflow: auto;
 }
+
+
 /* 整个滚动条 */
+
 .index-nav .type-list::-webkit-scrollbar {
 	width: 6px;
 	background-color: transparent;
 }
+
+
 /* 滚动条上的按钮 (上下箭头). */
 
 .index-nav .type-list::-webkit-scrollbar-button {
 	height: 0px;
 	width: 0px;
 }
+
+
 /* 滚动条上的滚动滑块. */
+
 .index-nav .type-list::-webkit-scrollbar-thumb {
 	background-color: #64a15e;
 	border-radius: 50px;
 }
+
+
 /*  滚动条轨道. */
+
 .index-nav .type-list::-webkit-scrollbar-track {
 	background-color: transparent;
 }
+
+
 /* 滚动条没有滑块的轨道部分 */
+
 .index-nav .type-list::-webkit-scrollbar-track-piece {
 	background-color: transparent;
 }
@@ -127,24 +141,68 @@ a {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+	margin-bottom: 10px;
+	line-height: 42px;
+	transition: 0.3s all;
+	overflow: hidden;
+}
+
+.index-nav .type-list .list a {
+	width: 80%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 	font-size: 16px;
 	font-weight: bold;
-	padding: 10px;
-	border-radius: 5px;
-	margin-bottom: 10px;
+	padding: 0 10px;
+	border-radius: 5px 0px 0px 5px;
 	color: #555555;
 	transition: 0.3s all;
 }
 
-.index-nav .type-list .list i {
+.index-nav .type-list .list a i {
 	display: block;
 	margin-right: 6px;
 	font-size: 22px;
 }
 
-.index-nav .type-list .list:hover {
+.index-nav .type-list .list span {
+	display: block;
+	width: 0;
+	overflow: hidden;
+	text-align: center;
+	background-color: #477975;
+	cursor: pointer;
+	border-radius: 0px 5px 5px 0px;
+	color: #FFFFFF;
+	transition: 0.3s all;
+}
+
+.index-nav .type-list .list span i {
+	display: block;
+	font-size: 18px;
+	transition: 0.3s all;
+}
+.index-nav .type-list .list.add{
+	margin-top: 12px;
+}
+.index-nav .type-list .list.add a{
+	width: 100%;
+	border: 1px solid #64a15e;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+
+
+.index-nav .type-list .list:hover a {
 	background-color: #64a15e;
 	color: #FFFFFF;
+	transition: 0.3s all;
+}
+
+.index-nav .type-list .list:hover span {
+	width: 20%;
 	transition: 0.3s all;
 }
 
@@ -313,12 +371,14 @@ a {
 	font-size: 20px;
 	color: #64a15e;
 }
-.search-main .search-btnlist{
+
+.search-main .search-btnlist {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: relative;
 }
+
 .search-main button.search-btn {
 	width: 140px;
 	height: 50px;
@@ -334,25 +394,28 @@ a {
 	cursor: pointer;
 	border-right: 1px solid #64a15e;
 }
-.search-main button.search-btn img{
+
+.search-main button.search-btn img {
 	display: block;
 	width: 25px;
 	height: 25px;
 	border-radius: 6px;
 	margin-right: 6px;
 }
+
 .search-main button.search-btn i {
 	display: block;
 	margin-right: 4px;
 	font-size: 20px;
 	line-height: 50px;
 }
+
 .search-main button.search-change {
 	width: 30px;
 	height: 50px;
 	text-align: center;
 	border: none;
-	border-radius:  0px 10px 10px 0px;
+	border-radius: 0px 10px 10px 0px;
 	background-color: #64a15e;
 	color: #ffffff;
 	font-size: 16px;
@@ -367,7 +430,8 @@ a {
 	font-size: 16px;
 	line-height: 50px;
 }
-.search-main .search-btnlist .search-lists{
+
+.search-main .search-btnlist .search-lists {
 	width: 390px;
 	display: flex;
 	justify-content: space-between;
@@ -382,10 +446,12 @@ a {
 	z-index: 100;
 	box-shadow: 0px 0px 6px #000000;
 }
-.search-main .search-btnlist .search-lists.hide{
+
+.search-main .search-btnlist .search-lists.hide {
 	display: none;
 }
-.search-main .search-btnlist .search-lists .list{
+
+.search-main .search-btnlist .search-lists .list {
 	width: 33%;
 	line-height: 40px;
 	padding: 0 10px;
@@ -397,7 +463,8 @@ a {
 	cursor: pointer;
 	transition: 0.3s all;
 }
-.search-main .search-btnlist .search-lists .list img{
+
+.search-main .search-btnlist .search-lists .list img {
 	display: block;
 	width: 20px;
 	height: 20px;
@@ -405,7 +472,7 @@ a {
 	border-radius: 6px;
 }
 
-.search-main .search-btnlist .search-lists .list:hover{
+.search-main .search-btnlist .search-lists .list:hover {
 	background-color: #64a15e;
 	color: #FFFFFF;
 	transition: 0.3s all;
@@ -458,8 +525,6 @@ a {
 .search-main-w .date-main span.weeks {
 	margin-left: 15px;
 }
-
-
 
 .search-main-w .weather-main {
 	width: 240px;
@@ -528,7 +593,7 @@ a {
 	position: relative;
 	display: flex;
 	justify-content: flex-start;
-	align-items: center;
+	align-items: flex-start;
 }
 
 .site-main .site-list .list span {
@@ -589,13 +654,23 @@ a {
 	bottom: 0;
 }
 
+.site-main .site-list .list .desc {
+	display: block;
+	width: 100%;
+	font-size: 13px;
+	padding-bottom: 10px;
+	color: #666;
+	line-height: 1.5;
+}
+
 .site-main .site-list .list:hover {
 	box-shadow: 0px 0px 6px #333;
 	background-color: #64a15e;
 	transition: 0.3s all;
 }
 
-.site-main .site-list .list:hover p.name {
+.site-main .site-list .list:hover p.name,
+.site-main .site-list .list:hover p.desc {
 	color: #ffffff;
 }
 
@@ -636,14 +711,16 @@ footer.show {
 footer a:hover {
 	color: #64a15e !important;
 }
-.tool-list{
+
+.tool-list {
 	position: fixed;
 	bottom: 30px;
 	right: 15px;
 	z-index: 99;
 	width: 45px;
 }
-.tool-list .list{
+
+.tool-list .list {
 	width: 45px;
 	height: 45px;
 	display: block;
@@ -655,12 +732,15 @@ footer a:hover {
 	cursor: pointer;
 	margin-top: 12px;
 }
-.tool-list .list i{
+
+.tool-list .list i {
 	font-size: 20px;
 }
-.tool-list .addsite i{
+
+.tool-list .addsite i {
 	font-size: 24px;
 }
+
 
 /**/
 
@@ -840,7 +920,9 @@ footer a:hover {
 	margin-top: 0;
 }
 
-.m-header{display: none;}
+.m-header {
+	display: none;
+}
 
 
 /*
@@ -848,74 +930,72 @@ footer a:hover {
  */
 
 @media only screen and (max-width: 1200px) {
-	.index-nav{
+	.index-nav {
 		left: -100%;
 		transition: 0.3s all;
 	}
-	.index-nav.show{
+	.index-nav.show {
 		left: 0;
 		transition: 0.3s all;
 	}
-	.index-main{
+	.index-main {
 		padding: 15px !important;
 	}
-	.search-main-w{
+	.search-main-w {
 		width: 100%;
 		height: 120px;
 		margin-top: 60px;
 	}
-	.search-main-w .date-main{
+	.search-main-w .date-main {
 		display: none;
 	}
-	#he-plugin-standard{
+	#he-plugin-standard {
 		display: none;
 	}
-	.search-main{
+	.search-main {
 		width: 100%;
 		padding: 25px 0;
 		flex-wrap: wrap;
 		background-position: center;
 	}
-	.search-main .search-input{
+	.search-main .search-input {
 		width: 80%;
 	}
-	.search-main .search-btnlist{
+	.search-main .search-btnlist {
 		width: 100%;
 		display: none;
 	}
-	.search-main .search-btnlist .search-lists{
+	.search-main .search-btnlist .search-lists {
 		width: 100%;
 		left: 0;
 		right: 0;
 		margin: auto;
 		font-size: 13px;
 	}
-	
-	
-	.site-main .site-name{
+	.site-main .site-name {
 		margin-bottom: 10px;
 	}
-	.site-main .site-list .list{
+	.site-main .site-list .list {
 		width: 48%;
 		margin-bottom: 10px;
 	}
-	.site-main .site-list{
+	.site-main .site-list {
 		margin-bottom: 25px;
 	}
-	.site-main .site-list .list span{
+	.site-main .site-list .list span {
 		position: absolute;
 		right: 0px;
 		top: 0;
 		bottom: 0;
 		margin: auto;
 	}
-	.site-main .site-list .list a{
+	.site-main .site-list .list a {
 		padding: 0 10% 0 5%;
 	}
-	footer{
+	footer {
 		padding-left: 0;
 	}
-	.m-header{
+	.m-header {
 		width: 100%;
 		padding: 10px 15px;
 		display: flex;
@@ -927,14 +1007,14 @@ footer a:hover {
 		z-index: 9999;
 		box-shadow: 0px 0px 1px #C0C4CC;
 	}
-	.m-header .logo{
+	.m-header .logo {
 		height: 30px;
 	}
-	.m-header .logo img{
+	.m-header .logo img {
 		display: block;
 		height: 100%;
 	}
-	.m-header .navbar{
+	.m-header .navbar {
 		display: flex;
 		justify-content: center;
 		flex-direction: column;
@@ -945,5 +1025,40 @@ footer a:hover {
 		border: 1px solid #64a15e;
 		color: #64a15e;
 		border-radius: 6px;
+	}
+	.m-navlist-w {
+		width: 100%;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background-color: #FFFFFF;
+		padding: 15px;
+		display: none;
+		border-top: 1px solid #C0C4CC;
+	}
+	.m-navlist {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+	.m-navlist a.list {
+		width: 33%;
+		padding: 0 10px;
+		line-height: 40px;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	.m-navlist a.list i {
+		display: block;
+		margin-right: 4px;
+	}
+	.addsite-main {
+		width: 100%;
+	}
+	.addsite-main .list.type span {
+		width: 32%;
 	}
 }

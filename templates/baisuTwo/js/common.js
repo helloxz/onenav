@@ -1,5 +1,5 @@
 var bodyH = $('.index-main').height();
-var winH = $(window).height();
+var winH = $(window).height() - 100;
 if(bodyH > winH) {
 	$('footer').addClass('show');
 };
@@ -192,7 +192,7 @@ function keyClick() {
 keyClick();
 
 //锚点、返回顶部
-$("a.list").click(function() {
+$("a.catlist").click(function() {
 	$("html, body").animate({
 		scrollTop: $($(this).attr("href")).offset().top - 5 + "px"
 	}, 500);
@@ -255,5 +255,9 @@ $('#nowWeek').text('星期' + nowWeek);
 
 //手机端
 $(".navbar").click(function() {
-		$(".index-nav").toggleClass("show");
-	});
+	$(".m-navlist-w").slideToggle();
+	$(this).toggleClass("hover");
+});
+$(".m-navlist a.list").click(function() {
+	$(".m-navlist-w").slideUp();
+});

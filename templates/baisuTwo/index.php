@@ -19,9 +19,18 @@
 		<link rel="stylesheet" type="text/css" href="templates/<?php echo TEMPLATE; ?>/css/style.css" />
 		<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="templates/<?php echo TEMPLATE; ?>/layui/css/layui.css" />
+		<style type="text/css">
+			/*链接描述是否显示*/
+			
+			.site-main .site-list .list .desc {
+				/*none：不显示，block:显示*/
+				display: none;
+			}
+		</style>
 	</head>
 
 	<body>
+		<!--手机顶部 S-->
 		<!--手机顶部 S-->
 		<div class="m-header">
 			<div class="logo">
@@ -30,7 +39,21 @@
 			<div class="navbar">
 				<i class="iconfont icon-caidan"></i>
 			</div>
+			<div class="m-navlist-w">
+				<div class="m-navlist">
+					<?php
+			foreach ($categorys as $category) {
+				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
+		?>
+						<a href="#category-<?php echo $category['id']; ?>" class="list catlist">
+							<?php echo $font_icon; ?>
+							<?php echo htmlspecialchars_decode($category['name']); ?>
+						</a>
+						<?php } ?>
+				</div>
+			</div>
 		</div>
+		<!--手机顶部 E-->
 		<!--手机顶部 E-->
 		<!--左侧分类栏 S-->
 		<div class="index-nav">
@@ -43,11 +66,19 @@
 			foreach ($categorys as $category) {
 				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
 		?>
-					<a href="#category-<?php echo $category['id']; ?>" class="list">
-						<?php echo $font_icon; ?><?php echo htmlspecialchars_decode($category['name']); ?>
-					</a>
+					<div class="list">
+						<a class="catlist" href="#category-<?php echo $category['id']; ?>">
+							<?php echo $font_icon; ?>
+							<?php echo htmlspecialchars_decode($category['name']); ?>
+						</a>
+						<span class="editFid" data-fid = "<?php echo $category['id']; ?>"><i class="iconfont icon-bianji"></i></span>
+					</div>
 					<?php } ?>
 
+					<div class="list add" id="addCat">
+						<a>
+							<i class="iconfont icon-tianjia"></i>添加分类</a>
+					</div>
 			</div>
 			<div class="user-info">
 				<div class="pic">
@@ -137,7 +168,7 @@
 					<button><i class="iconfont icon-sousuo"></i></button>
 				</div>
 			</div>
-			<!--搜索 E--> 
+			<!--搜索 E-->
 			<div class="site-main">
 				<!-- 遍历分类目录 -->
 				<?php foreach ( $categorys as $category ) {
@@ -154,7 +185,8 @@
             ?>
 
 				<div class="site-name" id="category-<?php echo $category['id']; ?>">
-						<?php echo $font_icon; ?><?php echo htmlspecialchars_decode($category['name']); ?>
+					<?php echo $font_icon; ?>
+					<?php echo htmlspecialchars_decode($category['name']); ?>
 					<?php echo $property; ?>
 				</div>
 				<div class="site-list">
@@ -169,6 +201,9 @@
 								<p class="name">
 									<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>">
 									<?php echo $link['title']; ?>
+								</p>
+								<p class="desc">
+									<?php echo $link['description']; ?>
 								</p>
 							</a>
 							<?php if($link['property'] == 1 ) { ?>
@@ -190,7 +225,7 @@
 
 		<!--底部版权 S-->
 		<footer>
-			© 2022 BaiSu,Powered by
+			© 2022 BaiSu，Powered by
 			<a target="_blank" href="https://github.com/helloxz/onenav" title="简约导航/书签管理器" rel="nofollow">OneNav</a>
 			<br> The theme author is
 			<a href="https://gitee.com/baisucode/onenav" target="_blank">BaiSu</a>
@@ -218,7 +253,7 @@
 		<!--添加链接 S-->
 		<div class="addsite-main" id="addsiteBox">
 			<div class="title">
-				添加连接
+				添加链接
 			</div>
 			<form class="layui-form list-w">
 				<div class="list">
@@ -261,6 +296,126 @@
 		</div>
 		<!--添加链接 E-->
 
+		<!--修改链接 S-->
+		<div class="addsite-main" id="editsiteBox">
+			<div class="title">
+				修改链接
+			</div>
+			<form class="layui-form list-w" lay-filter="editsite">
+				<input type="hidden" name="id" id="id" value="" required lay-verify="required" />
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-charulianjie"></i></span>
+					<input type="text" class="text" name="url" id="url" required lay-verify="required|url" placeholder="请输入完整的网址链接" autocomplete="off">
+				</div>
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-bianji"></i></span>
+					<input type="text" class="text" name="title" id="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off">
+				</div>
+				<div class="list type">
+					<input type="hidden" name="fid" id="fid" value="" required lay-verify="required" />
+					<?php foreach ($categorys as $category) {
+        ?>
+					<span class="fid editfid-<?php echo $category['id'] ?>" data-fid="<?php echo $category['id'] ?>"><?php echo htmlspecialchars_decode($category['name']); ?></span>
+					<?php } ?>
+					<span class="kongs"></span>
+					<span class="kongs"></span>
+					<span class="kongs"></span>
+				</div>
+
+				<div class="list list-2">
+					<div class="li">
+						<span>权重：</span>
+						<input type="text" class="num" name="weight" min="0" max="999" value="0" required lay-verify="required|number" autocomplete="off">
+					</div>
+					<div class="li">
+						私有：
+						<input type="checkbox" lay-skin="switch" lay-text="是|否" name="property" value="1">
+					</div>
+				</div>
+				<div class="list">
+					<textarea name="description" id="description" placeholder="请输入站点描述（选填）"></textarea>
+				</div>
+				<div class="list">
+					<button lay-submit lay-filter="edit_link">修改</button>
+				</div>
+
+			</form>
+		</div>
+		<!--修改链接 E-->
+
+		<!--添加分类 S-->
+		<div class="addsite-main" id="addFidBox">
+			<div class="title">
+				添加分类
+			</div>
+			<form class="layui-form list-w" lay-filter="editsite">
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-bianji"></i></span>
+					<input type="text" class="text" name="name" id="name" required lay-verify="required" placeholder="请输入分类名称" autocomplete="off">
+				</div>
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-shezhi1"></i></span>
+					<input type="text" class="text" name="font_icon" id="font_icon" required lay-verify="required" placeholder="请输入或选择分类图标" autocomplete="off">
+				</div>
+
+				<div class="list list-2">
+					<div class="li">
+						<span>权重：</span>
+						<input type="text" class="num" name="weight" min="0" max="999" value="0" required lay-verify="required|number" autocomplete="off">
+					</div>
+					<div class="li">
+						私有：
+						<input type="checkbox" lay-skin="switch" lay-text="是|否" name="property" value="1">
+					</div>
+				</div>
+				<div class="list">
+					<textarea name="description" id="description" placeholder="请输入分类描述（选填）"></textarea>
+				</div>
+				<div class="list">
+					<button lay-submit lay-filter="add_fid">添加</button>
+				</div>
+
+			</form>
+		</div>
+		<!--添加分类 E-->
+
+		<!--修改分类 S-->
+		<div class="addsite-main" id="editFidBox">
+			<div class="title">
+				修改分类
+			</div>
+			<form class="layui-form list-w" lay-filter="editfid">
+				<input type="hidden" name="id" id="id" value="" required lay-verify="required" />
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-bianji"></i></span>
+					<input type="text" class="text" name="name" id="name" required lay-verify="required" placeholder="请输入分类名称" autocomplete="off">
+				</div>
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-shezhi1"></i></span>
+					<input type="text" class="text" name="font_icon" id="font_icon" required lay-verify="required" placeholder="请输入或选择分类图标" autocomplete="off">
+				</div>
+
+				<div class="list list-2">
+					<div class="li">
+						<span>权重：</span>
+						<input type="text" class="num" name="weight" min="0" max="999" value="0" required lay-verify="required|number" autocomplete="off">
+					</div>
+					<div class="li">
+						私有：
+						<input type="checkbox" lay-skin="switch" lay-text="是|否" name="property" value="1">
+					</div>
+				</div>
+				<div class="list">
+					<textarea name="description" id="description" placeholder="请输入分类描述（选填）"></textarea>
+				</div>
+				<div class="list">
+					<button lay-submit lay-filter="edit_fid">修改</button>
+				</div>
+
+			</form>
+		</div>
+		<!--修改分类 E-->
+
 		<!--iconfont-->
 		<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_3000268_oov6h4vru0h.css" />
 		<script src="//at.alicdn.com/t/font_3000268_oov6h4vru0h.js" type="text/javascript" charset="utf-8"></script>
@@ -299,4 +454,3 @@
 	</body>
 
 </html>
-
