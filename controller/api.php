@@ -236,3 +236,51 @@ function exe_sql($api) {
     $data['name'] = htmlspecialchars(trim($_GET['name']));
     $api->exe_sql($data);
 }
+
+//设置options表
+function set_theme($api) {
+    $key = 'theme';
+    $value = htmlspecialchars($_POST['value']);
+    $api->set_option($key,$value);
+}
+
+//设置站点信息
+function set_site($api) {
+    //获取传递过来的参数
+    //获取网站标题
+    $data['title'] = htmlspecialchars($_POST['title']);
+    //获取网站logo
+    $data['logo'] = htmlspecialchars($_POST['logo']);
+    //获取副标题
+    $data['subtitle'] = htmlspecialchars($_POST['subtitle']);
+    //获取关键词
+    $data['keywords'] = htmlspecialchars($_POST['keywords']);
+    //获取描述
+    $data['description'] = htmlspecialchars($_POST['description']);
+    //获取自定义header
+    $data['custom_header'] = $_POST['custom_header'];
+    //序列化存储
+    $value = serialize($data);
+    
+
+    $api->set_option('s_site',$value);
+}
+
+//设置过渡页面
+function set_transition_page($api) {
+    //获取传递过来的参数
+    //获取开关
+    $data['control'] = htmlspecialchars(trim($_POST['control']));
+    //获取游客停留时间
+    $data['visitor_stay_time'] = intval($_POST['visitor_stay_time']);
+    //获取管理员停留时间
+    $data['admin_stay_time'] = intval($_POST['admin_stay_time']);
+    
+    //序列化存储
+    $value = serialize($data);
+
+    
+    
+
+    $api->set_option('s_transition_page',$value);
+}

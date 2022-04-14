@@ -22,14 +22,28 @@
         </li>
       </ul>
 
+      <!-- 系统设置 -->
+      </ul>
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;">系统设置</a>
+          <dl class="layui-nav-child">
+            <dd><a href="/index.php?c=admin&page=setting/site">站点设置</a></dd>
+            <dd><a href="/index.php?c=admin&page=setting/theme">主题设置</a></dd>
+            <dd><a href="/index.php?c=admin&page=setting/transition_page">过渡页面</a></dd>
+          </dl>
+        </li>
+      </ul>
+      <!-- 系统设置END -->
+
+      <!-- <ul class="layui-nav layui-nav-tree"  lay-filter="test">
         <li class="layui-nav-item layui-nav-itemed">
           <a class="" href="javascript:;">高级功能</a>
           <dl class="layui-nav-child">
             <dd><a href="/index.php?c=admin&page=ext_js">自定义JavaScript</a></dd>
           </dl>
         </li>
-      </ul>
+      </ul> -->
 
     </div>
   </div>

@@ -118,12 +118,22 @@ else{
 
 
 // 载入前台首页模板
+//查询主题设置
+$template = $db->get("on_options","value",[
+    "key"   =>  "theme"
+]);
+//获取当前站点信息
+$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
+$site = unserialize($site);
+
 //判断文件夹是否存在
-if( is_dir('templates/'.TEMPLATE) ){
+if( is_dir('templates/'.$template) ){
     $tpl_dir = 'templates/';
 }
 else{
     $tpl_dir = 'data/templates/';
 }
-require($tpl_dir.TEMPLATE.'/index.php');
+
+
+require($tpl_dir.$template.'/index.php');
 ?>
