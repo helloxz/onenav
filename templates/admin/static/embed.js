@@ -507,7 +507,7 @@ function get_sql_update_list() {
 function exe_sql(sqlname) {
   $.ajax({ url: "index.php?c=api&method=exe_sql&name=" + sqlname, async:false, success: function(data,status){
     if( data.code == 0 ){
-      $("#console_log").append(data.data);
+      $("#console_log").append(data.data + "\n" );
     }
     else {
       $("#console_log").append(sqlname + "更新失败！\n");

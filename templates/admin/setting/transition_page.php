@@ -9,7 +9,7 @@
     <form class="layui-form layui-form-pane" action="">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">过渡页</label>
+            <label class="layui-form-label" style = "width:130px;">过渡页</label>
             <div class="layui-input-block">
             <input type="radio" name="control" value="off" <?php echo ( $transition_page['control'] == 'off' ) ? "checked" : ''; ?> title="关闭">
             <input type="radio" name="control" value="on" <?php echo ( $transition_page['control'] == 'on' ) ? "checked" : ''; ?> title="开启">
@@ -17,7 +17,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">访客停留时间</label>
+            <label class="layui-form-label" style = "width:130px;">访客停留时间</label>
             <div class="layui-input-inline">
                 <input type="number" min="0" max="86400" lay-verify="required|number" name="visitor_stay_time" value = "<?php echo $transition_page['visitor_stay_time']; ?>" autocomplete="off" placeholder="访客停留时间，单位s" class="layui-input">
             </div>
@@ -25,7 +25,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">管理员停留时间</label>
+            <label class="layui-form-label" style = "width:130px;">管理员停留时间</label>
             <div class="layui-input-inline">
                 <input type="number" min="0" max="86400" lay-verify="required|number" name="admin_stay_time" value = "<?php echo $transition_page['admin_stay_time']; ?>" required  lay-verify="required" autocomplete="off" placeholder="管理员停留时间，单位s" class="layui-input">
             </div>

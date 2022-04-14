@@ -10,10 +10,10 @@
                 //var_dump($theme['info']->name);
             ?>
             <!-- 主题列表 -->
-            <div class="layui-col-lg2">
-                <fieldset style = "padding:1em;border:0px;height:180px;background-color:#EEEEEE;box-shadow: 2px 2px 3px #888888;color:#666666">
-                    <legend style = "font-size:38px;"><?php echo $key; ?></legend>
-                    <p><h1><?php echo $theme['info']->name ?></h1></p>
+            <div class="layui-col-lg3">
+                <fieldset style = "padding:1em;border:0px;height:170px;background-color:#EEEEEE;box-shadow: 2px 2px 3px #888888;color:#666666">
+                    <legend style = "font-size:32px;"><?php echo $key; ?></legend>
+                    <p><h2><?php echo $theme['info']->name ?></h2></p>
                     <p>版本：<?php echo $theme['info']->version ?></p>
                     <p>更新时间：<?php echo $theme['info']->update ?></p>
                     <br />
@@ -57,7 +57,7 @@ function set_theme(name) {
             }, 2000);
         }
         else{
-            layer.msg(data.data, {icon: 5});
+            layer.msg(data.err_msg, {icon: 5});
         }
     });
 }

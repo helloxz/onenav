@@ -781,6 +781,13 @@ class Api {
         //数据库sql目录
         $sql_dir = 'db/sql/';
         $name = $data['name'];
+        //查询sql是否已经执行过
+        $count = $this->db->count("on_db_logs",[
+            "sql_name"  =>  $name
+        ]);
+        if( $count >= 1 ) {
+            $this->err_msg(-2000,$name."已经更新过！");
+        }
         $sql_name = $sql_dir.$name;
         //如果文件不存在，直接返回错误
         if ( !file_exists($sql_name) ) {
