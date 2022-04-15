@@ -220,6 +220,34 @@ layui.use(['element','table','layer','form','upload'], function(){
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
+  //保存站点设置
+  form.on('submit(set_site)', function(data){
+    $.post('/index.php?c=api&method=set_site',data.field,function(data,status){
+      if(data.code == 0) {
+        layer.msg(data.data, {icon: 1});
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
+   //保存站点设置
+   form.on('submit(set_transition_page)', function(data){
+    $.post('/index.php?c=api&method=set_transition_page',data.field,function(data,status){
+      if(data.code == 0) {
+        layer.msg(data.data, {icon: 1});
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
   //添加分类目录
   form.on('submit(add_category)', function(data){
     $.post('/index.php?c=api&method=add_category',data.field,function(data,status){
@@ -479,7 +507,7 @@ function get_sql_update_list() {
 function exe_sql(sqlname) {
   $.ajax({ url: "index.php?c=api&method=exe_sql&name=" + sqlname, async:false, success: function(data,status){
     if( data.code == 0 ){
-      $("#console_log").append(data.data);
+      $("#console_log").append(data.data + "\n" );
     }
     else {
       $("#console_log").append(sqlname + "更新失败！\n");

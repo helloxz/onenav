@@ -34,6 +34,14 @@ if( is_login() ) {
     $is_login = TRUE;
 }
 
+//查询过渡页设置
+$transition_page = $db->get('on_options','value',[ 'key'  =>  "s_transition_page" ]);
+$transition_page = unserialize($transition_page);
+
+//获取当前站点信息
+$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
+$site = unserialize($site);
+
 //link.id为公有，且category.id为公有
 if( ( $link['property'] == 0 ) && ($category['property'] == 0) ){
     //增加link.id的点击次数
@@ -46,10 +54,16 @@ if( ( $link['property'] == 0 ) && ($category['property'] == 0) ){
     ]);
     //如果更新成功
     if($update) {
-        //进行header跳转
-        //header('location:'.$link['url']);
-        #加载跳转模板
-        require('templates/admin/click.php');
+        //判断是否开启过渡页面
+        if ( ($transition_page['control'] == 'off') && ( empty($link['url_standby']) ) ){
+            //进行header跳转
+            header('location:'.$link['url']);
+        }
+        //如果备用链接不为空，或者开启了过渡页面
+        else if( !empty($link['url_standby']) || ($transition_page['control'] == 'on') ) {
+            #加载跳转模板
+            require('templates/admin/click.php');
+        }
         exit;
     }
 }
@@ -66,10 +80,15 @@ elseif( is_login() ) {
     
     //如果更新成功
     if($update) {
-        //进行header跳转
-        //header('location:'.$link['url']);
-        #加载跳转模板
-        require('templates/admin/click.php');
+        //判断是否开启过渡页面
+        if ( ($transition_page['control'] == 'off') && ( empty($link['url_standby']) ) ){
+            //进行header跳转
+            header('location:'.$link['url']);
+        }
+        else if( !empty($link['url_standby']) || ($transition_page['control'] == 'on') ) {
+            #加载跳转模板
+            require('templates/admin/click.php');
+        }
         exit;
     }
 }

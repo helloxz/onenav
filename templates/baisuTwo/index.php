@@ -11,22 +11,13 @@
 		<meta name="MobileOptimized" content="width">
 		<meta name="HandheldFriendly" content="true">
 		<meta name="author" content="BaiSu" />
-		<title>
-			<?php echo $site_setting['title']; ?>
-		</title>
-		<meta name="keywords" content="<?php echo $site_setting['keywords']; ?>" />
-		<meta name="description" content="<?php echo $site_setting['description']; ?>" />
-		<link rel="stylesheet" type="text/css" href="templates/<?php echo TEMPLATE; ?>/css/style.css" />
+		<title><?php echo $site['title']; ?> - <?php echo $site['subtitle']; ?></title>
+		<meta name="keywords" content="<?php echo $site['keywords']; ?>" />
+		<meta name="description" content="<?php echo $site['description']; ?>" />
+		<link rel="stylesheet" type="text/css" href="templates/<?php echo $template; ?>/css/style.css" />
 		<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
-		<link rel="stylesheet" type="text/css" href="templates/<?php echo TEMPLATE; ?>/layui/css/layui.css" />
-		<style type="text/css">
-			/*链接描述是否显示*/
-			
-			.site-main .site-list .list .desc {
-				/*none：不显示，block:显示*/
-				display: none;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
+		<?php echo $site['custom_header']; ?>
 	</head>
 
 	<body>
@@ -34,7 +25,7 @@
 		<!--手机顶部 S-->
 		<div class="m-header">
 			<div class="logo">
-				<a href="/"><img src="templates/<?php echo TEMPLATE; ?>/images/logo.png" /></a>
+				<a href="/"><img src="<?php echo $site['logo']; ?>" /></a>
 			</div>
 			<div class="navbar">
 				<i class="iconfont icon-caidan"></i>
@@ -58,7 +49,7 @@
 		<!--左侧分类栏 S-->
 		<div class="index-nav">
 			<div class="logo">
-				<a href="/"><img src="templates/<?php echo TEMPLATE; ?>/images/logo.png" /></a>
+				<a href="/"><img src="<?php echo $site['logo']; ?>" /></a>
 			</div>
 			<div class="type-list">
 
@@ -83,7 +74,7 @@
 			<div class="user-info">
 				<div class="pic">
 					<a href="/">
-						<img src="templates/<?php echo TEMPLATE; ?>/images/touxiang.png" /></a>
+						<img src="templates/<?php echo $template; ?>/images/touxiang.png" /></a>
 				</div>
 				<div class="text">
 					<?php
@@ -91,7 +82,7 @@
 	  ?>
 						<a href="/index.php?c=admin" target="_blank">
 							<p class="t1">
-								<?php echo $site_setting['title']; ?>
+								<?php echo $site['title']; ?>
 							</p>
 							<p class="t2">管理后台</p>
 						</a>
@@ -116,30 +107,30 @@
 					</div>
 					<div class="search-btnlist">
 						<button class="search-btn" data-url="https://www.baidu.com/s?ie=UTF-8&wd=">
-							<img src="templates/<?php echo TEMPLATE; ?>/images/icon/baidu.svg" />
+							<img src="templates/<?php echo $template; ?>/images/icon/baidu.svg" />
 							百度搜索</button>
 						<button class="search-change"><i class="iconfont icon-xiangxia"></i></button>
 						<div class="search-lists hide">
 							<div class="list" data-url="https://www.baidu.com/s?ie=UTF-8&wd=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/baidu.svg" />百度搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/baidu.svg" />百度搜索
 							</div>
 							<div class="list" data-url="https://www.google.com/search?q=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/google.svg" />谷歌搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/google.svg" />谷歌搜索
 							</div>
 							<div class="list" data-url="https://cn.bing.com/search?q=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/bing.svg" />必应搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/bing.svg" />必应搜索
 							</div>
 							<div class="list" data-url="https://www.zhihu.com/search?type=content&q=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/zhihu.png" />知乎搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/zhihu.png" />知乎搜索
 							</div>
 							<div class="list" data-url="https://search.bilibili.com/all?keyword=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/bilibili.svg" />Bilibili搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/bilibili.svg" />Bilibili搜索
 							</div>
 							<div class="list" data-url="https://s.weibo.com/weibo?q=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/weibo.svg" />微博搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/weibo.svg" />微博搜索
 							</div>
 							<div class="list" data-url="https://so.toutiao.com/search?dvpf=pc&source=input&keyword=">
-								<img src="templates/<?php echo TEMPLATE; ?>/images/icon/toutiao.ico" />头条搜索
+								<img src="templates/<?php echo $template; ?>/images/icon/toutiao.ico" />头条搜索
 							</div>
 							<!--此处添加搜索引擎 S-->
 							<!--<div class="list" data-url="搜索链接">
@@ -225,7 +216,7 @@
 
 		<!--底部版权 S-->
 		<footer>
-			© 2022 BaiSu，Powered by
+			© 2022 BaiSu,Powered by
 			<a target="_blank" href="https://github.com/helloxz/onenav" title="简约导航/书签管理器" rel="nofollow">OneNav</a>
 			<br> The theme author is
 			<a href="https://gitee.com/baisucode/onenav" target="_blank">BaiSu</a>
@@ -259,6 +250,10 @@
 				<div class="list">
 					<span class="icon"><i class="iconfont icon-charulianjie"></i></span>
 					<input type="text" class="text" name="url" id="url" required lay-verify="required|url" placeholder="请输入完整的网址链接" autocomplete="off">
+				</div>
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-charulianjie"></i></span>
+					<input type="text" class="text" name="url_standby" id="url_standby" placeholder="请输入备用链接，如果没有，请留空" autocomplete="off">
 				</div>
 				<div class="list">
 					<span class="icon"><i class="iconfont icon-bianji"></i></span>
@@ -306,6 +301,10 @@
 				<div class="list">
 					<span class="icon"><i class="iconfont icon-charulianjie"></i></span>
 					<input type="text" class="text" name="url" id="url" required lay-verify="required|url" placeholder="请输入完整的网址链接" autocomplete="off">
+				</div>
+				<div class="list">
+					<span class="icon"><i class="iconfont icon-charulianjie"></i></span>
+					<input type="text" class="text" name="url_standby" id="url_standby" placeholder="请输入备用链接，如果没有，请留空" autocomplete="off">
 				</div>
 				<div class="list">
 					<span class="icon"><i class="iconfont icon-bianji"></i></span>
@@ -420,16 +419,16 @@
 		<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_3000268_oov6h4vru0h.css" />
 		<script src="//at.alicdn.com/t/font_3000268_oov6h4vru0h.js" type="text/javascript" charset="utf-8"></script>
 		<!--JS-->
-		<script src="templates/<?php echo TEMPLATE; ?>/js/jquery-3.5.1.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="templates/<?php echo TEMPLATE; ?>/layui/layui.js" type="text/javascript" charset="utf-8"></script>
-		<script src="templates/<?php echo TEMPLATE; ?>/js/clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="templates/<?php echo TEMPLATE; ?>/js/holmes.js" type="text/javascript" charset="utf-8"></script>
-		<script src="templates/<?php echo TEMPLATE; ?>/js/lunar.js" type="text/javascript" charset="utf-8"></script>
-		<script src="templates/<?php echo TEMPLATE; ?>/js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="templates/<?php echo $template; ?>/js/jquery-3.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="templates/<?php echo $template; ?>/js/clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="templates/<?php echo $template; ?>/js/holmes.js" type="text/javascript" charset="utf-8"></script>
+		<script src="templates/<?php echo $template; ?>/js/lunar.js" type="text/javascript" charset="utf-8"></script>
+		<script src="templates/<?php echo $template; ?>/js/common.js" type="text/javascript" charset="utf-8"></script>
 		<?php
 		if( is_login() ) {
 	  ?>
-			<script src="templates/<?php echo TEMPLATE; ?>/js/admin.js" type="text/javascript" charset="utf-8"></script>
+			<script src="templates/<?php echo $template; ?>/js/admin.js" type="text/javascript" charset="utf-8"></script>
 
 			<?php } ?>
 

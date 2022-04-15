@@ -781,6 +781,13 @@ class Api {
         //数据库sql目录
         $sql_dir = 'db/sql/';
         $name = $data['name'];
+        //查询sql是否已经执行过
+        $count = $this->db->count("on_db_logs",[
+            "sql_name"  =>  $name
+        ]);
+        if( $count >= 1 ) {
+            $this->err_msg(-2000,$name."已经更新过！");
+        }
         $sql_name = $sql_dir.$name;
         //如果文件不存在，直接返回错误
         if ( !file_exists($sql_name) ) {
@@ -788,8 +795,16 @@ class Api {
         }
         //读取需要更新的SQL内容
         try {
-            //读取一个SQL温江，并将单个SQL文件拆分成单条SQL语句循环执行
-            $sql_content = explode(';',file_get_contents($sql_name));
+            //读取一个SQL文件，并将单个SQL文件拆分成单条SQL语句循环执行
+            switch ($name) {
+                case '20220414.sql':
+                    $sql_content = explode("\n",file_get_contents($sql_name));
+                    break;
+                default:
+                    $sql_content = explode(';',file_get_contents($sql_name));
+                    break;
+            }
+            
             //计算SQL总数
             $num = count($sql_content) - 1;
             //初始数量设置为0
@@ -827,6 +842,59 @@ class Api {
         } catch(Exception $e){
             $this->err_msg(-2000,$e->getMessage());
         }
+    }
+    /**
+     * 更新option
+     */
+    public function set_option($key,$value = '') {
+        $key = htmlspecialchars(trim($key));
+        //如果key是空的
+        if( empty($key) ) {
+            $this->err_msg(-2000,'键不能为空！');
+        }
+        //鉴权
+        if( !$this->is_login() ) {
+            $this->err_msg(-1002,'Authorization failure!');
+        }
+
+        $count = $this->db->count("on_options", [
+            "key" => $key
+        ]);
+        
+        //如果数量是0，则插入，否则就是更新
+        if( $count === 0 ) {
+            try {
+                $this->db->insert("on_options",[
+                    "key"   =>  $key,
+                    "value" =>  $value
+                ]);
+                $data = [
+                    "code"      =>  0,
+                    "data"      =>  "设置成功！"
+                ];
+                exit(json_encode($data));
+            } catch (\Throwable $th) {
+                $this->err_msg(-2000,$th);
+            }
+        }
+        //更新数据
+        else if( $count === 1 ) {
+            try {
+                $this->db->update("on_options",[
+                    "value"     =>  $value
+                ],[
+                    "key"       =>  $key
+                ]);
+                $data = [
+                    "code"      =>  0,
+                    "data"      =>  "设置已更新！"
+                ];
+                exit(json_encode($data));
+            } catch (\Throwable $th) {
+                $this->err_msg(-2000,$th);
+            }
+        }
+
     }
     
 }

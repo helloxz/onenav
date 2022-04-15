@@ -15,15 +15,22 @@
 			text-overflow:ellipsis;/*超出部分文字以...显示dsds*/
 		}
 	</style>
+	<?php echo $site['custom_header']; ?>
 	<?php
 		//不存在多个链接的情况，如果用户已经登录，则1s后跳转，不然等5s
 		if( empty($link['url_standby']) ) {
+			//游客停留时间
+			$visitor_stay_time = $transition_page['visitor_stay_time'];
+			//管理员停留时间
+			$admin_stay_time = $transition_page['admin_stay_time'];
 			
 			if ($is_login) {
-				header("Refresh:1;url=".$link['url']);
+				//header("Refresh:1;url=".$link['url']);
+
+				header("Refresh:$admin_stay_time;url=".$link['url']);
 			}
 			else{
-				header("Refresh:5;url=".$link['url']);
+				header("Refresh:$visitor_stay_time;url=".$link['url']);
 			}
 		}
 		

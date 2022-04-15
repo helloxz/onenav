@@ -67,3 +67,10 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 20220315
 1. 修复一个任意文件漏洞
 2. baisuTwo主题更新
+
+20220414
+1. 新增：站点信息、主题、过渡页面可直接通过后台设置
+2. 主题新增 info.json 对主题进行描述
+3. 移除自定义Javascript，改用站点设置的自定义header
+4. 部分资源已经本地化
+5. baisuTwo适配OneNav 0.9.18

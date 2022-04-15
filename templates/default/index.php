@@ -2,18 +2,18 @@
 <html lang="zh-ch" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8" />
-	<title><?php echo $site_setting['title']; ?></title>
+	<title><?php echo $site['title']; ?> - <?php echo $site['subtitle']; ?></title>
 	<meta name="generator" content="EverEdit" />
 	<meta name="author" content="xiaoz<www.xiaoz.me>" />
-	<meta name="keywords" content="<?php echo $site_setting['keywords']; ?>" />
-	<meta name="description" content="<?php echo $site_setting['description']; ?>" />
+	<meta name="keywords" content="<?php echo $site['keywords']; ?>" />
+	<meta name="description" content="<?php echo $site['description']; ?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel='stylesheet' href='https://libs.xiaoz.top/mdui/v1.0.1/css/mdui.min.css'>
+	<link rel='stylesheet' href='/static/mdui/css/mdui.css'>
 	<link rel='stylesheet' href='https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.css'>
 	<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
-	<link rel="stylesheet" href="templates/<?php echo TEMPLATE; ?>/static/style.css?v=<?php echo $version; ?>">
-	<script src = 'https://libs.xiaoz.top/mdui/v1.0.1/js/mdui.min.js'></script>
-	<!-- <script src="https://cdn.jsdelivr.net/npm/hotkeys-js@3.7.3/dist/hotkeys.min.js"></script> -->
+	<link rel="stylesheet" href="templates/<?php echo $template; ?>/static/style.css?v=<?php echo $version; ?>">
+	<script src = '/static/mdui/js/mdui.min.js'></script>
+	<?php echo $site['custom_header']; ?>
 </head>
 <body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
 	<!--导航工具-->
@@ -22,7 +22,7 @@
 		<!-- <button class="mdui-btn" mdui-drawer="{target: '#drawer'}"><i class="mdui-icon material-icons">home</i></button> -->
 		<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-drawer="{target: '#drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></span>
 		  <!-- <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">home</i></a> -->
-		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site_setting['description'] ?>"><span class="mdui-typo-title"><?php echo $site_setting['logo']; ?></span></a>
+		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site['description'] ?>"><span class="mdui-typo-title"><?php echo $site['title']; ?></span></a>
 		  <div class="mdui-toolbar-spacer"></div>
 		  <!-- 搜索框 -->
 		  <!-- <div class="mdui-col-lg-3">
@@ -202,14 +202,13 @@
 	</footer>
 	<!-- footerend -->
 </body>
-<script src = 'https://libs.xiaoz.top/jquery/2.2.4/jquery.min.js'></script>
-<script src="/static//layer/layer.js"></script>
+<script src = '/static/js/jquery.min.js'></script>
+<script src="/static/layer/layer.js"></script>
 <script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
 <script src = 'https://libs.xiaoz.top/clipBoard.js/clipBoard.min.js'></script>
-<script src = "templates/<?php echo TEMPLATE; ?>/static/holmes.js"></script>
-<script src="templates/<?php echo TEMPLATE; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
+<script src = "templates/<?php echo $template; ?>/static/holmes.js"></script>
+<script src="templates/<?php echo $template; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 <script>
 <?php echo $onenav['right_menu']; ?>
 </script>
-<?php echo $onenav['extend']; ?>
 </html>
