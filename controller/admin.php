@@ -89,7 +89,7 @@ if ( $page == 'setting/theme_detail' ) {
     //主题目录
     $tpl_dir1 = dirname(__DIR__).'/templates/'.$name;
     //备用主题目录
-    $tps_dir2 = dirname(__DIR__).'/data/templates/'.$name;
+    $tpl_dir2 = dirname(__DIR__).'/data/templates/'.$name;
     if( is_dir($tpl_dir1) ) {
         $info = file_get_contents($tpl_dir1.'/info.json');
     }
@@ -105,10 +105,11 @@ if( $page == 'setting/theme' ) {
     //主题目录
     $tpl_dir1 = dirname(__DIR__).'/templates/';
     //备用主题目录
-    $tps_dir2 = dirname(__DIR__).'/data/templates/';
+    $tpl_dir2 = dirname(__DIR__).'/data/templates/';
+    
     //声明两个空数组用来存放模板目录列表
     $tpl_one = [];
-    $tps_two = [];
+    $tpl_two = [];
     //遍历第一个目录
     foreach ( scandir($tpl_dir1) as $value) {
         //完整的路径
@@ -132,7 +133,7 @@ if( $page == 'setting/theme' ) {
         }
     }
     //如果第二个目录存在，则遍历
-    if( is_dir($tps_dir2) ) {
+    if( is_dir($tpl_dir2) ) {
         foreach ( scandir($tpl_dir2) as $value) {
             //完整的路径
             $path = $tpl_dir2.$value;
@@ -154,18 +155,18 @@ if( $page == 'setting/theme' ) {
             }
         }
     }
+    
     //合并目录
     //现在$tpl_one是合并后的完整主题列表
-    array_merge($tpl_one,$tpl_two);
+    $tpls = array_merge($tpl_one,$tpl_two);
     
     //读取主题里面的信息
     //设置一个空数组
     $data = [];
     
-    foreach ($tpl_one as $value) {
-        
+    foreach ($tpls as $value) {
         //如果文件存在
-        if( $tpl_dir1.$value.'/info.json' ) {
+        if( is_file($tpl_dir1.$value.'/info.json') ) {
             $data[$value]['info'] = json_decode(@file_get_contents( $tpl_dir1.$value.'/info.json' ));
         }
         else{
