@@ -5,6 +5,13 @@
 <div class="layui-body">
 <!-- 内容主体区域 -->
 <div class="layui-row content-body">
+    <!-- 说明提示框 -->
+    <div class="layui-col-lg12">
+      <div class="setting-msg">
+      过渡页使用说明，请参考：<a href="https://dwz.ovh/yoyaf" target = "_blank" title = "过渡页使用说明">https://dwz.ovh/c7goi</a>
+      </div>
+    </div>
+    <!-- 说明提示框END -->
     <div class="layui-col-lg6">
     <form class="layui-form layui-form-pane" action="">
 

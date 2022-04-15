@@ -4,6 +4,13 @@
 <div class="layui-body">
 <!-- 内容主体区域 -->
 <div class="layui-row content-body">
+    <!-- 说明提示框 -->
+    <div class="layui-col-lg12">
+      <div class="setting-msg">
+      主题更换及设置说明，请参考：<a href="https://dwz.ovh/yoyaf" target = "_blank" title = "主题更换及设置说明">https://dwz.ovh/yoyaf</a>
+      </div>
+    </div>
+    <!-- 说明提示框END -->
     <div class="layui-col-lg12">
         <div class="layui-row layui-col-space24">
             <?php foreach ($themes as $key => $theme) {
@@ -11,7 +18,7 @@
             ?>
             <!-- 主题列表 -->
             <div class="layui-col-lg3">
-                <fieldset style = "padding:1em;border:0px;height:170px;background-color:#EEEEEE;box-shadow: 2px 2px 3px #888888;color:#666666">
+                <fieldset style = "padding:1em;border:0px;height:170px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
                     <legend style = "font-size:32px;"><?php echo $key; ?></legend>
                     <p><h2><?php echo $theme['info']->name ?></h2></p>
                     <p>版本：<?php echo $theme['info']->version ?></p>

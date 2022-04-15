@@ -5,6 +5,13 @@
 <div class="layui-body">
 <!-- 内容主体区域 -->
 <div class="layui-row content-body">
+    <!-- 说明提示框 -->
+    <div class="layui-col-lg12">
+      <div class="setting-msg">
+      站点设置使用说明，请参考：<a href="https://dwz.ovh/un5rz" target = "_blank" title = "站点设置使用说明">https://dwz.ovh/un5rz</a>
+      </div>
+    </div>
+    <!-- 说明提示框END -->
     <div class="layui-col-lg6">
     <form class="layui-form layui-form-pane" action="">
 

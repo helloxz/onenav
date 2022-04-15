@@ -166,6 +166,7 @@ layui.use(['dropdown', 'layer', 'form'], function() {
 				form.val('editsite', {
 					"id": data.data.id,
 					"url": data.data.url,
+					"url_standby": data.data.url_standby,
 					"title": data.data.title,
 					"description": data.data.description,
 					"fid": data.data.fid,
@@ -224,6 +225,7 @@ function editUrl(data) {
 		fid: data.fid,
 		id: data.id,
 		url: data.url,
+		url_standby: data.url_standby,
 		title: data.title,
 		weight: data.weight,
 		property: data.property,

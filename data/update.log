@@ -73,3 +73,4 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 2. 主题新增 info.json 对主题进行描述
 3. 移除自定义Javascript，改用站点设置的自定义header
 4. 部分资源已经本地化
+5. baisuTwo适配OneNav 0.9.18

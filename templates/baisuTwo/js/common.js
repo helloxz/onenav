@@ -57,6 +57,7 @@ function addUrl(data) {
 
 	$.post("index.php?c=api&method=add_link", {
 		url: data.url,
+		url_standby: data.url_standby,
 		title: data.title,
 		fid: data.fid,
 		weight: data.weight,

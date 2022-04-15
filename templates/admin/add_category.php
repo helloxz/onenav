@@ -4,6 +4,13 @@
 <div class="layui-body">
 <!-- 内容主体区域 -->
 <div class="layui-row content-body">
+    <!-- 说明提示框 -->
+    <div class="layui-col-lg12">
+      <div class="setting-msg">
+      关于字体图标的说明请参考帮助文档：<a href="https://dwz.ovh/7nr1f" target = "_blank" title = "字体图标使用说明">https://dwz.ovh/7nr1f</a>
+      </div>
+    </div>
+    <!-- 说明提示框END -->
     <div class="layui-col-lg12">
     <form class="layui-form">
   <div class="layui-form-item">
@@ -48,7 +55,6 @@
     </div>
   </div>
 </form>
-<p>关于字体图标的说明请参考帮助文档：<a href="https://dwz.ovh/7nr1f" target = "_blank" title = "字体图标使用说明">https://dwz.ovh/7nr1f</a></p>
     </div>
     
 </div>
