@@ -15,7 +15,7 @@
 		<meta name="keywords" content="<?php echo $site['keywords']; ?>" />
 		<meta name="description" content="<?php echo $site['description']; ?>" />
 		<link rel="stylesheet" type="text/css" href="templates/<?php echo $template; ?>/css/style.css" />
-		<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
+		<link rel="stylesheet" href="static/font-awesome/4.7.0/css/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
 		<?php echo $site['custom_header']; ?>
 	</head>
@@ -54,16 +54,29 @@
 			<div class="type-list">
 
 				<?php
-			foreach ($categorys as $category) {
+			foreach ($category_parent as $category) {
 				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
 		?>
 					<div class="list">
-						<a class="catlist" href="#category-<?php echo $category['id']; ?>">
+						<a class="catlist" style="overflow:hidden;white-space: nowrap;text-overflow: ellipsis;-o-text-overflow:ellipsis;" href="#category-<?php echo $category['id']; ?>">
 							<?php echo $font_icon; ?>
 							<?php echo htmlspecialchars_decode($category['name']); ?>
 						</a>
 						<span class="editFid" data-fid = "<?php echo $category['id']; ?>"><i class="iconfont icon-bianji"></i></span>
 					</div>
+<!--                遍历二级分类-->
+                    <?php foreach (get_category_sub($category['id']) AS $category_sub){
+
+                    ?>
+                    <div class="list" style="padding-left:1em;">
+                        <a class="catlist" style="font-size:12px;font-weight: normal;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;-o-text-overflow:ellipsis;" href="#category-<?php echo $category_sub['id']; ?>">
+                            <i class="<?php echo $category_sub['font_icon']; ?>"></i>
+                            <?php echo htmlspecialchars_decode($category_sub['name']); ?>
+                        </a>
+                        <span class="editFid" data-fid = "<?php echo $category_sub['id']; ?>"><i class="iconfont icon-bianji"></i></span>
+                    </div>
+                    <?php } ?>
+<!--                遍历二级分类END-->
 					<?php } ?>
 
 					<div class="list add" id="addCat">
@@ -216,11 +229,14 @@
 
 		<!--底部版权 S-->
 		<footer>
+			<?php if( empty( $site['custom_footer']) ){ ?>
 			© 2022 BaiSu,Powered by
 			<a target="_blank" href="https://github.com/helloxz/onenav" title="简约导航/书签管理器" rel="nofollow">OneNav</a>
 			<br> The theme author is
 			<a href="https://gitee.com/baisucode/onenav" target="_blank">BaiSu</a>
-
+			<?php }else{
+				echo $site['custom_footer'];
+			} ?>
 		</footer>
 		<!--底部版权 E-->
 		<!--返回顶部 S-->

@@ -146,3 +146,16 @@ footer a{
     padding-top: 70px;
     margin-top: -70px;
   } */
+
+.category_sub{
+    font-size:14px;
+    margin-left:0px;
+    /*padding-left:8px;*/
+}
+.category_sub i{
+    padding-right:5px;
+}
+#drawer{
+    background-color: #FEFEFE;
+    box-shadow:1px 0 5px 0 #eeeeee;
+}

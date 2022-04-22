@@ -10,6 +10,9 @@
           <div class="layui-col-lg4">
             <div class = "admin-msg">当前版本：<?php echo file_get_contents('version.txt'); ?></div>
           </div>
+            <div class="layui-col-lg4">
+                <div class = "admin-msg">最新版本：<span><span id = "getting">获取中...</span><a href = "https://github.com/helloxz/onenav/releases" title = "下载最新版OneNav" target = "_blank" id="latest_version"></a></span></div>
+            </div>
           <div class="layui-col-lg4">
             <div class = "admin-msg">QQ群1：147687134</div>
           </div>
@@ -34,6 +37,9 @@
           <div class="layui-col-lg4">
             <div class = "admin-msg">捐赠地址: <a href="https://dwz.ovh/donation" rel = "nofollow" target="_blank">https://dwz.ovh/donation</a></div>
           </div>
+            <div class="layui-col-lg4">
+                <div class = "admin-msg">Chrome浏览器扩展: <a href="https://dwz.ovh/4kxn2" title = "适用于Chromium内核的浏览器扩展" rel = "nofollow" target="_blank">https://dwz.ovh/4kxn2</a></div>
+            </div>
 
           <!-- 日志输出窗口 -->
           <div class="layui-col-lg12">

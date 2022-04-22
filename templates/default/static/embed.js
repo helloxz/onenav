@@ -245,3 +245,8 @@ function on_search(){
 //     default: alert(event);
 //   }
 // });
+
+//链接跳转
+function goto(url) {
+    window.location.href = url;
+}

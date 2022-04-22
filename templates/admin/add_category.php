@@ -11,8 +11,8 @@
       </div>
     </div>
     <!-- 说明提示框END -->
-    <div class="layui-col-lg12">
-    <form class="layui-form">
+    <div class="layui-col-lg6">
+    <form class="layui-form layui-form-pane">
   <div class="layui-form-item">
     <label class="layui-form-label">分类名称</label>
     <div class="layui-input-block">
@@ -26,6 +26,20 @@
       <input type="text" name="font_icon" placeholder="请输入字体图标，如：fa fa-bookmark-o" autocomplete="off" class="layui-input">
     </div>
   </div>
+
+  <div class="layui-form-item">
+      <label class="layui-form-label">父级分类</label>
+      <div class="layui-input-block">
+      <select name="fid" lay-verify="">
+      <option value="0">无</option>
+        <?php foreach ($categorys as $key => $category) {
+          
+        ?>
+          <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+        <?php } ?>
+      </select> 
+      </div>
+    </div>
 
   <div class="layui-form-item">
     <label class="layui-form-label">权重</label>
@@ -49,10 +63,8 @@
     </div>
   </div>
   <div class="layui-form-item">
-    <div class="layui-input-block">
       <button class="layui-btn" lay-submit lay-filter="add_category">添加</button>
       <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </div>
   </div>
 </form>
     </div>

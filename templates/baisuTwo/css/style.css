@@ -1050,6 +1050,7 @@ footer a:hover {
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;
+		overflow:hidden;white-space: nowrap;text-overflow: ellipsis;-o-text-overflow:ellipsis;
 	}
 	.m-navlist a.list i {
 		display: block;

@@ -5,16 +5,15 @@
 <!-- 内容主体区域 -->
 <div class="layui-row content-body">
     <div class="layui-col-lg12">
-    <form class="layui-form">
+    <form class="layui-form layui-form-pane">
     <div class="layui-form-item">
     <label class="layui-form-label">URL</label>
     <div class="layui-input-block">
-      <input type="url" id = "url" name="url" required  lay-verify="required|url" placeholder="请输入有效链接" autocomplete="off" class="layui-input">
+      <input id = "url" name="url" required  lay-verify="required" placeholder="请输入有效链接" autocomplete="off" class="layui-input">
     </div>
   </div>
 <!-- 添加备用链接 -->
   <div class="layui-col-lg12">
-    <form class="layui-form">
     <div class="layui-form-item">
     <label class="layui-form-label">备用URL</label>
     <div class="layui-input-block">
@@ -64,12 +63,10 @@
     </div>
   </div>
   <div class="layui-form-item">
-    <div class="layui-input-block">
       <button class="layui-btn" lay-submit lay-filter="add_link">添加</button>
       <!-- <button class="layui-btn" lay-submit lay-filter="get_link_info">识别</button> -->
       <a href="javascript:;" class="layui-btn" onclick="get_link_info()">识别</a>
       <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </div>
   </div>
 </form>
     </div>
