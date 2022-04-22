@@ -2,13 +2,30 @@
 /**
  * 首页模板入口
  */
-
 //如果已经登录，获取所有分类和链接
 if( is_login() ){
-    //查询分类目录
+    //查询所有分类目录
     $categorys = $db->select('on_categorys','*',[
         "ORDER" =>  ["weight" => "DESC"]
     ]);
+    //查询一级分类目录，分类fid为0的都是一级分类
+    $category_parent = $db->select('on_categorys','*',[
+        "fid"   =>  0,
+        "ORDER" =>  ["weight" => "DESC"]
+    ]);
+    //根据分类ID查询二级分类，分类fid大于0的都是二级分类
+    function get_category_sub($id) {
+        global $db;
+        $id = intval($id);
+
+        $category_sub = $db->select('on_categorys','*',[
+            "fid"   =>  $id,
+            "ORDER"     =>  ["weight" => "DESC"]
+        ]);
+
+        return $category_sub;
+    }
+
     //根据category id查询链接
     function get_links($fid) {
         global $db;

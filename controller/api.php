@@ -36,6 +36,8 @@ function add_category($api){
     $name = $_POST['name'];
     //获取私有属性
     $property = empty($_POST['property']) ? 0 : 1;
+    //获取分级ID
+    $fid = intval($_POST['fid']);
     //获取权重
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     //获取描述
@@ -44,7 +46,7 @@ function add_category($api){
     $description = htmlspecialchars($description);
     //获取字体图标
     $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
-    $api->add_category($token,$name,$property,$weight,$description,$font_icon);
+    $api->add_category($token,$name,$property,$weight,$description,$font_icon,$fid);
 }
 /**
  * 修改分类目录入口
@@ -259,6 +261,8 @@ function set_site($api) {
     $data['description'] = htmlspecialchars($_POST['description']);
     //获取自定义header
     $data['custom_header'] = $_POST['custom_header'];
+    //获取自定义footer
+    $data['custom_footer'] = $_POST['custom_footer'];
     //序列化存储
     $value = serialize($data);
     
@@ -283,4 +287,9 @@ function set_transition_page($api) {
     
 
     $api->set_option('s_transition_page',$value);
+}
+
+//生成create_sk
+function create_sk($api) {
+    $api->create_sk();
 }
