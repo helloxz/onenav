@@ -74,3 +74,15 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 3. 移除自定义Javascript，改用站点设置的自定义header
 4. 部分资源已经本地化
 5. baisuTwo适配OneNav 0.9.18
+
+20220422
+1. 后台新增版本检测
+2. defautl和baisuTwo主题适配二级分类
+3. 新增Chrome浏览器插件支持
+4. 后台新增API设置
+5. 修复站点设置,低分辨率底部被遮挡
+6. 静态资源进一步本地化
+7. 添加自定义footer
+8. 支持添加多种协议的链接
+9. 完成后台二级目录功能
+10. 修复category_list接口API调用不显示私有链接
