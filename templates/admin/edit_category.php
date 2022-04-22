@@ -30,16 +30,27 @@
       <label class="layui-form-label">父级分类</label>
       <div class="layui-input-block">
       <select name="fid" lay-verify="">
-      <option value="<?php echo $category_one['fid']; ?>"><?php echo $category_one['fname']; ?></option>
-        <?php foreach ($categorys as $key => $category) {
+        <!-- 显示上级分类，如果没有，则显示空 -->
+        <?php if( empty( $category_one['fname'] ) ){
           
+        ?>
+        <!-- 如果上级分类名称为空 -->
+          <option value="0">无</option>
+        <?php }else{ ?>
+          <option value="<?php echo $category_one['fid']; ?>"><?php echo $category_one['fname']; ?></option>
+          <option value="0">无</option>
+        <?php } ?>
+        <!-- 显示上级分类END -->
+
+        <!-- 遍历所有分类，但不显示对应的父级 -->
+        <?php foreach ($categorys as $key => $category) {
            if ( $category['id'] == $category_one['fid'] ) {
-             
              continue;
            }
         ?>
           <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
         <?php } ?>
+        <!-- 遍历所有分类END -->
       </select> 
       </div>
     </div>
