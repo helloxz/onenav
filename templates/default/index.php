@@ -61,6 +61,7 @@
 		</div>
 	</header>
 	<!--导航工具END-->
+
 	<!-- 添加按钮 -->
 	<?php
 		if( is_login() ) {
@@ -75,10 +76,10 @@
 	<!-- 返回顶部按钮 -->
 	<div id="top"></div>
 	<div class="top mdui-shadow-10">
-	<a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i>
+		<a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i></a>
 	</div>
 	<!-- 返回顶部END -->
-		<!--左侧抽屉导航-->
+	<!--左侧抽屉导航-->
 	<!-- 默认抽屉栏在左侧 -->
 	<div class="mdui-drawer" id="drawer">
 	  <ul class="mdui-list">
@@ -98,7 +99,7 @@
 			</li>
 		</a>
         </div>
-<!-- 遍历二级分类               -->
+		<!-- 遍历二级分类-->
           <div class="mdui-collapse-item-body">
          <ul>
          <?php foreach (get_category_sub( $category['id'] ) AS $category_sub){
@@ -116,11 +117,10 @@
          <?php } ?>
         </ul>
         </div>
-<!--                遍历二级分类END-->
-
+		<!--遍历二级分类END-->
+		</div>
+        </div>
 		<?php } ?>
-              </div>
-          </div>
 		<a href="https://www.xiaoz.me/" target="_blank" title="小z博客">
 			<li class="mdui-list-item mdui-ripple">
 			<div class="mdui-list-item-content category-name"><i class="fa fa-user-circle"></i> About</div>
