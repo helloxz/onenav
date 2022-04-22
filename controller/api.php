@@ -54,7 +54,8 @@ function add_category($api){
 function edit_category($api){
     //获取ID
     $id = intval($_POST['id']);
-    
+    //获取父级ID
+    $fid = intval($_POST['fid']);
     //获取token
     $token = $_POST['token'];
     //获取分类名称
@@ -69,7 +70,7 @@ function edit_category($api){
     $description = htmlspecialchars($description);
     //字体图标
     $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
-    $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon);
+    $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon,$fid);
 }
 /**
  * 删除分类目录

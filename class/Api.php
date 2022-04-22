@@ -52,25 +52,34 @@ class Api {
      * 修改分类目录
      * 
      */
-    public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = '',$font_icon = ''){
+    public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = '',$font_icon = '',$fid = 0){
         $this->auth($token);
         //如果id为空
         if( empty($id) ){
             $this->err_msg(-1003,'The category ID cannot be empty!');
         }
         //如果分类名为空
-        elseif( empty($name) ){
+        elseif( empty($name ) ){
             $this->err_msg(-1004,'The category name cannot be empty!');
         }
+        
         //更新数据库
         else{
+            //根据分类ID查询改分类下面是否已经存在子分类，如果存在子分类了则不允许设置为子分类，实用情况：一级分类下存在二级分类，无法再将改一级分类修改为二级分类
+            $count = $this->db->count("on_categorys", [
+                "fid" => $id
+            ]);
+            if( $count > 0 ) {
+                $this->err_msg(-2000,'修改失败，该分类下已存在子分类！');
+            }
             $data = [
                 'name'          =>  htmlspecialchars($name,ENT_QUOTES),
                 'up_time'      =>  time(),
                 'weight'        =>  $weight,
                 'property'      =>  $property,
                 'description'   =>  htmlspecialchars($description,ENT_QUOTES),
-                'font_icon'     =>  $font_icon
+                'font_icon'     =>  $font_icon,
+                'fid'           =>  $fid
             ];
             $re = $this->db->update('on_categorys',$data,[ 'id' => $id]);
             //var_dump( $this->db->log() );
