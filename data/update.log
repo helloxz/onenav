@@ -86,3 +86,9 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 8. 支持添加多种协议的链接
 9. 完成后台二级目录功能
 10. 修复category_list接口API调用不显示私有链接
+
+20220423
+1. 新增环境检测
+2. 新增用户初始化设置界面
+3. 新增版本更新检查
+4. 修复未登录情况下不显示分类的BUG
