@@ -8,14 +8,14 @@ $db = new medoo([
 ]);
 
 //用户名
-define('USER','xiaoz');
+define('USER','{username}');
 //密码
-define('PASSWORD','xiaoz.me');
+define('PASSWORD','{password}');
 //邮箱，用于后台Gravatar头像显示
-define('EMAIL','337003006@qq.com');
-//token参数，API需要使用
+define('EMAIL','{email}');
+//token参数，API需要使用，0.9.19版本这个废弃了，请通过后台设置
 define('TOKEN','xiaoz.me');
-//主题风格
+//主题风格,0.9.18废弃了，请通过后台设置
 define('TEMPLATE','default');
 
 //站点信息

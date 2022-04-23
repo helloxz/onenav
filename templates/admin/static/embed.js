@@ -206,6 +206,45 @@ layui.use(['element','table','layer','form','upload'], function(){
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
+
+  //初始化设置onenav密码
+  form.on('submit(init_onenav)', function(data){
+    console.log(data.field.username);
+    
+    let username = data.field.username;
+    let password = data.field.password;
+    let password2 = data.field.password2;
+    //正则验证用户名、密码
+    var u_patt = /^[0-9a-z]{3,32}$/;
+    if ( !u_patt.test(username) ) {
+      layer.msg("用户名需要3-32位的字母或数字组合！", {icon: 5});
+      return false;
+    }
+    //正则验证密码
+    let p_patt = /^[0-9a-zA-Z!@#$%^&*.()]{6,16}$/;
+    if ( !p_patt.test(password) ) {
+      layer.msg("密码需要6-16字母、数字或特殊字符！", {icon: 5});
+      return false;
+    }
+    if( password !== password2) {
+      layer.msg("两次密码不一致！", {icon: 5});
+      return false;
+    }
+    $.post('/index.php?c=init',data.field,function(data,status){
+      //如果添加成功
+      if(data.code == 200) {
+        layer.msg(data.msg, {icon: 1});
+        setTimeout(() => {
+          window.location.href = "/index.php?c=login";
+        }, 2000);
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
   //手机登录
   form.on('submit(mobile_login)', function(data){
     $.post('/index.php?c=login&check=login',data.field,function(data,status){
@@ -591,9 +630,25 @@ function getQueryVariable(variable)
 
 //获取最新版本
 function get_latest_version(){
-    $.get("https://git.xiaoz.me/xiaoz/onenav/raw/branch/main/version.txt",function(data,status){
+    $.post("/index.php?c=api&method=get_latest_version",function(data,status){
+        //console.log(data.data);
         $("#getting").hide();
-        $("#latest_version").text(data);
+        
+        //获取最新版本
+        let latest_version = data.data;
+        $("#latest_version").text(latest_version);
+
+        //获取当前版本
+        let current_version = $("#current_version").text();
+
+        let pattern = /[0-9]+\.[0-9\.]+/;
+        current_version = pattern.exec(current_version)[0];
+        latest_version = pattern.exec(latest_version)[0];
+
+        //如果当前版本小于最新版本，则提示更新
+        if( current_version < latest_version ) {
+          $("#update_msg").show();
+        }
     });
+    
 }
-get_latest_version();

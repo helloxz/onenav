@@ -282,10 +282,7 @@ function set_transition_page($api) {
     $data['admin_stay_time'] = intval($_POST['admin_stay_time']);
     
     //序列化存储
-    $value = serialize($data);
-
-    
-    
+    $value = serialize($data);   
 
     $api->set_option('s_transition_page',$value);
 }
@@ -293,4 +290,36 @@ function set_transition_page($api) {
 //生成create_sk
 function create_sk($api) {
     $api->create_sk();
+}
+
+//获取onenav最新版本号
+function get_latest_version() {
+    try {
+        $curl = curl_init("https://git.xiaoz.me/xiaoz/onenav/raw/branch/main/version.txt");
+
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 Edg/100.0.1185.50");
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        #设置超时时间，最小为1s（可选）
+        curl_setopt($curl , CURLOPT_TIMEOUT, 5);
+
+        $html = curl_exec($curl);
+        curl_close($curl);
+        $data = [
+            "code"      =>  200,
+            "msg"       =>  "",
+            "data"      =>  $html
+        ];
+        
+    } catch (\Throwable $th) {
+        $data = [
+            "code"      =>  200,
+            "msg"       =>  "",
+            "data"      =>  ""
+        ];
+    }
+    exit(json_encode($data));
 }

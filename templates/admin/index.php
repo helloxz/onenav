@@ -8,7 +8,9 @@
       <div class="layui-container" style = "margin-top:2em;">
         <div class="layui-row layui-col-space18">
           <div class="layui-col-lg4">
-            <div class = "admin-msg">当前版本：<?php echo file_get_contents('version.txt'); ?></div>
+            <div class = "admin-msg">当前版本：<span id = "current_version"><?php echo file_get_contents('version.txt'); ?></span>
+            <span id = "update_msg" style = "display:none;">（<a style = "color: #FF5722;" href = "https://github.com/helloxz/onenav/releases" title = "下载最新版OneNav" target = "_blank" id="current_version">有可用更新</a>）</span>
+          </div>
           </div>
             <div class="layui-col-lg4">
                 <div class = "admin-msg">最新版本：<span><span id = "getting">获取中...</span><a href = "https://github.com/helloxz/onenav/releases" title = "下载最新版OneNav" target = "_blank" id="latest_version"></a></span></div>
@@ -58,4 +60,5 @@
   check_db_down();
   check_weak_password();
   get_sql_update_list();
+  get_latest_version();
 </script>

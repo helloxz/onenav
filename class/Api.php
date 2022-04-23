@@ -673,8 +673,12 @@ class Api {
     public function get_link_info($token,$url){
         $this->auth($token);
         //检查链接是否合法
+        $pattern = "/^(http:\/\/|https:\/\/).*/";
         //链接不合法
-        if( !filter_var($url, FILTER_VALIDATE_URL) ) {
+        if( empty($url) ) {
+            $this->err_msg(-2000,'URL不能为空!');
+        }
+        if( !preg_match($pattern,$url) ){
             $this->err_msg(-1010,'只支持识别http/https协议的链接!');
         }
         //获取网站标题
