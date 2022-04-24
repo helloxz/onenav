@@ -33,7 +33,7 @@ OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使
 
 1. 需安装PHP环境，并确保支持SQLite3
 2. 下载源码解压到站点根目录
-3. 访问首页自动完成安装
+3. 访问首页根据提示初始化用户名/密码
 4. 访问后台：`http://IP/index.php?c=login`
 
 **Docker部署：**
@@ -42,12 +42,11 @@ OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使
 docker run -itd --name="onenav" -p 80:80 \
     -e USER='xiaoz' -e PASSWORD='xiaoz.me' \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav
+    helloz/onenav:0.9.19
 ```
-
-* `USER`：设置用户名，上述设置为`xiaoz`
-* `PASSWORD`：设置密码，上述设置为`xiaoz.me`
+* 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
+* `0.9.19`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
