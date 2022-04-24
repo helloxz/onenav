@@ -38,7 +38,6 @@ OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使
 
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
-    -e USER='xiaoz' -e PASSWORD='xiaoz.me' \
     -v /data/onenav:/data/wwwroot/default/data \
     helloz/onenav:0.9.19
 ```
