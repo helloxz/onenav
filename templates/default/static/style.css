@@ -89,7 +89,7 @@ footer a{
 	position:fixed;
 	right:10px;
 	bottom:30px;
-    z-index:99;
+    z-index:1000;
     border-radius: 40px;
     /* border:1px solid red; */
 }
