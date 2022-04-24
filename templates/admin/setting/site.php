@@ -4,7 +4,7 @@
 <?php include_once(dirname(__DIR__).'/left.php'); ?>
 <div class="layui-body">
 <!-- 内容主体区域 -->
-<div class="layui-row content-body">
+<div class="layui-row content-body place-holder" style="padding-bottom: 3em;">
     <!-- 说明提示框 -->
     <div class="layui-col-lg12">
       <div class="setting-msg">
@@ -55,6 +55,13 @@
             <label class="layui-form-label">自定义header</label>
             <div class="layui-input-block">
                 <textarea name = "custom_header" placeholder="您可以自定义<header>...</header>之间的内容，如果您不清楚，请勿填写！" rows = "8" class="layui-textarea"><?php echo $site['custom_header']; ?></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">自定义footer</label>
+            <div class="layui-input-block">
+                <textarea name = "custom_footer" placeholder="自定义站点底部信息，请填写HTML代码" class="layui-textarea"><?php echo $site['custom_footer']; ?></textarea>
             </div>
         </div>
 

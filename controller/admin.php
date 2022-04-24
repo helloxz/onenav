@@ -22,18 +22,41 @@ $version = get_version();
 
 $page = empty($_GET['page']) ? 'index' : $_GET['page'];
 //如果页面是修改edit_category
-if ($page == 'edit_category') {
+if ( $page == 'edit_category' ) {
     //获取id
     $id = intval($_GET['id']);
     //查询单条分类信息
-    $category = $db->get('on_categorys','*',[ 'id'  =>  $id ]);
+    $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys AS a WHERE id = $id";
+    $category_one = $db->query($sql)->fetchAll()[0];
+    //$category_one = $db->get('on_categorys','*',[ 'id'  =>  $id ]);
+    //查询父级分类
+    $categorys = $db->select('on_categorys','*',[
+        'fid'   => 0,
+        'ORDER' =>  ['weight'    =>  'DESC'] 
+    ]);
     //checked按钮
-    if( $category['property'] == 1 ) {
-        $category['checked'] = 'checked';
+    if( $category_one['property'] == 1 ) {
+        $category_one['checked'] = 'checked';
     }
     else{
-        $category['checked'] = '';
+        $category_one['checked'] = '';
     }
+}
+
+//添加分类页面
+if ( $page == 'add_category' ) {
+    //查询父级分类
+    $categorys = $db->select('on_categorys','*',[
+        'fid'   => 0,
+        'ORDER' =>  ['weight'    =>  'DESC'] 
+    ]);
+}
+
+//API设置页面
+if( $page == 'setting/api' ) {
+    //查询SecretKey
+    $SecretKey = $db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
+    
 }
 
 //如果页面是修改link

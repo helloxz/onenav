@@ -36,6 +36,8 @@ function add_category($api){
     $name = $_POST['name'];
     //获取私有属性
     $property = empty($_POST['property']) ? 0 : 1;
+    //获取分级ID
+    $fid = intval($_POST['fid']);
     //获取权重
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     //获取描述
@@ -44,7 +46,7 @@ function add_category($api){
     $description = htmlspecialchars($description);
     //获取字体图标
     $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
-    $api->add_category($token,$name,$property,$weight,$description,$font_icon);
+    $api->add_category($token,$name,$property,$weight,$description,$font_icon,$fid);
 }
 /**
  * 修改分类目录入口
@@ -52,7 +54,8 @@ function add_category($api){
 function edit_category($api){
     //获取ID
     $id = intval($_POST['id']);
-    
+    //获取父级ID
+    $fid = intval($_POST['fid']);
     //获取token
     $token = $_POST['token'];
     //获取分类名称
@@ -67,7 +70,7 @@ function edit_category($api){
     $description = htmlspecialchars($description);
     //字体图标
     $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
-    $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon);
+    $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon,$fid);
 }
 /**
  * 删除分类目录
@@ -259,6 +262,8 @@ function set_site($api) {
     $data['description'] = htmlspecialchars($_POST['description']);
     //获取自定义header
     $data['custom_header'] = $_POST['custom_header'];
+    //获取自定义footer
+    $data['custom_footer'] = $_POST['custom_footer'];
     //序列化存储
     $value = serialize($data);
     
@@ -277,10 +282,44 @@ function set_transition_page($api) {
     $data['admin_stay_time'] = intval($_POST['admin_stay_time']);
     
     //序列化存储
-    $value = serialize($data);
-
-    
-    
+    $value = serialize($data);   
 
     $api->set_option('s_transition_page',$value);
+}
+
+//生成create_sk
+function create_sk($api) {
+    $api->create_sk();
+}
+
+//获取onenav最新版本号
+function get_latest_version() {
+    try {
+        $curl = curl_init("https://git.xiaoz.me/xiaoz/onenav/raw/branch/main/version.txt");
+
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 Edg/100.0.1185.50");
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        #设置超时时间，最小为1s（可选）
+        curl_setopt($curl , CURLOPT_TIMEOUT, 5);
+
+        $html = curl_exec($curl);
+        curl_close($curl);
+        $data = [
+            "code"      =>  200,
+            "msg"       =>  "",
+            "data"      =>  $html
+        ];
+        
+    } catch (\Throwable $th) {
+        $data = [
+            "code"      =>  200,
+            "msg"       =>  "",
+            "data"      =>  ""
+        ];
+    }
+    exit(json_encode($data));
 }

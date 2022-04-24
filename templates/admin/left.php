@@ -23,7 +23,6 @@
       </ul>
 
       <!-- 系统设置 -->
-      </ul>
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
         <li class="layui-nav-item layui-nav-itemed">
           <a class="" href="javascript:;">系统设置</a>
@@ -31,6 +30,7 @@
             <dd><a href="/index.php?c=admin&page=setting/site">站点设置</a></dd>
             <dd><a href="/index.php?c=admin&page=setting/theme">主题设置</a></dd>
             <dd><a href="/index.php?c=admin&page=setting/transition_page">过渡页面</a></dd>
+            <dd><a href="/index.php?c=admin&page=setting/api">获取API</a></dd>
           </dl>
         </li>
       </ul>

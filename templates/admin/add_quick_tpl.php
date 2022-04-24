@@ -11,17 +11,16 @@
 		<meta name="HandheldFriendly" content="true">
 		<title>快速添加</title>
 		<link rel="stylesheet" type="text/css" href="templates/admin/static/add_quick_tpl.css" />
-		<link rel="stylesheet" type="text/css" href="https://libs.xiaoz.top/layui/v2.5.4/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
 	</head>
-
 	<body>
 		<div class="quick-main">
 			<div class="title">
-				<i class="iconfont icon--_tianjia"></i>快速添加当前连接
+				<i class="iconfont icon--_tianjia"></i>快速添加链接到OneNav
 			</div>
 			<form class="layui-form">
 				<div class="list">
-					<input type="text" name="url" id="url" required  lay-verify="required|url" placeholder="URL" autocomplete="off">
+					<input type="text" name="url" id="url" required  lay-verify="required" placeholder="URL" autocomplete="off">
 				</div>
 				<div class="list">
 					<input type="text" name="title" id="title" required  lay-verify="required" placeholder="标题" autocomplete="off">
@@ -44,11 +43,11 @@
 					</div>
 					<div class="li">
 					是否私有
-					<input type="checkbox" lay-skin="switch" lay-text="是|否" name="property" value = "1">
+					<input type="checkbox" lay-skin="switch" lay-text="是|否" name="property" value = "1" checked>
 					</div>
 				</div>
 				<div class="list">
-					<textarea name="description" id = "description" placeholder="请输入站点描述（选填）" ></textarea>
+					<textarea name="description" id = "description" style = "height:64px;" placeholder="请输入站点描述（选填）" ></textarea>
 				</div>
 				<div class="list-3">
 					<button class="close">关闭</button>

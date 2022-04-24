@@ -8,14 +8,24 @@
 	<meta name="keywords" content="<?php echo $site['keywords']; ?>" />
 	<meta name="description" content="<?php echo $site['description']; ?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel='stylesheet' href='/static/mdui/css/mdui.css'>
-	<link rel='stylesheet' href='https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.css'>
-	<link rel="stylesheet" href="https://libs.xiaoz.top/font-awesome/4.7.0/css/font-awesome.css">
+	<link rel='stylesheet' href='static/mdui/css/mdui.css'>
+	<link rel='stylesheet' href='static/jQuery-contextMenu/jquery.contextMenu.min.css'>
+	<link rel="stylesheet" href="static/font-awesome/4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="templates/<?php echo $template; ?>/static/style.css?v=<?php echo $version; ?>">
-	<script src = '/static/mdui/js/mdui.min.js'></script>
+	<script src = 'static/mdui/js/mdui.min.js'></script>
 	<?php echo $site['custom_header']; ?>
 </head>
-<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
+<?php
+	// 根据cookie来设置mdui主题
+	$md_theme = $_COOKIE['docs-theme-layout'];
+	if( empty($md_theme) || ( $md_theme == "light" ) ) {
+		$md_theme = "";
+	}
+	else{
+		$md_theme = "mdui-theme-layout-dark";
+	}
+?>
+<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar <?php echo $md_theme ?> mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
 	<!--导航工具-->
 	<header class = "mdui-appbar mdui-appbar-fixed">
 		<div class="mdui-toolbar mdui-color-theme">
@@ -38,6 +48,7 @@
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
 					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
+					<i class="mdui-icon material-icons" style = "position:absolute;right:2px;">search</i>
 				</div>
 			</div>
 			<!-- 新版搜索框END -->
@@ -61,6 +72,7 @@
 		</div>
 	</header>
 	<!--导航工具END-->
+
 	<!-- 添加按钮 -->
 	<?php
 		if( is_login() ) {
@@ -75,26 +87,54 @@
 	<!-- 返回顶部按钮 -->
 	<div id="top"></div>
 	<div class="top mdui-shadow-10">
-	<a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i>
+		<a href="javascript:;" title="返回顶部" onclick="gotop()"><i class="mdui-icon material-icons">arrow_drop_up</i></a>
 	</div>
 	<!-- 返回顶部END -->
-		<!--左侧抽屉导航-->
+	<!--左侧抽屉导航-->
 	<!-- 默认抽屉栏在左侧 -->
 	<div class="mdui-drawer" id="drawer">
 	  <ul class="mdui-list">
 	  	<?php
 			//遍历分类目录并显示
-			foreach ($categorys as $category) {
+			foreach ($category_parent as $category) {
 			//var_dump($category);
 			$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
 		?>
+          <div class="mdui-collapse" mdui-collapse>
+              <div class="mdui-collapse-item">
+        <div class="mdui-collapse-item-header">
 		<a href="#category-<?php echo $category['id']; ?>">
 			<li class="mdui-list-item mdui-ripple">
 				<div class="mdui-list-item-content category-name"><?php echo $font_icon; ?><?php echo htmlspecialchars_decode($category['name']); ?></div>
+                <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
 			</li>
 		</a>
-	    
+        </div>
+		<!-- 遍历二级分类-->
+          <div class="mdui-collapse-item-body">
+         <ul>
+         <?php foreach (get_category_sub( $category['id'] ) AS $category_sub){
+
+         ?>
+            <a href="#category-<?php echo $category_sub['id']; ?>">
+                <li class="mdui-list-item mdui-ripple" style="margin-left:-4.3em;">
+                    <div class="mdui-list-item-content category_sub">
+                        <i>
+                        <i class="<?php echo $category_sub['font_icon']; ?>"></i><?php echo htmlspecialchars_decode($category_sub['name']); ?>
+                        </i>
+                    </div>
+                </li>
+            </a>
+         <?php } ?>
+        </ul>
+        </div>
+		<!--遍历二级分类END-->
+		</div>
+        </div>
 		<?php } ?>
+		<!-- 华丽的分割线 -->
+		<div class="mdui-divider"></div>
+		<!-- 华丽的分割线END -->
 		<a href="https://www.xiaoz.me/" target="_blank" title="小z博客">
 			<li class="mdui-list-item mdui-ripple">
 			<div class="mdui-list-item-content category-name"><i class="fa fa-user-circle"></i> About</div>
@@ -116,6 +156,13 @@
 		</li>
 		</a>
 		<?php } ?>
+		<!-- 切换主题 -->
+		<a href="javascript:;" onclick = "change_theme()" title="点击可切换主题风格">
+			<li class="mdui-list-item mdui-ripple">
+				<div class="mdui-list-item-content category-name"><i class="fa fa-adjust"></i> 切换风格</div>
+			</li>
+		</a>
+		<!-- 切换主题END -->
 	  </ul>
 	</div>
 	<!--左侧抽屉导航END-->
@@ -156,9 +203,10 @@
 				foreach ($links as $link) {
 					//默认描述
 					$link['description'] = empty($link['description']) ? '作者很懒，没有填写描述。' : $link['description'];
-					
+					$id = $link['id'];
 				//var_dump($link);
 			?>
+			<a href="/index.php?c=click&id=<?php echo $link['id']; ?>" target="_blank" title = "<?php echo $link['description']; ?>">
 			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>" link-title = "<?php echo $link['title']; ?>" link-url = "<?php echo $link['url']; ?>">
 				<!--定义一个卡片-->
 				<div class="mdui-card link-line mdui-hoverable">
@@ -169,22 +217,18 @@
 						</div>
 						<?php } ?>
 						<!-- 角标END -->
-						<a href="/index.php?c=click&id=<?php echo $link['id']; ?>" target="_blank" title = "<?php echo $link['description']; ?>">
 							<div class="mdui-card-primary" style = "padding-top:16px;">
 									<div class="mdui-card-primary-title link-title">
 										<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
 										<span class="link_title"><?php echo $link['title']; ?></span> 
 									</div>
-
 							</div>
-						</a>
-						
-					
 					<!-- 卡片的内容end -->
 					<div class="mdui-card-content mdui-text-color-black-disabled" style="padding-top:0px;"><span class="link-content"><?php echo $link['description']; ?></span></div>
 				</div>
 				<!--卡片END-->
 			</div>
+			</a>
 			<?php } ?>
 			<!-- 遍历链接END -->
 			<?php } ?>
@@ -198,14 +242,18 @@
 	<!-- footer部分 -->
 	<!-- 未经作者授权，请勿去掉版权，否则可能影响作者更新代码的积极性或直接放弃维护此项目。 -->
 	<footer>
+		<?php if(empty( $site['custom_footer']) ){ ?>
 		© 2022 Powered by <a target = "_blank" href="https://github.com/helloxz/onenav" title = "简约导航/书签管理器" rel = "nofollow">OneNav</a>.The author is <a href="https://www.xiaoz.me/" target="_blank" title = "小z博客">xiaoz.me</a>
+		<?php }else{
+			echo $site['custom_footer'];
+		} ?>
 	</footer>
 	<!-- footerend -->
 </body>
-<script src = '/static/js/jquery.min.js'></script>
-<script src="/static/layer/layer.js"></script>
-<script src = 'https://libs.xiaoz.top/jQuery-contextMenu/2.9.2/jquery.contextMenu.min.js'></script>
-<script src = 'https://libs.xiaoz.top/clipBoard.js/clipBoard.min.js'></script>
+<script src = 'static/js/jquery.min.js'></script>
+<script src="static/layer/layer.js"></script>
+<script src = 'static/jQuery-contextMenu/jquery.contextMenu.min.js'></script>
+<script src = 'static/js/clipBoard.min.js'></script>
 <script src = "templates/<?php echo $template; ?>/static/holmes.js"></script>
 <script src="templates/<?php echo $template; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 <script>

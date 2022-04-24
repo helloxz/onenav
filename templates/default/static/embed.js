@@ -245,3 +245,36 @@ function on_search(){
 //     default: alert(event);
 //   }
 // });
+
+//链接跳转
+function goto(url) {
+    window.location.href = url;
+}
+
+function getCookie(cname)
+{
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0; i<ca.length; i++) 
+  {
+    var c = ca[i].trim();
+    if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+  }
+  return "";
+}
+//切换mdui的主题
+function change_theme() {
+    var d = new Date();
+    d.setTime(d.getTime()+(30*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    
+    if( ( getCookie("docs-theme-layout") == "" ) || ( getCookie("docs-theme-layout") == "light" ) ) {
+      var docs_theme_layout = "dark";
+    }
+    else{
+      var docs_theme_layout = "light";
+    }
+    document.cookie = "docs-theme-layout=" + docs_theme_layout + "; " + expires + " path=/";
+    window.location.href = "/";
+}
+

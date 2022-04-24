@@ -15,15 +15,20 @@ class Api {
     /**
      * name:创建分类目录
      */
-    public function add_category($token,$name,$property = 0,$weight = 0,$description = '',$font_icon = ''){
+    public function add_category($token,$name,$property = 0,$weight = 0,$description = '',$font_icon = '',$fid = 0){
         $this->auth($token);
+        //分类名称不允许为空
+        if( empty($name) ) {
+            $this->err_msg(-2000,'分类名称不能为空！');
+        }
         $data = [
             'name'          =>  htmlspecialchars($name,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
             'property'      =>  $property,
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
-            'font_icon'     =>  $font_icon
+            'font_icon'     =>  $font_icon,
+            'fid'           =>  $fid
         ];
         //插入分类目录
         $this->db->insert("on_categorys",$data);
@@ -47,25 +52,36 @@ class Api {
      * 修改分类目录
      * 
      */
-    public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = '',$font_icon = ''){
+    public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = '',$font_icon = '',$fid = 0){
         $this->auth($token);
+        $fid = intval($fid);
         //如果id为空
         if( empty($id) ){
             $this->err_msg(-1003,'The category ID cannot be empty!');
         }
         //如果分类名为空
-        elseif( empty($name) ){
+        elseif( empty($name ) ){
             $this->err_msg(-1004,'The category name cannot be empty!');
         }
+        
         //更新数据库
         else{
+            //根据分类ID查询改分类下面是否已经存在子分类，如果存在子分类了则不允许设置为子分类，实用情况：一级分类下存在二级分类，无法再将改一级分类修改为二级分类
+            $count = $this->db->count("on_categorys", [
+                "fid" => $id
+            ]);
+            //改分类下的子分类数量大于0，并且将父级ID修改为其它分类
+            if( ( $count > 0 ) && ( $fid !== 0 ) ) {
+                $this->err_msg(-2000,'修改失败，该分类下已存在子分类！');
+            }
             $data = [
                 'name'          =>  htmlspecialchars($name,ENT_QUOTES),
                 'up_time'      =>  time(),
                 'weight'        =>  $weight,
                 'property'      =>  $property,
                 'description'   =>  htmlspecialchars($description,ENT_QUOTES),
-                'font_icon'     =>  $font_icon
+                'font_icon'     =>  $font_icon,
+                'fid'           =>  $fid
             ];
             $re = $this->db->update('on_categorys',$data,[ 'id' => $id]);
             //var_dump( $this->db->log() );
@@ -136,12 +152,16 @@ class Api {
      */
     protected function auth($token){
         //计算正确的token：用户名 + TOKEN
-        $token_yes = md5(USER.TOKEN);
+        $SecretKey = @$this->db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
+        $token_yes = md5(USER.$SecretKey);
         //如果token为空，则验证cookie
         if(empty($token)) {
             if( !$this->is_login() ) {
                 $this->err_msg(-1002,'Authorization failure!');
             }
+        }
+        else if ( empty($SecretKey) ) {
+            $this->err_msg(-2000,'请先生成SecretKey！');
         }
         else if($token != $token_yes){
             $this->err_msg(-1002,'Authorization failure!');
@@ -169,8 +189,8 @@ class Api {
         $data = [
             'fid'           =>  $fid,
             'title'         =>  htmlspecialchars($title,ENT_QUOTES),
-            'url'           =>  $url,
-            'url_standby'   =>  $url_standby,
+            'url'           =>  htmlspecialchars($url,ENT_QUOTES),
+            'url_standby'   =>  htmlspecialchars($url_standby,ENT_QUOTES),
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
@@ -315,9 +335,9 @@ class Api {
         //$this->check_link($fid,$title,$url);
         $this->check_link([
             'fid'           =>  $fid,
-            'title'         =>  $title,
-            'url'           =>  $url,
-            'url_standby'   =>  $url_standby
+            'title'         =>  htmlspecialchars($title,ENT_QUOTES),
+            'url'           =>  htmlspecialchars($url,ENT_QUOTES),
+            'url_standby'   =>  htmlspecialchars($url_standby,ENT_QUOTES)
         ]);
         //查询ID是否存在
         $count = $this->db->count('on_links',[ 'id' => $id]);
@@ -411,12 +431,16 @@ class Api {
         if( empty($url) ){
             $this->err_msg(-1009,'URL cannot be empty!');
         }
-        //链接不合法
-        if( !filter_var($url, FILTER_VALIDATE_URL) ) {
+        //通过正则匹配链接是否合法，支持http/https/ftp/magnet:?|ed2k|tcp/udp/thunder/rtsp/rtmp/sftp
+        $pattern = "/^(http:\/\/|https:\/\/|ftp:\/\/|ftps:\/\/|magnet:?|ed2k:\/\/|tcp:\/\/|udp:\/\/|thunder:\/\/|rtsp:\/\/|rtmp:\/\/|sftp:\/\/).+/";
+        // if( !filter_var($url, FILTER_VALIDATE_URL) ) {
+        //     $this->err_msg(-1010,'URL is not valid!');
+        // }
+        if ( !preg_match($pattern,$url) ) {
             $this->err_msg(-1010,'URL is not valid!');
         }
         //备用链接不合法
-        if ( ( !empty($url_standby) ) && ( !filter_var($url_standby, FILTER_VALIDATE_URL) ) ) {
+        if ( ( !empty($url_standby) ) && ( !preg_match($pattern, $url_standby) ) ) {
             $this->err_msg(-1010,'URL is not valid!');
         }
         return true;
@@ -425,16 +449,30 @@ class Api {
      * 查询分类目录
      */
     public function category_list($page,$limit){
+        $token = @$_POST['token'];
         $offset = ($page - 1) * $limit;
         //如果成功登录，则查询所有
         if( $this->is_login() ){
-            $sql = "SELECT * FROM on_categorys ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            //统计总数
+            $count = $this->db->count('on_categorys','*');
+        }
+        //如果存在token，则验证
+        else if( !empty($token) ) {
+            $this->auth($token);
+            //查询所有分类
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            //统计总数
+            $count = $this->db->count('on_categorys','*');
         }
         else{
-            $sql = "SELECT * FROM on_categorys WHERE property = 0 ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a WHERE property = 0 ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            //统计总数
+            $count = $this->db->count('on_categorys','*',[
+                "property"      =>  0
+            ]);
         }
-        //统计总数
-        $count = $this->db->count('on_categorys','*');
+        
         //原生查询
         $datas = $this->db->query($sql)->fetchAll();
         $datas = [
@@ -444,6 +482,27 @@ class Api {
             'data'      =>  $datas
         ];
         exit(json_encode($datas));
+    }
+    /**
+     * 生成
+     */
+    public function create_sk() {
+        //验证是否登录
+        $this->auth('');
+        $sk = md5(USER.USER.time());
+        
+        $result = $this->set_option_bool('SecretKey',$sk);
+        if( $result ){
+            $datas = [
+                'code'      =>  0,
+                'data'      =>  $sk
+            ];
+            exit(json_encode($datas));
+        }
+        else{
+            $this->err_msg(-2000,'SecretKey生成失败！');
+        }
+        
     }
     /**
      * 查询链接
@@ -616,9 +675,16 @@ class Api {
     public function get_link_info($token,$url){
         $this->auth($token);
         //检查链接是否合法
+        $pattern = "/^(http:\/\/|https:\/\/).*/";
         //链接不合法
-        if( !filter_var($url, FILTER_VALIDATE_URL) ) {
-            $this->err_msg(-1010,'URL is not valid!');
+        if( empty($url) ) {
+            $this->err_msg(-2000,'URL不能为空!');
+        }
+        if( !preg_match($pattern,$url) ){
+            $this->err_msg(-1010,'只支持识别http/https协议的链接!');
+        }
+        else if( !filter_var($url, FILTER_VALIDATE_URL) ) {
+            $this->err_msg(-2000,'只支持识别http/https协议的链接!');
         }
         //获取网站标题
         $c = curl_init(); 
@@ -892,6 +958,55 @@ class Api {
                 exit(json_encode($data));
             } catch (\Throwable $th) {
                 $this->err_msg(-2000,$th);
+            }
+        }
+
+    }
+    /**
+     * 更新option，返回BOOL值
+     */
+    protected function set_option_bool($key,$value = '') {
+        $key = htmlspecialchars(trim($key));
+        //如果key是空的
+        if( empty($key) ) {
+            return FALSE;
+        }
+
+        $count = $this->db->count("on_options", [
+            "key" => $key
+        ]);
+        
+        //如果数量是0，则插入，否则就是更新
+        if( $count === 0 ) {
+            try {
+                $this->db->insert("on_options",[
+                    "key"   =>  $key,
+                    "value" =>  $value
+                ]);
+                $data = [
+                    "code"      =>  0,
+                    "data"      =>  "设置成功！"
+                ];
+                return TRUE;
+            } catch (\Throwable $th) {
+                return FALSE;
+            }
+        }
+        //更新数据
+        else if( $count === 1 ) {
+            try {
+                $this->db->update("on_options",[
+                    "value"     =>  $value
+                ],[
+                    "key"       =>  $key
+                ]);
+                $data = [
+                    "code"      =>  0,
+                    "data"      =>  "设置已更新！"
+                ];
+                return TRUE;
+            } catch (\Throwable $th) {
+                return FALSE;
             }
         }
 

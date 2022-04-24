@@ -1,6 +1,6 @@
 # OneNav
 
-使用PHP + SQLite 3开发的书签管理器（导航），界面简洁，安装简单，使用方便。
+OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使用PHP + SQLite 3开发，界面简洁，安装简单，使用方便。OneNav可帮助你你将浏览器书签集中式管理，解决跨设备、跨平台、跨浏览器之间同步和访问困难问题，做到一处部署，随处访问。
 
 ![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
 
@@ -22,6 +22,8 @@
 * 支持API
 * 支持Docker部署
 * 支持uTools插件
+* 支持二级分类
+* 支持Chromium内核的[浏览器扩展](https://dwz.ovh/4kxn2)（插件）
 
 ## 安装
 
@@ -29,7 +31,7 @@
 
 1. 需安装PHP环境，并确保支持SQLite3
 2. 下载源码解压到站点根目录
-3. 访问首页自动完成安装
+3. 访问首页根据提示初始化用户名/密码
 4. 访问后台：`http://IP/index.php?c=login`
 
 **Docker部署：**
@@ -38,12 +40,11 @@
 docker run -itd --name="onenav" -p 80:80 \
     -e USER='xiaoz' -e PASSWORD='xiaoz.me' \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav
+    helloz/onenav:0.9.19
 ```
-
-* `USER`：设置用户名，上述设置为`xiaoz`
-* `PASSWORD`：设置密码，上述设置为`xiaoz.me`
+* 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
+* `0.9.19`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
@@ -63,6 +64,8 @@ docker run -itd --name="onenav" -p 80:80 \
 * 社区支持：[https://dwz.ovh/vd0bw](https://dwz.ovh/vd0bw)
 
 ## 鸣谢
+
+感谢`@落幕`/`@百素`/`@itushan`的代码贡献及主题开发，以及其它OneNav贡献者和使用者，名字太多无法一一列举，还请谅解。
 
 OneNav诞生离不开以下项目，在此表示感谢（排名不分先后）。
 
