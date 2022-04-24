@@ -15,7 +15,17 @@
 	<script src = 'static/mdui/js/mdui.min.js'></script>
 	<?php echo $site['custom_header']; ?>
 </head>
-<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
+<?php
+	// 根据cookie来设置mdui主题
+	$md_theme = $_COOKIE['docs-theme-layout'];
+	if( empty($md_theme) || ( $md_theme == "light" ) ) {
+		$md_theme = "";
+	}
+	else{
+		$md_theme = "mdui-theme-layout-dark";
+	}
+?>
+<body class = "mdui-drawer-body-left mdui-appbar-with-toolbar <?php echo $md_theme ?> mdui-theme-primary-indigo mdui-theme-accent-pink mdui-loaded">
 	<!--导航工具-->
 	<header class = "mdui-appbar mdui-appbar-fixed">
 		<div class="mdui-toolbar mdui-color-theme">
@@ -38,6 +48,7 @@
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
 					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
+					<i class="mdui-icon material-icons" style = "position:absolute;right:2px;">search</i>
 				</div>
 			</div>
 			<!-- 新版搜索框END -->
@@ -121,6 +132,9 @@
 		</div>
         </div>
 		<?php } ?>
+		<!-- 华丽的分割线 -->
+		<div class="mdui-divider"></div>
+		<!-- 华丽的分割线END -->
 		<a href="https://www.xiaoz.me/" target="_blank" title="小z博客">
 			<li class="mdui-list-item mdui-ripple">
 			<div class="mdui-list-item-content category-name"><i class="fa fa-user-circle"></i> About</div>
@@ -142,6 +156,13 @@
 		</li>
 		</a>
 		<?php } ?>
+		<!-- 切换主题 -->
+		<a href="javascript:;" onclick = "change_theme()" title="点击可切换主题风格">
+			<li class="mdui-list-item mdui-ripple">
+				<div class="mdui-list-item-content category-name"><i class="fa fa-adjust"></i> 切换风格</div>
+			</li>
+		</a>
+		<!-- 切换主题END -->
 	  </ul>
 	</div>
 	<!--左侧抽屉导航END-->

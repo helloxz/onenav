@@ -3,7 +3,7 @@
 
 <div class="layui-body">
 <!-- 内容主体区域 -->
-<div class="layui-row content-body">
+<div class="layui-row content-body place-holder">
   <!-- 说明提示框 -->
   <div class="layui-col-lg12">
       <div class="setting-msg">

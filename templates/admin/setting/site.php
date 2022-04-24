@@ -4,7 +4,7 @@
 <?php include_once(dirname(__DIR__).'/left.php'); ?>
 <div class="layui-body">
 <!-- 内容主体区域 -->
-<div class="layui-row content-body" style="padding-bottom: 3em;">
+<div class="layui-row content-body place-holder" style="padding-bottom: 3em;">
     <!-- 说明提示框 -->
     <div class="layui-col-lg12">
       <div class="setting-msg">

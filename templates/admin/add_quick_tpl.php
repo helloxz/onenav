@@ -20,7 +20,7 @@
 			</div>
 			<form class="layui-form">
 				<div class="list">
-					<input type="text" name="url" id="url" required  lay-verify="required|url" placeholder="URL" autocomplete="off">
+					<input type="text" name="url" id="url" required  lay-verify="required" placeholder="URL" autocomplete="off">
 				</div>
 				<div class="list">
 					<input type="text" name="title" id="title" required  lay-verify="required" placeholder="标题" autocomplete="off">

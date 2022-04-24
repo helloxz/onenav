@@ -54,6 +54,7 @@ class Api {
      */
     public function edit_category($token,$id,$name,$property = 0,$weight = 0,$description = '',$font_icon = '',$fid = 0){
         $this->auth($token);
+        $fid = intval($fid);
         //如果id为空
         if( empty($id) ){
             $this->err_msg(-1003,'The category ID cannot be empty!');
@@ -69,7 +70,8 @@ class Api {
             $count = $this->db->count("on_categorys", [
                 "fid" => $id
             ]);
-            if( $count > 0 ) {
+            //改分类下的子分类数量大于0，并且将父级ID修改为其它分类
+            if( ( $count > 0 ) && ( $fid !== 0 ) ) {
                 $this->err_msg(-2000,'修改失败，该分类下已存在子分类！');
             }
             $data = [
@@ -680,6 +682,9 @@ class Api {
         }
         if( !preg_match($pattern,$url) ){
             $this->err_msg(-1010,'只支持识别http/https协议的链接!');
+        }
+        else if( !filter_var($url, FILTER_VALIDATE_URL) ) {
+            $this->err_msg(-2000,'只支持识别http/https协议的链接!');
         }
         //获取网站标题
         $c = curl_init(); 

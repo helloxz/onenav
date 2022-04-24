@@ -11,7 +11,7 @@ body{
 }
 .link-line {
     font-size: 16px;
-    border-bottom: 1px solid #dddddd;
+    /* border-bottom: 1px solid #dddddd; */
     height:120px;
     position:relative;
     overflow: hidden;
@@ -47,6 +47,7 @@ body{
 }
 .link-space{
     margin-top:16px;
+    z-index:999;
 }
 .link-title{
     /*color:rgb(0,0,0);*/
@@ -156,6 +157,7 @@ footer a{
     padding-right:5px;
 }
 #drawer{
-    background-color: #FEFEFE;
-    box-shadow:1px 0 5px 0 #eeeeee;
+    /* background-color: #FEFEFE; */
+    /* box-shadow:1px 0 5px 0 #eeeeee; */
+    border-right: 0.5px solid rgba(0, 0, 0, 0.12);
 }

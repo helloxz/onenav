@@ -3,7 +3,7 @@
 
 <div class="layui-body">
 <!-- 内容主体区域 -->
-<div class="layui-row content-body">
+<div class="layui-row content-body place-holder">
     <div class="layui-col-lg12">
         <table id="category_list" lay-filter="mycategory"></table>
     </div>

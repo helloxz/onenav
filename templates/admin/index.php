@@ -2,7 +2,7 @@
 <?php include_once('left.php'); ?>
   
   
-  <div class="layui-body">
+  <div class="layui-body place-holder">
     <!-- 内容主体区域 -->
     <div style="padding: 15px;">
       <div class="layui-container" style = "margin-top:2em;">
