@@ -18,6 +18,15 @@
 		<link rel="stylesheet" href="static/font-awesome/4.7.0/css/font-awesome.css">
 		<link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" />
 		<?php echo $site['custom_header']; ?>
+		<style>
+		<?php if( $theme_config->link_description == "hide" ) { ?>
+		/*链接描述是否显示*/
+		.site-main .site-list .list .desc {
+		/*none：不显示，block:显示*/
+		display: none;
+		}
+		<?php } ?>
+		</style>
 	</head>
 
 	<body>
@@ -418,6 +427,10 @@
 					<div class="li">
 						私有：
 						<input type="checkbox" lay-skin="switch" lay-text="是|否" name="property" value="1">
+					</div>
+					<div class="li" style = "display:none;">
+						<span>fid：</span>
+						<input type="text" class="num" name="fid" min="0" max="999" required lay-verify="required|number" autocomplete="off">
 					</div>
 				</div>
 				<div class="list">

@@ -25,8 +25,6 @@
 			$admin_stay_time = $transition_page['admin_stay_time'];
 			
 			if ($is_login) {
-				//header("Refresh:1;url=".$link['url']);
-
 				header("Refresh:$admin_stay_time;url=".$link['url']);
 			}
 			else{
@@ -103,6 +101,5 @@
 			</div>
 		</div>
 	</div>
-	<?php g_extend_js(); ?>
 </body>
 </html>

@@ -71,6 +71,7 @@ layui.use(['element','table','layer','form','upload'], function(){
     elem: '#link_list'
     ,height: 520
     ,url: 'index.php?c=api&method=link_list' //数据接口
+    ,method: 'post'
     ,page: true //开启分页
     ,toolbar: '#linktool'
     ,cols: [[ //表头
@@ -156,9 +157,41 @@ layui.use(['element','table','layer','form','upload'], function(){
         //刷新当前页面
         //window.location.reload();
       break;
-      case 'getCheckLength':
+      case 'readmoredata':
         var data = checkStatus.data;
-        layer.msg('选中了：'+ data.length + ' 个');
+        fidtext = $("#fid option:selected").text();
+        fid = $("#fid").val();
+        fid = parseInt(fid);
+        if( data.length == 0 ) {
+          layer.msg('未选中任何数据！');
+          return false;
+        }
+        
+        if ( isNaN(fid) === true ){
+          layer.msg('请先选择分类！',{icon:5});
+        }
+        else{
+          
+          layer.confirm('确认将选中链接的分类修改为【' + fidtext + '】?',{icon: 3, title:'温馨提示！'}, function(index){
+            id = [];
+            for(let i = 0;i < data.length;i++) {
+              id.push(data[i].id);
+            }
+            
+            $.post("/index.php?c=api&method=batch_modify_category",{id:id,fid:fid},function(data,status){
+                if (data.msg === "success") {
+                  layer.msg("修改成功！",{icon:1});
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 2000);
+                }
+                else{
+                  layer.msg(data.err_msg,{icon:5});
+                }
+            });
+          });
+        }
+        //console.log(data);
       break;
       case 'isAll':
         layer.msg(checkStatus.isAll ? '全选': '未全选');
@@ -257,6 +290,66 @@ layui.use(['element','table','layer','form','upload'], function(){
       }
     });
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
+  //筛选链接
+  form.on('submit(screen_link)', function(data){
+    fid = data.field.fid;
+    if( fid == "" ) {
+      layer.msg("请先选择分类！",{icon:5});
+      return false;
+    }
+    //表格重载
+    var tableIns = table.render({
+      elem: '#link_list'
+      ,height: 520
+      ,url: 'index.php?c=api&method=link_list' //数据接口
+      ,method: 'post'
+      ,page: true //开启分页
+      ,toolbar: '#linktool'
+      ,where:{
+        category_id:fid
+      }
+      ,cols: [[ //表头
+        {type:'checkbox'} //开启复选框
+        ,{field: 'id', title: 'ID', width:80, sort: true}
+        // ,{field: 'fid', title: '分类ID',sort:true, width:90}
+        ,{field: 'category_name', title: '所属分类',sort:true,width:120}
+        ,{field: 'url', title: 'URL',width:140,templet:function(d){
+          var url = '<a target = "_blank" href = "' + d.url + '" title = "' + d.url + '">' + d.url + '</a>';
+          return url;
+        }}
+        ,{field: 'title', title: '链接标题', width:140}
+        ,{field: 'add_time', title: '添加时间', width:148, sort: true,templet:function(d){
+          var add_time = timestampToTime(d.add_time);
+          return add_time;
+        }}
+        ,{field: 'up_time', title: '修改时间', width:148,sort:true,templet:function(d){
+            if(d.up_time == null){
+              return '';
+            }
+            else{
+                var up_time = timestampToTime(d.up_time);
+                return up_time;
+            }
+            
+        }} 
+        ,{field: 'weight', title: '权重', width: 75,sort:true}
+        ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
+              if(d.property == 1) {
+                  return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
+              }
+              else {
+                  return '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger">否</button>';
+              }
+        }}
+        ,{field: 'click', title: '点击数',width:90,sort:true}
+        ,{fixed: 'right', title:'操作', toolbar: '#link_operate'}
+      ]]
+    });
+
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
