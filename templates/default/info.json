@@ -10,6 +10,6 @@
     "config": {
         "full_width_mode":"off",
         "link_description":"show",
-        "favicon": "offline"
+        "favicon": "online"
     }
 }

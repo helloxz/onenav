@@ -167,7 +167,7 @@ $site = unserialize($site);
 if( file_exists("templates/".$template."/config.json") ) {
     $config_file = "templates/".$template."/config.json";
 }
-else if(data/templates/".$template."/config.json) {
+else if( file_exists("data/templates/".$template."/config.json") ) {
     $config_file = "data/templates/".$template."/config.json";
 }
 else if( file_exists("templates/".$template."/info.json") ) {
@@ -181,12 +181,14 @@ else {
 $config_content = @file_get_contents($config_file);
 //如果是info.json,则特殊处理下
 if ( strstr($config_file,"info.json") ) {
+    $config_content = json_decode($config_content);
     $theme_config = $config_content->config;
 }
 else{
-    $theme_config = $config_content;
+    $config_content = $config_content;
+    $theme_config = json_decode($config_content);
 }
-$theme_config = json_decode($config_content);
+
 
 //判断文件夹是否存在
 if( is_dir('templates/'.$template) ){

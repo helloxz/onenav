@@ -980,7 +980,7 @@ class Api {
         if( file_exists("templates/".$template."/config.json") ) {
             $config_file = "templates/".$template."/config.json";
         }
-        else if(data/templates/".$template."/config.json) {
+        else if( file_exists("data/templates/".$template."/config.json") ) {
             $config_file = "data/templates/".$template."/config.json";
         }
         else if( file_exists("templates/".$template."/info.json") ) {
@@ -995,12 +995,14 @@ class Api {
         
         //如果是info.json,则特殊处理下
         if ( strstr($config_file,"info.json") ) {
+            $config_content = json_decode($config_content);
             $theme_config = $config_content->config;
         }
         else{
             $theme_config = $config_content;
+            $theme_config = json_decode($theme_config);
         }
-        $theme_config = json_decode($theme_config);
+        
         $this->return_json(200,$theme_config,"");
     }
     /**
