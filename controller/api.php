@@ -145,8 +145,8 @@ function category_list($api){
  * 查询链接列表
  */
 function link_list($api){
-    $page = empty(intval($_GET['page'])) ? 1 : intval($_GET['page']);
-    $limit = empty(intval($_GET['limit'])) ? 10 : intval($_GET['limit']);
+    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
+    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
     //获取token
     $token = $_POST['token'];
     //获取分类ID
@@ -322,4 +322,36 @@ function get_latest_version() {
         ];
     }
     exit(json_encode($data));
+}
+
+//批量修改链接分类
+function batch_modify_category($api) {
+    //获取id列表
+    $id = $_POST['id'];
+    //获取分类ID
+    $fid = intval($_POST['fid']);
+
+    $data = [
+        'id'    =>  $id,
+        'fid'   =>  $fid
+    ];
+    
+    $api->batch_modify_category($data);
+}
+
+//保存主题参数设置
+function save_theme_config($api) {
+    //获取所有POST数组，并组合为对象
+    $post_data = $_POST;
+    //数组转对象
+    foreach ($post_data as $key => $value) {
+        $data['config']->$key = $value;
+    }
+    $data['name'] = $post_data['name'];
+    unset($data['config']->name);
+    $api->save_theme_config($data);
+}
+//获取主题配置信息
+function get_theme_config($api) {
+    $api->get_theme_config();
 }
