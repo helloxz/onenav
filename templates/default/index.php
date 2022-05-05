@@ -14,6 +14,16 @@
 	<link rel="stylesheet" href="templates/<?php echo $template; ?>/static/style.css?v=<?php echo $version; ?>">
 	<script src = 'static/mdui/js/mdui.min.js'></script>
 	<?php echo $site['custom_header']; ?>
+	<style>
+	<?php if( $theme_config->link_description == "hide" ) { ?>
+		.link-content{
+			display:none;
+		}
+		.link-line{
+			height:56px;
+		}
+	<?php } ?>
+	</style>
 </head>
 <?php
 	// 根据cookie来设置mdui主题
@@ -32,19 +42,10 @@
 		<!-- <button class="mdui-btn" mdui-drawer="{target: '#drawer'}"><i class="mdui-icon material-icons">home</i></button> -->
 		<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-drawer="{target: '#drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></span>
 		  <!-- <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">home</i></a> -->
-		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site['description'] ?>"><span class="mdui-typo-title"><?php echo $site['title']; ?></span></a>
+		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site['description'] ?>"><span class="mdui-typo-title default-title"><h1><?php echo $site['title']; ?></h1></span></a>
 		  <div class="mdui-toolbar-spacer"></div>
-		  <!-- 搜索框 -->
-		  <!-- <div class="mdui-col-lg-3">
-			  <div class="mdui-textfield mdui-textfield-expandable mdui-float-right">
-			<button class="mdui-textfield-icon mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></button>
-			<input class="mdui-textfield-input search" type="text" placeholder="Search"/>
-			<button class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">close</i></button>
-			</div>
-		</div> -->
-		  <!-- 搜索框END -->
 		  <!-- 新版搜索框 -->
-		  	<div class="mdui-col-md-4 mdui-col-xs-6">
+		  	<div class="mdui-col-md-3 mdui-col-xs-6">
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
 					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
@@ -168,13 +169,13 @@
 	<!--左侧抽屉导航END-->
 
 	<!--正文内容部分-->
-	<div class="mdui-container">
+	<div class="<?php echo ( $theme_config->full_width_mode == "off") ? "mdui-container" : "mdui-container-fluid"; ?>">
 		<!-- 搜索框 -->
 		<!-- <div class="mdui-row">
-			<div class="mdui-col-xs-12">
+			<div class="mdui-col-xs-12" style = "z-index:99999;">
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<label class="mdui-textfield-label">输入书签关键词进行搜索</label>
-					<input class="mdui-textfield-input search" type="text" />
+					<input class="mdui-textfield-input search"  type="text" />
 				</div>
 			</div>
 		</div> -->
@@ -207,7 +208,7 @@
 				//var_dump($link);
 			?>
 			<a href="/index.php?c=click&id=<?php echo $link['id']; ?>" target="_blank" title = "<?php echo $link['description']; ?>">
-			<div class="mdui-col-lg-3 mdui-col-md-4 mdui-col-xs-12 link-space" id = "id_<?php echo $link['id']; ?>" link-title = "<?php echo $link['title']; ?>" link-url = "<?php echo $link['url']; ?>">
+			<div class="mdui-col-lg-2 mdui-col-md-3 mdui-col-sm-4 mdui-col-xs-6 link-space" id = "id_<?php echo $link['id']; ?>" link-title = "<?php echo $link['title']; ?>" link-url = "<?php echo $link['url']; ?>">
 				<!--定义一个卡片-->
 				<div class="mdui-card link-line mdui-hoverable">
 						<!-- 如果是私有链接，则显示角标 -->
@@ -219,7 +220,12 @@
 						<!-- 角标END -->
 							<div class="mdui-card-primary" style = "padding-top:16px;">
 									<div class="mdui-card-primary-title link-title">
-										<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
+										<!-- 网站图标显示方式 -->
+										<?php if( $theme_config->favicon == "online") { ?>
+											<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
+										<?php }else{ ?>
+											<img src="/index.php?c=ico&text=<?php echo $link['title']; ?>" alt="" width="16" height="16" />
+										<?php } ?>
 										<span class="link_title"><?php echo $link['title']; ?></span> 
 									</div>
 							</div>

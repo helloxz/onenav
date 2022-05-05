@@ -203,6 +203,7 @@ layui.use(['dropdown', 'layer', 'form'], function() {
 					"description": data.data.description,
 					"weight": data.data.weight,
 					"property": property,
+					"fid":parseInt(data.data.fid)
 				});
 			} else {
 				//获取信息失败
@@ -287,6 +288,7 @@ function editFID(data) {
 		name: data.name,
 		font_icon: data.font_icon,
 		weight: data.weight,
+		fid:data.fid,
 		property: data.property,
 		description: data.description,
 	}, function(data, status) {

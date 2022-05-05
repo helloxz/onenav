@@ -215,6 +215,38 @@ class Api {
         }
     }
     /**
+     * 批量修改链接分类
+     */
+    public function batch_modify_category($data) {
+        $this->auth($token);
+        //获取链接ID，是一个数组
+        $id = implode(',',$data['id']);
+        //获取分类ID
+        $fid = $data['fid'];
+        //查询分类ID是否存在
+        $count = $this->db->count('on_categorys',[ 'id' => $fid]);
+        //如果分类ID不存在
+        if( empty($fid) || empty($count) ) {
+            $this->err_msg(-2000,'分类ID不存在！');
+        }
+        else{
+            $sql = "UPDATE on_links SET fid='$fid' WHERE id IN ($id)";
+            $re = $this->db->query($sql);
+            if( $re ) {
+                $id = $this->db->id();
+                $data = [
+                    'code'      =>  0,
+                    'msg'        =>  "success"
+                ];
+                exit(json_encode($data));
+            }
+            else{
+                $this->err_msg(-2000,'更新失败！');
+            }
+        }
+    }
+    
+    /**
      * 批量导入链接
      */
     public function imp_link($token,$filename,$fid,$property = 0){
@@ -908,6 +940,81 @@ class Api {
         } catch(Exception $e){
             $this->err_msg(-2000,$e->getMessage());
         }
+    }
+    /**
+     * 保存主题参数
+     */
+    public function save_theme_config($data) {
+        $this->auth($token);
+        //获取主题名称
+        $name = $data['name'];
+        //获取config参数,是一个对象
+        $config = $data['config'];
+        
+        //获取主题配置文件config.json
+        if ( is_dir("templates/".$name) ) {
+            $config_file = "templates/".$name."/config.json";
+        }
+        else{
+            $config_file = "data/templates/".$name."/config.json";
+        }
+        
+        $config_content = json_encode($config,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        //写入配置
+        try {
+            $re = @file_put_contents($config_file,$config_content);
+            $this->return_json(0,"success");
+        } catch (\Throwable $th) {
+            $this->err_msg(-2000,"写入配置失败！");
+        }
+    }
+    /**
+     * 获取主题参数
+     */
+    public function get_theme_config() {
+        $template = $this->db->get("on_options","value",[
+            "key"   =>  "theme"
+        ]);
+        //获取主题配置信息
+        //获取主题配置
+        if( file_exists("templates/".$template."/config.json") ) {
+            $config_file = "templates/".$template."/config.json";
+        }
+        else if( file_exists("data/templates/".$template."/config.json") ) {
+            $config_file = "data/templates/".$template."/config.json";
+        }
+        else if( file_exists("templates/".$template."/info.json") ) {
+            $config_file = "templates/".$template."/info.json";
+        }
+        else {
+            $config_file = "data/templates/".$template."/info.json";
+        }
+
+        //读取主题配置
+        $config_content = @file_get_contents($config_file);
+        
+        //如果是info.json,则特殊处理下
+        if ( strstr($config_file,"info.json") ) {
+            $config_content = json_decode($config_content);
+            $theme_config = $config_content->config;
+        }
+        else{
+            $theme_config = $config_content;
+            $theme_config = json_decode($theme_config);
+        }
+        
+        $this->return_json(200,$theme_config,"");
+    }
+    /**
+     * 通用json消息返回
+     */
+    public function return_json($code,$data,$msg = "") {
+        $return = [
+            "code"  =>  intval($code),
+            "data"  =>  $data,
+            "msg"   =>  $msg
+        ];
+        exit(json_encode($return));
     }
     /**
      * 更新option

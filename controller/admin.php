@@ -43,6 +43,31 @@ if ( $page == 'edit_category' ) {
     }
 }
 
+//如果是主题设置页面
+if ( $page == "setting/theme_config" ){
+    //获取主题名称
+    $name = trim($_GET['name']);
+    //获取主题目录
+    if ( is_dir("templates/".$name) ) {
+        $theme_dir = "templates/".$name;
+    }
+    else{
+        $theme_dir = "data/templates/".$name;
+    }
+    //读取主题配置
+    $config_content = @file_get_contents("templates/".$name."/info.json");
+    if( !$config_content ) {
+        $config_content = @file_get_contents("data/templates/".$name."/info.json");
+    }
+    $configs = json_decode($config_content);
+    $configs = $configs->config;
+    //获取当前的配置参数
+    $current_configs = file_get_contents($theme_dir."/config.json");
+    
+    $current_configs = json_decode($current_configs);
+    //var_dump($current_configs);
+}
+
 //添加分类页面
 if ( $page == 'add_category' ) {
     //查询父级分类
@@ -78,6 +103,12 @@ if ($page == 'edit_link') {
     else{
         $link['checked'] = '';
     }
+}
+
+//链接列表页面
+if ( $page == "link_list" ) {
+    //查询所有分类信息，用于分类框选择
+    $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weigth'    =>  'DESC'] ]);
 }
 
 //如果页面是添加链接页面

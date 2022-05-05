@@ -66,8 +66,12 @@ line-height:15px;
     -webkit-line-clamp: 2; 
     
 }
+.default-title h1{
+    font-size: 1.2em;
+}
 .category-name{
     padding-left:8px;
+    font-weight: bold;
 }
 .category-name i {
     padding-right:12px;

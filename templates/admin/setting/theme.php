@@ -28,6 +28,7 @@
                     <div class="layui-btn-group">
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "set_theme('<?php echo $key; ?>')">使用</button>
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail('<?php echo $key; ?>')">详情</button>
+                        <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_config('<?php echo $key; ?>')">参数设置</button>
                         <?php if( $current_them == $key ) { ?>
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">当前主题</button>
                         <?php } ?>
@@ -53,6 +54,15 @@ function theme_detail(name){
         area: ['60%', '59%'],
         content:'/index.php?c=admin&page=setting/theme_detail&name=' + name
     });   
+}
+//主题参数设置
+function theme_config(name){
+    layer.open({
+        title: "设置主题【" + name + "】参数：",
+        type:2,
+        area: ['620px', '560px'],
+        content:'/index.php?c=admin&page=setting/theme_config&name=' + name
+    });
 }
 
 function set_theme(name) {

@@ -21,6 +21,7 @@
             <p>版本：<?php echo $theme->version; ?></p>
             <p>更新时间：<?php echo $theme->update; ?></p>
             <p>作者：<?php echo $theme->author; ?></p>
+            <p>使用说明：<a style = "color:#01AAED;" href="<?php echo $theme->help_url; ?>" target="_blank" rel = "nofollow"><?php echo $theme->help_url; ?></a></p>
             <p>主页：<a style = "color:#01AAED;" href="<?php echo $theme->homepage; ?>" target="_blank" rel = "nofollow"><?php echo $theme->homepage; ?></a></p>
             </div>
         </div>

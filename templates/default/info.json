@@ -1,9 +1,15 @@
 {
-    "name":"OneNav默认主题",
-    "description":"OneNav默认主题",
-    "homepage":"https://www.xiaoz.me",
-    "version":"0.9.19",
-    "update":"2022/04/22",
-    "author":"xiaoz<xiaoz93@outlook.com>",
-    "screenshot":"https://img.rss.ink/imgs/2022/03/42ed3ef2c4a50f6d.png"
+    "name": "OneNav默认主题",
+    "description": "OneNav默认主题",
+    "homepage": "https:\/\/www.xiaoz.me",
+    "help_url":"https://dwz.ovh/gnae4",
+    "version": "0.9.20",
+    "update": "2022\/04\/29",
+    "author": "xiaoz<xiaoz93@outlook.com>",
+    "screenshot": "https:\/\/img.rss.ink\/imgs\/2022\/03\/42ed3ef2c4a50f6d.png",
+    "config": {
+        "full_width_mode":"off",
+        "link_description":"show",
+        "favicon": "online"
+    }
 }
