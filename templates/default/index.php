@@ -42,19 +42,10 @@
 		<!-- <button class="mdui-btn" mdui-drawer="{target: '#drawer'}"><i class="mdui-icon material-icons">home</i></button> -->
 		<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-drawer="{target: '#drawer', swipe: true}"><i class="mdui-icon material-icons">menu</i></span>
 		  <!-- <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">home</i></a> -->
-		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site['description'] ?>"><span class="mdui-typo-title"><?php echo $site['title']; ?></span></a>
+		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site['description'] ?>"><span class="mdui-typo-title default-title"><h1><?php echo $site['title']; ?></h1></span></a>
 		  <div class="mdui-toolbar-spacer"></div>
-		  <!-- 搜索框 -->
-		  <!-- <div class="mdui-col-lg-3">
-			  <div class="mdui-textfield mdui-textfield-expandable mdui-float-right">
-			<button class="mdui-textfield-icon mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></button>
-			<input class="mdui-textfield-input search" type="text" placeholder="Search"/>
-			<button class="mdui-textfield-close mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">close</i></button>
-			</div>
-		</div> -->
-		  <!-- 搜索框END -->
 		  <!-- 新版搜索框 -->
-		  	<div class="mdui-col-md-4 mdui-col-xs-6">
+		  	<div class="mdui-col-md-3 mdui-col-xs-6">
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
 					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
@@ -181,10 +172,10 @@
 	<div class="<?php echo ( $theme_config->full_width_mode == "off") ? "mdui-container" : "mdui-container-fluid"; ?>">
 		<!-- 搜索框 -->
 		<!-- <div class="mdui-row">
-			<div class="mdui-col-xs-12">
+			<div class="mdui-col-xs-12" style = "z-index:99999;">
 				<div class="mdui-textfield mdui-textfield-floating-label">
 					<label class="mdui-textfield-label">输入书签关键词进行搜索</label>
-					<input class="mdui-textfield-input search" type="text" />
+					<input class="mdui-textfield-input search"  type="text" />
 				</div>
 			</div>
 		</div> -->
