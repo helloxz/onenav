@@ -5,7 +5,7 @@
 <!-- 内容主体区域 -->
 <div class="layui-row content-body place-holder">
     <div class="layui-col-lg6 layui-col-md-offset3">
-      <div class="setting-msg">仅支持 <em>.html</em> 格式导入，使用前请参考<a href="https://dwz.ovh/ij3mq" target="_blank" rel = "nofollow">帮助文档</a> 。</div>
+      <div class="setting-msg">仅支持 <em>.html</em> 格式导入，导入时会自动创建不存在的分类，使用前请参考<a href="https://dwz.ovh/ij3mq" target="_blank" rel = "nofollow">帮助文档</a> 。</div>
     <!-- 上传 -->
     <div class="layui-upload-drag" id="up_html">
       <i class="layui-icon layui-icon-upload"></i>
@@ -23,7 +23,7 @@
       <input type="text" id = "filename" name="filename" required  lay-verify="required" placeholder="请输入书签路径" autocomplete="off" class="layui-input">
     </div>
   </div>
-  <div class="layui-form-item">
+  <!-- <div class="layui-form-item">
     <label class="layui-form-label">所属分类</label>
     <div class="layui-input-block">
       <select name="fid" lay-verify="required" lay-search>
@@ -35,7 +35,7 @@
         <?php } ?>
       </select>
     </div>
-  </div>
+  </div> -->
   
   <div class="layui-form-item">
     <label class="layui-form-label">是否私有</label>

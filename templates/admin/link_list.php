@@ -34,6 +34,8 @@
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="getCheckData">删除选中</button>
             <button class="layui-btn layui-btn-sm" lay-event="readmoredata">批量修改分类</button>
+            <button class="layui-btn layui-btn-sm" lay-event="set_private">设为私有</button>
+            <button class="layui-btn layui-btn-sm" lay-event="set_public">设为公有</button>
             <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
             <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
         </div>
