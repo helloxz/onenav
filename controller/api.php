@@ -221,6 +221,16 @@ function imp_link($api) {
     $property = intval(@$_POST['property']);
     $api->imp_link($token,$filename,$fid,$property);
 }
+//新版书签批量导入并自动创建分类
+function import_link($api) {
+    //获取token
+    $token = $_POST['token'];
+    //获取书签路径
+    $filename = trim($_POST['filename']);
+    $fid = intval($_POST['fid']);
+    $property = intval(@$_POST['property']);
+    $api->import_link($filename,$property);
+}
 //检查弱密码
 function check_weak_password($api) {
     //获取token
@@ -354,4 +364,15 @@ function save_theme_config($api) {
 //获取主题配置信息
 function get_theme_config($api) {
     $api->get_theme_config();
+}
+
+//批量设置链接私有属性
+function set_link_attribute($api) {
+    $ids = $_POST['ids'];
+    $property = intval( $_POST['property'] );
+    $data = [
+        "ids"      =>   $ids,
+        "property" =>   $property
+    ];
+    $api->set_link_attribute($data);
 }

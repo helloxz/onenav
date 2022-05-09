@@ -245,6 +245,26 @@ class Api {
             }
         }
     }
+    /**
+     * 批量修改链接属性为公有或私有
+     */
+    public function set_link_attribute($data) {
+        $this->auth($token);
+        //获取链接ID，是一个数组
+        $ids = implode(',',$data['ids']);
+        $property = intval($data['property']);
+        //拼接SQL文件
+        $sql = "UPDATE on_links SET property = $property WHERE id IN ($ids)";
+        $re = $this->db->query($sql);
+        //返回影响行数
+        $row = $re->rowCount();
+        if ( $row > 0 ){
+            $this->return_json(200,"success");
+        }
+        else{
+            $this->return_json(-2000,"failed");
+        }
+    }
     
     /**
      * 批量导入链接
@@ -323,6 +343,123 @@ class Api {
         ];
         exit(json_encode($data));
     }
+    /**
+     * 批量导入链接并自动创建分类，这是新的导入接口
+     */
+    public function import_link($filename,$property = 0) {
+        //过滤$filename
+        $filename = str_replace('../','',$filename);
+        $filename = str_replace('./','',$filename);
+        $this->auth($token);
+        //检查文件是否存在
+        if ( !file_exists($filename) ) {
+            $this->err_msg(-1016,'File does not exist!');
+        }
+        //解析HTML数据
+        $content = file_get_contents($filename);
+        $HTMLs = explode("\n",$content);//分割文本
+        $data = []; //链接组
+        $categorys = []; //分类信息组
+        $categoryt = []; //分类信息表
+
+        // 遍历HTML
+        foreach( $HTMLs as $HTMLh ){
+            //匹配分类名称
+            if( preg_match("/<DT><H3.+>(.*)<\/H3>/i",$HTMLh,$category) ){
+                //匹配到文件夹名时加入数组
+                array_push($categoryt,$category[1]);
+                array_push($categorys,$category[1]);
+            }elseif( preg_match('/<\/DL><p>/i',$HTMLh) ){
+                //匹配到文件夹结束标记时删除一个
+                array_pop($categorys);
+            }elseif( preg_match('/<DT><A HREF="(.+)" ADD_DAT.+>(.+)<\/A>/i',$HTMLh,$urls) ){
+                $datat['category'] =  $categorys[count($categorys) -1];
+                $datat['title'] = $urls[2];
+                $datat['url'] = $urls[1];
+                array_push($data,$datat);
+            }
+        }
+        $categoryt = array_unique($categoryt);
+        
+        //批量创建分类
+        $this->batch_create_category($categoryt);
+        //查询所有分类
+        $categorys = $this->db->select("on_categorys",[
+            "name",
+            "id",
+            "fid"
+        ]);
+        // var_dump($categorys);
+        // exit;
+        //链接计数
+        $i = 0;
+        //统计链接总数
+        $count = count($data);
+        //批量导入链接
+        foreach ($data as $key => $value) {
+            $category_name = trim($value['category']);
+            
+            foreach ($categorys as $category) {
+                if( trim( $category['name'] ) == $category_name ) {
+                    $fid = intval($category['id']);
+                    break;
+                }
+            }
+            //合并数据
+            $link_data = [
+                'fid'           =>  $fid,
+                'title'         =>  htmlspecialchars($value['title']),
+                'url'           =>  htmlspecialchars($value['url'],ENT_QUOTES),
+                'add_time'      =>  time(),
+                'weight'        =>  0,
+                'property'      =>  $property
+            ];
+            // var_dump($link_data);
+            // exit;
+            //插入数据库
+            $re = $this->db->insert('on_links',$link_data);
+            //返回影响行数
+            $row = $re->rowCount();
+            if ($row) {
+                $i++;
+            }
+        }
+        //删除书签文件
+        unlink($filename);
+        $this->return_json(200,"success",[
+            "count"     =>  $count,
+            "success"   =>  $i,
+            "failed"    =>  $count - $i
+        ]);
+
+    }
+    /**
+     * 批量创建分类
+     * 接收一个一维数组
+     */
+    protected function batch_create_category($category_name) {
+        $i = 0;
+        foreach ($category_name as $key => $value) {
+            $data = [
+                'name'          =>  trim($value),
+                'add_time'      =>  time(),
+                'weight'        =>  0,
+                'property'      =>  1,
+                'description'   =>  "书签导入时自动创建",
+                'fid'           =>  0
+            ];
+            try {
+                //插入分类目录
+                $this->db->insert("on_categorys",$data);
+                $i++;
+            } catch (\Throwable $th) {
+                continue;
+            }
+            
+        }
+        return $i;
+    }
+
     /**
      * 书签上传
      * type:上传类型，默认为上传书签，后续类型保留使用
