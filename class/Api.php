@@ -380,6 +380,8 @@ class Api {
             }
         }
         $categoryt = array_unique($categoryt);
+        //追加一个默认分类，用来存储部分链接找不到分类的情况
+        array_push($categoryt,"默认分类");
         
         //批量创建分类
         $this->batch_create_category($categoryt);
@@ -398,6 +400,8 @@ class Api {
         //批量导入链接
         foreach ($data as $key => $value) {
             $category_name = trim($value['category']);
+            //如果链接的分类是空的，则设置为默认分类
+            $value['category'] = empty( $value['category'] ) ? "默认分类" : $value['category'];
             
             foreach ($categorys as $category) {
                 if( trim( $category['name'] ) == $category_name ) {
@@ -405,6 +409,7 @@ class Api {
                     break;
                 }
             }
+            
             //合并数据
             $link_data = [
                 'fid'           =>  $fid,
@@ -493,6 +498,40 @@ class Api {
                 exit(json_encode($data));
             }
         }
+    }
+    /**
+     * 导出HTML链接进行备份
+     */
+    public function export_link(){
+        //鉴权
+        $this->auth($token);
+        //查询所有分类
+        $categorys = $this->db->select("on_categorys","*");
+        
+        //定义一个空数组用来存储查询后的数据
+        $data = [];
+        
+        //遍历分类
+        foreach ($categorys as $key => $category) {
+            //查询该分类下的所有链接
+            $links = $this->db->select("on_links","*",[
+                "fid"      =>  $category['id']
+            ]);
+            // echo $category['name'];
+            // var_dump($links);
+            // exit;
+            //组合为一个一维数组
+            
+            $arr[$category['name']] = $links;
+            // var_dump();
+            // exit;
+            $data[$category['name']] = $arr[$category['name']];
+            
+            //清除临时数据
+            unset($arr);
+        }
+        //返回数据
+        return $data;
     }
     /**
      * name:修改链接

@@ -784,3 +784,28 @@ function set_link_attribute(ids,property) {
       });
     }
 }
+
+//导出所有链接
+function export_link(url, fileName) {
+  layer.confirm('导出的链接可以导入到浏览器也可以再次导入到OneNav！', {icon: 3, title:'确定导出所有链接？'}, function(index){
+    var date = new Date();
+  var current_time = date.toLocaleDateString();
+  current_time = current_time.replaceAll("/","-");
+  var url = "index.php?c=api&method=export_link";
+  var fileName = "OneNav_Export_" + current_time + ".html";
+  var x = new XMLHttpRequest();
+  x.open("GET", url, true);
+  x.responseType = 'blob';
+  x.onload=function(e) {
+      var url = window.URL.createObjectURL(x.response)
+      var a = document.createElement('a');
+      a.href = url
+      a.download = fileName;
+      a.click()
+  }
+  x.send();
+    
+    layer.close(index);
+  });
+  
+}

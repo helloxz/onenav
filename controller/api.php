@@ -376,3 +376,31 @@ function set_link_attribute($api) {
     ];
     $api->set_link_attribute($data);
 }
+
+//导出链接数据
+function export_link($api) {
+    header('Content-Type: text/html;charset=utf8');
+    $data = $api->export_link();
+    //当前时间
+    $current = time();
+    echo <<< EOF
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>从OneNav导出的书签</TITLE>
+<H1>Bookmarks</H1>
+EOF;
+    //遍历结果
+    foreach ($data as $key => $value) {
+        
+        echo "<DT>\n";
+        echo "<h3 add_date=\"$current\" last_modified=\"$current\">$key</h3>\n";
+        echo "<dl><p></p>\n";
+        foreach ($value as $link) {
+            $title = $link['title'];
+            $add_time = $link['add_time'];
+            echo "<dt><a href = \"$title\" add_date = \"$add_time\" ICON = \"\">$title</a></dt>\n";
+        }
+        echo "<p></p></dl>\n";
+        echo "</DT>\n";
+
+    }
+}

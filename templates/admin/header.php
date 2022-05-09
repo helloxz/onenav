@@ -10,7 +10,7 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo"><a href="/index.php?c=admin" style="color:#009688;"><h2>OneNav后台管理</h1></a></div>
+    <div class="layui-logo"><a href="/index.php?c=admin" style="color:#009688;"><h2>OneNav后台管理</h2></a></div>
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-left">
       <li class="layui-nav-item"><a href="/"><i class="layui-icon layui-icon-home"></i> 前台首页</a></li>
