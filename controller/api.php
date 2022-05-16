@@ -397,10 +397,16 @@ EOF;
         foreach ($value as $link) {
             $title = $link['title'];
             $add_time = $link['add_time'];
-            echo "<dt><a href = \"$title\" add_date = \"$add_time\" ICON = \"\">$title</a></dt>\n";
+            $url = $link['url'];
+            echo "<dt><a href = \"$url\" add_date = \"$add_time\" ICON = \"\">$title</a></dt>\n";
         }
         echo "<p></p></dl>\n";
         echo "</DT>\n";
 
     }
+}
+
+//获取用户登录状态
+function check_login($api) {
+    $api->check_login();
 }

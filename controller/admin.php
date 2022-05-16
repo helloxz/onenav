@@ -2,6 +2,8 @@
 /**
  * 后台入口文件
  */
+// 载入辅助函数
+require('functions/helper.php');
 
 //检查认证
 check_auth($site_setting['user'],$site_setting['password']);
@@ -269,40 +271,12 @@ if ($page == 'ext_js') {
 
 $page = $page.'.php';
 
-//获取访客IP
-function getIP() { 
-    if (getenv('HTTP_CLIENT_IP')) { 
-    $ip = getenv('HTTP_CLIENT_IP'); 
-  } 
-  elseif (getenv('HTTP_X_FORWARDED_FOR')) { 
-      $ip = getenv('HTTP_X_FORWARDED_FOR'); 
-  } 
-      elseif (getenv('HTTP_X_FORWARDED')) { 
-      $ip = getenv('HTTP_X_FORWARDED'); 
-  } 
-    elseif (getenv('HTTP_FORWARDED_FOR')) { 
-    $ip = getenv('HTTP_FORWARDED_FOR'); 
-  } 
-    elseif (getenv('HTTP_FORWARDED')) { 
-    $ip = getenv('HTTP_FORWARDED'); 
-  } 
-  else { 
-      $ip = $_SERVER['REMOTE_ADDR']; 
-  } 
-      return $ip; 
-  } 
-
 /**
  * 检查授权
  */
 
 function check_auth($user,$password){
-    $ip = getIP();
-    $key = md5($user.$password.'onenav');
-    //获取cookie
-    $cookie = $_COOKIE['key'];
-    //如果cookie的值和计算的key不一致，则没有权限
-    if( $cookie !== $key ){
+    if ( !is_login() ) {
         $msg = "<h3>认证失败，请<a href = 'index.php?c=login'>重新登录</a>！</h3>";
         require('templates/admin/403.php');
         exit;

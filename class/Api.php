@@ -59,18 +59,35 @@ class Api {
         if( empty($id) ){
             $this->err_msg(-1003,'The category ID cannot be empty!');
         }
+        //根据fid查询这个分类是否存在
+        $count = $this->db->count("on_categorys", [
+            "id" => $fid
+        ]);
+        
+        //如果fid不是0，且查询结果小于1，则认为这个父级ID是不存在的，则不允许修改
+        if( !empty($fid) && ($count < 1) ) {
+            $this->err_msg(-2000,'父级ID不存在！');
+        }
+
+        //查询fid是否是二级分类的ID，如果是，则不允许修改
+        $category = $this->db->get("on_categorys","*",[
+            "id"    =>  $fid
+        ]);
+        //如果查询到他的父ID不是0，则是一个二级分类
+        if( intval($category['fid']) !== 0 ) {
+            $this->err_msg(-2000,'父分类不能是二级分类!');
+        }
         //如果分类名为空
         elseif( empty($name ) ){
             $this->err_msg(-1004,'The category name cannot be empty!');
         }
-        
         //更新数据库
         else{
             //根据分类ID查询改分类下面是否已经存在子分类，如果存在子分类了则不允许设置为子分类，实用情况：一级分类下存在二级分类，无法再将改一级分类修改为二级分类
             $count = $this->db->count("on_categorys", [
                 "fid" => $id
             ]);
-            //改分类下的子分类数量大于0，并且将父级ID修改为其它分类
+            //该分类下的子分类数量大于0，并且父级ID修改为其它分类
             if( ( $count > 0 ) && ( $fid !== 0 ) ) {
                 $this->err_msg(-2000,'修改失败，该分类下已存在子分类！');
             }
@@ -383,6 +400,7 @@ class Api {
         //追加一个默认分类，用来存储部分链接找不到分类的情况
         array_push($categoryt,"默认分类");
         
+        
         //批量创建分类
         $this->batch_create_category($categoryt);
         //查询所有分类
@@ -401,7 +419,7 @@ class Api {
         foreach ($data as $key => $value) {
             $category_name = trim($value['category']);
             //如果链接的分类是空的，则设置为默认分类
-            $value['category'] = empty( $value['category'] ) ? "默认分类" : $value['category'];
+            $category_name = empty( $category_name ) ? "默认分类" : $category_name;
             
             foreach ($categorys as $category) {
                 if( trim( $category['name'] ) == $category_name ) {
@@ -419,8 +437,7 @@ class Api {
                 'weight'        =>  0,
                 'property'      =>  $property
             ];
-            // var_dump($link_data);
-            // exit;
+            
             //插入数据库
             $re = $this->db->insert('on_links',$link_data);
             //返回影响行数
@@ -445,6 +462,7 @@ class Api {
     protected function batch_create_category($category_name) {
         $i = 0;
         foreach ($category_name as $key => $value) {
+            $value = empty($value) ? "默认分类" : $value;
             $data = [
                 'name'          =>  trim($value),
                 'add_time'      =>  time(),
@@ -866,7 +884,7 @@ class Api {
      * 验证是否登录
      */
     protected function is_login(){
-        $key = md5(USER.PASSWORD.'onenav');
+        $key = md5(USER.PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
         //获取session
         $session = $_COOKIE['key'];
         //如果已经成功登录
@@ -1293,6 +1311,13 @@ class Api {
             }
         }
 
+    }
+    /**
+     * 用户状态
+     */
+    public function check_login(){
+        $status = $this->is_login() ? "true" : "false";
+        $this->return_json(200,$status,"");
     }
     
 }

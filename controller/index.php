@@ -3,16 +3,30 @@
  * 首页模板入口
  */
 //如果已经登录，获取所有分类和链接
+// 载入辅助函数
+require('functions/helper.php');
 if( is_login() ){
     //查询所有分类目录
-    $categorys = $db->select('on_categorys','*',[
-        "ORDER" =>  ["weight" => "DESC"]
-    ]);
+    $categorys = [];
     //查询一级分类目录，分类fid为0的都是一级分类
     $category_parent = $db->select('on_categorys','*',[
         "fid"   =>  0,
         "ORDER" =>  ["weight" => "DESC"]
     ]);
+    //遍历一级分类，然后获取下面的二级分类，获取到了就push
+    foreach ($category_parent as $key => $value) {
+        //把一级分类先加入到空数组
+        array_push($categorys,$value);
+        //然后查询他下面的子分类，再追加到数组
+        $category_subs = $db->select('on_categorys','*',[
+            "fid"   =>  $value['id'],
+            "ORDER"     =>  ["weight" => "DESC"]
+        ]);
+        
+        foreach ($category_subs as $category_sub) {
+            array_push($categorys,$category_sub);
+        }
+    }
     //根据分类ID查询二级分类，分类fid大于0的都是二级分类
     function get_category_sub($id) {
         global $db;
@@ -42,16 +56,28 @@ if( is_login() ){
 //如果没有登录，只获取公有链接
 else{
     //查询分类目录
-    $categorys = $db->select('on_categorys','*',[
-        "property"  =>  0,
-        "ORDER" =>  ["weight" => "DESC"]
-    ]);
+    $categorys = [];
     //查询一级分类目录，分类fid为0的都是一级分类
     $category_parent = $db->select('on_categorys','*',[
         "fid"   =>  0,
         'property'  =>  0,
         "ORDER" =>  ["weight" => "DESC"]
     ]);
+    //遍历一级分类，然后获取下面的二级分类，获取到了就push
+    foreach ($category_parent as $key => $value) {
+        //把一级分类先加入到空数组
+        array_push($categorys,$value);
+        //然后查询他下面的子分类，再追加到数组
+        $category_subs = $db->select('on_categorys','*',[
+            "fid"   =>  $value['id'],
+            'property'  =>  0,
+            "ORDER"     =>  ["weight" => "DESC"]
+        ]);
+        
+        foreach ($category_subs as $category_sub) {
+            array_push($categorys,$category_sub);
+        }
+    }
     //根据分类ID查询二级分类，分类fid大于0的都是二级分类
     function get_category_sub($id) {
         global $db;
@@ -80,29 +106,6 @@ else{
     $onenav['right_menu'] = 'user_menu();';
 }
 
-
-//获取访客IP
-function getIP() { 
-    if (getenv('HTTP_CLIENT_IP')) { 
-    $ip = getenv('HTTP_CLIENT_IP'); 
-  } 
-  elseif (getenv('HTTP_X_FORWARDED_FOR')) { 
-      $ip = getenv('HTTP_X_FORWARDED_FOR'); 
-  } 
-      elseif (getenv('HTTP_X_FORWARDED')) { 
-      $ip = getenv('HTTP_X_FORWARDED'); 
-  } 
-    elseif (getenv('HTTP_FORWARDED_FOR')) { 
-    $ip = getenv('HTTP_FORWARDED_FOR'); 
-  } 
-    elseif (getenv('HTTP_FORWARDED')) { 
-    $ip = getenv('HTTP_FORWARDED'); 
-  } 
-  else { 
-      $ip = $_SERVER['REMOTE_ADDR']; 
-  } 
-      return $ip; 
-  }
 //获取版本号
 function get_version(){
     if( file_exists('version.txt') ) {
@@ -114,19 +117,7 @@ function get_version(){
         return $version;
     }
 } 
-//判断用户是否已经登录
-function is_login(){
-    $key = md5(USER.PASSWORD.'onenav');
-    //获取session
-    $session = $_COOKIE['key'];
-    //如果已经成功登录
-    if($session == $key) {
-        return true;
-    }
-    else{
-        return false;
-    }
-}
+
 //将URL转换为base64编码
 function base64($url){
     $urls = parse_url($url);

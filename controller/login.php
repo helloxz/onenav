@@ -2,16 +2,20 @@
 /**
  * 登录入口
  */
+
+// 载入辅助函数
+require('functions/helper.php');
+
 $username = $site_setting['user'];
 $password = $site_setting['password'];
 $ip = getIP();
 //如果认证通过，直接跳转到后台管理
-$key = md5($username.$password.'onenav');
+$key = md5($username.$password.'onenav'.$_SERVER['HTTP_USER_AGENT']);
 //获取cookie
 $cookie = $_COOKIE['key'];
 
 //如果已经登录，直接跳转
-if( $cookie === $key ){
+if( is_login() ){
     header('location:index.php?c=admin');
     exit;
 }
@@ -22,7 +26,7 @@ if( $_GET['check'] == 'login' ) {
     $pass = $_POST['password'];
     header('Content-Type:application/json; charset=utf-8');
     if( ($user === $username) && ($pass === $password) ) {
-        $key = md5($username.$password.'onenav');
+        $key = md5($username.$password.'onenav'.$_SERVER['HTTP_USER_AGENT']);
         //开启httponly支持
         setcookie("key", $key, time()+30 * 24 * 60 * 60,"/",NULL,false,TRUE);
         $data = [
@@ -55,29 +59,6 @@ if( $_GET['check'] == 'login' ) {
 //     setcookie("key", $key, time()+7 * 24 * 60 * 60,"/");
 //     header('location:index.php?c=admin');
 // }
-
-//获取访客IP
-function getIP() { 
-if (getenv('HTTP_CLIENT_IP')) { 
-$ip = getenv('HTTP_CLIENT_IP'); 
-} 
-elseif (getenv('HTTP_X_FORWARDED_FOR')) { 
-    $ip = getenv('HTTP_X_FORWARDED_FOR'); 
-} 
-    elseif (getenv('HTTP_X_FORWARDED')) { 
-    $ip = getenv('HTTP_X_FORWARDED'); 
-} 
-elseif (getenv('HTTP_FORWARDED_FOR')) { 
-$ip = getenv('HTTP_FORWARDED_FOR'); 
-} 
-elseif (getenv('HTTP_FORWARDED')) { 
-$ip = getenv('HTTP_FORWARDED'); 
-} 
-else { 
-    $ip = $_SERVER['REMOTE_ADDR']; 
-} 
-    return $ip; 
-} 
 
 
 // 载入后台登录模板
