@@ -390,17 +390,15 @@ function export_link($api) {
 EOF;
     //遍历结果
     foreach ($data as $key => $value) {
-        
-        echo "<DT>\n";
-        echo "<h3 add_date=\"$current\" last_modified=\"$current\">$key</h3>\n";
-        echo "<dl><p></p>\n";
+        echo "<DT><H3 ADD_DATE=\"$current\" LAST_MODIFIED=\"$current\">$key</H3>\n";
+        echo "<DL><P></P>\n";
         foreach ($value as $link) {
             $title = $link['title'];
             $add_time = $link['add_time'];
             $url = $link['url'];
-            echo "<dt><a href = \"$url\" add_date = \"$add_time\" ICON = \"\">$title</a></dt>\n";
+            echo "<DT><A HREF=\"$url\" ADD_DATE=\"$add_time\" ICON=\"\">$title</a></DT>\n";
         }
-        echo "<p></p></dl>\n";
+        echo "<P></P></DL>\n";
         echo "</DT>\n";
 
     }
