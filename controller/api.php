@@ -221,6 +221,16 @@ function imp_link($api) {
     $property = intval(@$_POST['property']);
     $api->imp_link($token,$filename,$fid,$property);
 }
+//新版书签批量导入并自动创建分类
+function import_link($api) {
+    //获取token
+    $token = $_POST['token'];
+    //获取书签路径
+    $filename = trim($_POST['filename']);
+    $fid = intval($_POST['fid']);
+    $property = intval(@$_POST['property']);
+    $api->import_link($filename,$property);
+}
 //检查弱密码
 function check_weak_password($api) {
     //获取token
@@ -354,4 +364,47 @@ function save_theme_config($api) {
 //获取主题配置信息
 function get_theme_config($api) {
     $api->get_theme_config();
+}
+
+//批量设置链接私有属性
+function set_link_attribute($api) {
+    $ids = $_POST['ids'];
+    $property = intval( $_POST['property'] );
+    $data = [
+        "ids"      =>   $ids,
+        "property" =>   $property
+    ];
+    $api->set_link_attribute($data);
+}
+
+//导出链接数据
+function export_link($api) {
+    header('Content-Type: text/html;charset=utf8');
+    $data = $api->export_link();
+    //当前时间
+    $current = time();
+    echo <<< EOF
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>从OneNav导出的书签</TITLE>
+<H1>Bookmarks</H1>
+EOF;
+    //遍历结果
+    foreach ($data as $key => $value) {
+        echo "<DT><H3 ADD_DATE=\"$current\" LAST_MODIFIED=\"$current\">$key</H3>\n";
+        echo "<DL><P></P>\n";
+        foreach ($value as $link) {
+            $title = $link['title'];
+            $add_time = $link['add_time'];
+            $url = $link['url'];
+            echo "<DT><A HREF=\"$url\" ADD_DATE=\"$add_time\" ICON=\"\">$title</a></DT>\n";
+        }
+        echo "<P></P></DL>\n";
+        echo "</DT>\n";
+
+    }
+}
+
+//获取用户登录状态
+function check_login($api) {
+    $api->check_login();
 }

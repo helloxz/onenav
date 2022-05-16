@@ -47,6 +47,10 @@
            if ( $category['id'] == $category_one['fid'] ) {
              continue;
            }
+           //如果分类ID的父级ID不能是自己
+           if( $category['id'] == $id ) {
+             continue;
+           }
         ?>
           <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
         <?php } ?>

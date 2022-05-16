@@ -193,6 +193,28 @@ layui.use(['element','table','layer','form','upload'], function(){
         }
         //console.log(data);
       break;
+      case "set_private":
+        //用户点击设为私有按钮
+        var data = checkStatus.data;
+        ids = [];
+        //获取链接所有ID，并拼接为数组
+        for(let i = 0;i < data.length;i++) {
+          ids.push(data[i].id);
+        }
+        //调用函数设为私有
+        set_link_attribute(ids,1);
+        break;
+      case "set_public":
+        //用户点击设为私有按钮
+        var data = checkStatus.data;
+        ids = [];
+        //获取链接所有ID，并拼接为数组
+        for(let i = 0;i < data.length;i++) {
+          ids.push(data[i].id);
+        }
+        //调用函数设为公有
+        set_link_attribute(ids,0);
+        break;
       case 'isAll':
         layer.msg(checkStatus.isAll ? '全选': '未全选');
       break;
@@ -546,12 +568,12 @@ layui.use(['element','table','layer','form','upload'], function(){
   //识别链接信息
   form.on('submit(imp_link)', function(data){
     //用ajax异步加载
-    $.post('/index.php?c=api&method=imp_link',data.field,function(data,status){
+    $.post('/index.php?c=api&method=import_link',data.field,function(data,status){
       //如果添加成功
-      if(data.code == 0) {
+      if(data.code == 200) {
         layer.open({
           title: '导入完成'
-          ,content: data.msg
+          ,content: "总数:" + data.msg.count + " 成功:" + data.msg.success + " 失败:" + data.msg.failed
         });
         //layer.msg('已添加！', {icon: 1});
       }
@@ -744,4 +766,46 @@ function get_latest_version(){
         }
     });
     
+}
+
+//设置链接属性，公有或私有,接收一个链接id数组和一个链接属性
+function set_link_attribute(ids,property) {
+    if( ids.length === 0 ) {
+      layer.msg("请先选择链接!",{icon:5});
+    }
+    else{
+      $.post("/index.php?c=api&method=set_link_attribute",{ids:ids,property:property},function(data,status){
+        if( data.code == 200 ){
+          layer.msg("设置已更新！",{icon:1});
+        }
+        else{
+            layer.msg("设置失败！",{icon:5});
+        }
+      });
+    }
+}
+
+//导出所有链接
+function export_link(url, fileName) {
+  layer.confirm('导出的链接可以导入到浏览器也可以再次导入到OneNav！', {icon: 3, title:'确定导出所有链接？'}, function(index){
+    var date = new Date();
+  var current_time = date.toLocaleDateString();
+  current_time = current_time.replaceAll("/",".");
+  var url = "index.php?c=api&method=export_link";
+  var fileName = "OneNav_Export_" + current_time + ".html";
+  var x = new XMLHttpRequest();
+  x.open("GET", url, true);
+  x.responseType = 'blob';
+  x.onload=function(e) {
+      var url = window.URL.createObjectURL(x.response)
+      var a = document.createElement('a');
+      a.href = url
+      a.download = fileName;
+      a.click()
+  }
+  x.send();
+    
+    layer.close(index);
+  });
+  
 }

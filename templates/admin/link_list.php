@@ -21,11 +21,11 @@
         <div class="layui-input-inline" style="width: 100px;">
             <button class="layui-btn" lay-submit lay-filter="screen_link">查询此分类下的链接</button>
         </div>
-        </div>
         
         </div>
     </div>
     </form>
+    </div>
     <!-- 表单上面的按钮END -->
     <div class="layui-col-lg12">
         <table id="link_list" lay-filter="mylink" lay-data="{id: 'mylink_reload'}"></table>
@@ -34,6 +34,8 @@
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="getCheckData">删除选中</button>
             <button class="layui-btn layui-btn-sm" lay-event="readmoredata">批量修改分类</button>
+            <button class="layui-btn layui-btn-sm" lay-event="set_private">设为私有</button>
+            <button class="layui-btn layui-btn-sm" lay-event="set_public">设为公有</button>
             <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
             <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
         </div>
@@ -44,6 +46,9 @@
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick = "">删除</a>
     </script>
+    <!-- 表单下面的按钮 -->
+    <button class="layui-btn layui-btn-sm" lay-submit onclick = "export_link()">导出所有链接</button>
+    <!-- 表单下面的按钮END -->
 </div>
 <!-- 内容主题区域END -->
 </div>
