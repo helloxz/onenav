@@ -107,3 +107,15 @@
 .place-holder{
     padding-bottom: 3em;
 }
+.screenshot {
+    height:220px;
+}
+.screenshot img{
+    max-width: auto;
+    max-height: 200px;
+}
+
+#progress{
+    display:none;
+    margin-top:1em;
+}
