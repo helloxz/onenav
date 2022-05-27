@@ -175,7 +175,7 @@
             var element = layui.element;
             $("#progress").show();
             element.progress('update_progress', progress);
-            $("#msg").text(msg);
+            $("#msg").html(msg);
         });
         
     }
