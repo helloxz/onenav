@@ -121,6 +121,7 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 20220525
 1. 修复link_list和get_a_link可以查询私有分类下的公有链接问题
 2. 新增查询指定分类下的链接接口：q_category_link
+3. 新增主题删除功能
 
 20220527
-1. 新增订阅于在线更新
+1. 新增订阅后在线更新

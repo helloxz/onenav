@@ -13,7 +13,10 @@
           </div>
           </div>
             <div class="layui-col-lg4">
-                <div class = "admin-msg">最新版本：<span><span id = "getting">获取中...</span><a href = "https://github.com/helloxz/onenav/releases" title = "下载最新版OneNav" target = "_blank" id="latest_version"></a></span></div>
+                <div class = "admin-msg">
+                  最新版本：<span><span id = "getting">获取中...</span><a href = "https://github.com/helloxz/onenav/releases" title = "下载最新版OneNav" target = "_blank" id="latest_version"></a></span>
+                  (<a href="/index.php?c=admin&page=setting/subscribe" title = "订阅后可一键更新">一键更新</a>)
+                </div>
             </div>
           <div class="layui-col-lg4">
             <div class = "admin-msg">QQ群1：147687134</div>
@@ -31,7 +34,7 @@
             <div class = "admin-msg">帮助文档：<a href="https://dwz.ovh/onenav" rel = "nofollow" target="_blank">https://dwz.ovh/onenav</a></div>
           </div>
           <div class="layui-col-lg4">
-            <div class = "admin-msg">QQ:337003006</div>
+            <div class = "admin-msg">QQ:446199062</div>
           </div>
           <div class="layui-col-lg4">
             <div class = "admin-msg">Blog: <a href="https://www.xiaoz.me/" rel = "nofollow" target="_blank">https://www.xiaoz.me/</a></div>

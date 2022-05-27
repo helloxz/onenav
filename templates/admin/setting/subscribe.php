@@ -11,15 +11,17 @@
         <ol>
             <li>您可以前往：<a href="https://dwz.ovh/69h9q" rel = "nofollow" target = "_blank" title = "购买订阅服务">https://dwz.ovh/69h9q</a> 购买订阅服务，订阅后可以：</li>
             <li>1. 享受一键更新OneNav</li>
-            <li>2. 可在线更新和下载主题（尚未实现）</li>
+            <li>2. 可在线更新和下载主题（实现中...）</li>
             <li>3. 可享受一对一售后服务</li>
             <li>4. 可帮助OneNav持续发展，让OneNav变得更加美好</li>
+            <li>5. 更多高级功能（实现中...）</li>
         </ol>
       </div>
     </div>
     <!-- 说明提示框END -->
     <!-- 订阅表格 -->
     <div class="layui-col-lg6">
+    <h2 style = "margin-bottom:1em;">我的订阅：</h2>
     <form class="layui-form layui-form-pane" action="">
 
         <div class="layui-form-item">
@@ -120,7 +122,7 @@
             $.get("/index.php?c=api&method=check_subscribe",function(data,status){
                 update_status("10%","正在验证订阅信息...");
                 if( data.code == 200 ) {
-                    update_status("20%","订阅信息验证通过...");
+                    update_status("30%","订阅信息验证通过...");
                     //取得必要的变量
                     var email = data.data.email;
                     var domain = data.data.domain;
@@ -128,37 +130,41 @@
                     var value = data.data.value;
                     //下载更新程序
                     $.get("/index.php?c=api&method=up_updater",function(data,status) {
-                        update_status("30%","正在检查更新程序...");
+                        update_status("50%","正在检查更新程序...");
                         if( data.code == 200 ) {
                             //继续往下执行
-                            update_status("40%","更新程序准备完成...");
+                            update_status("70%","更新程序准备完成...");
                             //准备下载升级包
-                            update_status("50%","准备下载升级包...");
+                            update_status("80%","准备下载升级包...");
                             $.get("/update.php",{version:new_version,key:key,value:value,type:'main'},function(data,stauts){
-                                update_status("70%","升级包下载完毕，正在校验版本...");
+                                update_status("90%","升级包下载完毕，正在校验版本...");
                                 if( data.code == 200 ) {
                                     //校验新版本
                                     $.get("/index.php?c=api&method=check_version",{version:new_version},function(data,status){
                                         if(data.code == 200) {
-                                            update_status("100%","更新完成！");
+                                            update_status("100%","更新完成，请前往后台检查<a href = '/index.php?c=admin'>更新数据库</a>！");
                                         }
                                         else {
-                                            layer.msg(data.msg,{icon:5,time: 0});
+                                            update_error(data.msg);
+                                            //layer.msg(data.msg,{icon:5,time: 0});
                                         }
                                     });
                                 }
                                 else{
-                                    layer.msg(data.msg,{icon:5,time: 0});
+                                    update_error(data.msg);
+                                    //layer.msg(data.msg,{icon:5,time: 0});
                                 }
                             });
                         }
                         else {
-                            layer.msg(data.msg,{icon:5,time: 0});
+                            update_error(data.msg);
+                            //layer.msg(data.msg,{icon:5,time: 0});
                         }
                     });
                 }
                 else{
-                    layer.msg(data.msg,{icon:5,time: 0});
+                    update_error(data.msg);
+                    //layer.msg(data.msg,{icon:5,time: 0});
                 }
             });
         }
@@ -172,5 +178,14 @@
             $("#msg").text(msg);
         });
         
+    }
+    //更新失败时的提示
+    function update_error(msg) {
+            layer.open({
+            title: '更新失败:'
+            ,content: msg
+            ,icon:5
+        }); 
+        $("#progress").hide();
     }
 </script>

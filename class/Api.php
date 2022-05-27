@@ -1442,7 +1442,7 @@ class Api {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             #设置超时时间，最小为1s（可选）
-            curl_setopt($curl , CURLOPT_TIMEOUT, 5);
+            curl_setopt($curl , CURLOPT_TIMEOUT, 30);
 
             $html = curl_exec($curl);
             curl_close($curl);
@@ -1459,7 +1459,7 @@ class Api {
                 $this->return_json(-2000,'',$data->msg);
             }
             else{
-                $this->return_json(-2000,'',"请求接口失败！");
+                $this->return_json(-2000,'',"请求接口失败，请重试！");
             }
         } catch (\Throwable $th) {
             $this->return_json(-2000,'','网络请求失败！');
