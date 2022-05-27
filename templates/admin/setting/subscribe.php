@@ -80,7 +80,8 @@
 
         </form>
         <div class="layui-input-inline">
-            <button class="layui-btn" lay-submit="" onclick = "update_main()">立即更新</button>
+            <button id = "btn_update" class="layui-btn" lay-submit="" onclick = "update_main()">立即更新</button>
+            <button id = "btn_updating" style = "display:none;" class="layui-btn layui-btn-disabled" >更新中，请勿关闭窗口</button>
         </div>
         <!-- 更新进度条 -->
         <div id="progress">
@@ -117,6 +118,8 @@
         }
         //否则可以更新
         else {
+            $("#btn_update").hide();
+            $("#btn_updating").show();
             update_status("1%","准备更新...");
             //第一步检查更新信息
             $.get("/index.php?c=api&method=check_subscribe",function(data,status){
@@ -143,6 +146,8 @@
                                     $.get("/index.php?c=api&method=check_version",{version:new_version},function(data,status){
                                         if(data.code == 200) {
                                             update_status("100%","更新完成，请前往后台检查<a href = '/index.php?c=admin'>更新数据库</a>！");
+                                            $("#btn_update").show();
+                                            $("#btn_updating").hide();
                                         }
                                         else {
                                             update_error(data.msg);
@@ -187,5 +192,7 @@
             ,icon:5
         }); 
         $("#progress").hide();
+        $("#btn_update").show();
+        $("#btn_updating").hide();
     }
 </script>

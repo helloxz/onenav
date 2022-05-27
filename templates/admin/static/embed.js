@@ -392,6 +392,7 @@ layui.use(['element','table','layer','form','upload'], function(){
   //保存订阅信息
   form.on('submit(set_subscribe)', function(data){
     var order_id = data.field.order_id;
+    var index = layer.load(1);
     $.get('http://down.onenav.top/v1/check_subscribe.php',data.field,function(data,status){
       
       if(data.code == 200) {
@@ -401,16 +402,20 @@ layui.use(['element','table','layer','form','upload'], function(){
         //存储到数据库中
         $.post("index.php?c=api&method=set_subscribe",{order_id:order_id,email:email,end_time:end_time},function(data,status){
           if(data.code == 0) {
+            layer.closeAll('loading');
             layer.msg(data.data, {icon: 1});
           }
           else{
+            layer.closeAll('loading');
             layer.msg(data.err_msg, {icon: 5});
           }
         });
       }
       else{
+        layer.closeAll('loading');
         layer.msg(data.msg, {icon: 5});
       }
+
     });
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
