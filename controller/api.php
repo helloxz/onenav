@@ -161,6 +161,25 @@ function link_list($api){
 }
 
 /**
+ * 查询分类下的链接
+ */
+function q_category_link($api){
+    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
+    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
+    //获取token
+    $token = $_POST['token'];
+    //获取分类ID
+    $category_id = empty($_REQUEST['category_id']) ? null : intval($_REQUEST['category_id']);
+    $data = [
+        'page'          =>  $page,
+        'limit'         =>  $limit,
+        'token'         =>  $token,
+        'category_id'   =>  $category_id
+    ];
+    $api->q_category_link($data);
+}
+
+/**
  * 获取链接标题、描述等信息
  */
 function get_link_info($api) {
@@ -279,6 +298,34 @@ function set_site($api) {
     
 
     $api->set_option('s_site',$value);
+}
+//设置订阅信息
+function set_subscribe($api) {
+    //获取订单ID
+    $data['order_id'] = htmlspecialchars( trim($_REQUEST['order_id']) );
+    //获取邮箱
+    $data['email'] = htmlspecialchars( trim($_REQUEST['email']) );
+    //到期时间
+    $data['end_time'] = htmlspecialchars( trim($_REQUEST['end_time']) );
+
+    //序列化存储
+    $value = serialize($data);
+
+    //序列化存储到数据库
+    $api->set_option('s_subscribe',$value);
+}
+//检查订阅信息
+function check_subscribe($api) {
+    $api->check_subscribe();
+}
+//检查更新程序
+function up_updater($api) {
+    $api->up_updater();
+}
+//验证当前版本是否匹配
+function check_version($api) {
+    $version = $_REQUEST['version'];
+    $api->check_version($version);
 }
 
 //设置过渡页面
@@ -407,4 +454,10 @@ EOF;
 //获取用户登录状态
 function check_login($api) {
     $api->check_login();
+}
+
+//删除主题
+function delete_theme($api) {
+    $name = $_REQUEST['name'];
+    $api->delete_theme($name);
 }
