@@ -1462,7 +1462,7 @@ class Api {
                 $this->return_json(-2000,'',"请求接口失败，请重试！");
             }
         } catch (\Throwable $th) {
-            $this->return_json(-2000,'','网络请求失败！');
+            $this->return_json(-2000,'','网络请求失败，请重试！');
         }
     }
     /**
@@ -1536,13 +1536,23 @@ class Api {
             $file_size = filesize("update.tar.gz");
             //如果本地文件大小和远程文件大小不一致，则下载更新
             if ( $file_size != $lentgh ) {
-                $this->down_updater();
+                if ( $this->down_updater() ) {
+                    //更新完毕后提示
+                    $this->return_json(200,"","更新程序准备就绪！");
+                }
+                else{
+                    $this->return_json(-2000,"","更新程序下载失败，请检查目录权限！");
+                }
+                
             }
             else {
                 $this->return_json(200,"","更新程序准备就绪！");
             }
         }
         else if( is_file("update.php") ) {
+            $this->return_json(200,"","更新程序准备就绪！");
+        }
+        else{
             $this->return_json(200,"","更新程序准备就绪！");
         }
     }
