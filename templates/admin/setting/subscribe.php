@@ -12,7 +12,7 @@
             <li>您可以前往：<a href="https://dwz.ovh/69h9q" rel = "nofollow" target = "_blank" title = "购买订阅服务">https://dwz.ovh/69h9q</a> 购买订阅服务，订阅后可以：</li>
             <li>1. 享受一键更新OneNav</li>
             <li>2. 可在线更新和下载主题（实现中...）</li>
-            <li>3. 可享受一对一售后服务</li>
+            <li>3. 可享受一对一售后服务（仅限高级版和商业版）</li>
             <li>4. 可帮助OneNav持续发展，让OneNav变得更加美好</li>
             <li>5. 更多高级功能（实现中...）</li>
         </ol>
@@ -27,33 +27,34 @@
         <div class="layui-form-item">
             <label class="layui-form-label">订单号</label>
             <div class="layui-input-block">
-                <input type="text" name="order_id" value = "<?php echo $subscribe['order_id']; ?>" required  lay-verify="required" autocomplete="off" placeholder="请输入订单号" class="layui-input">
+                <input type="text" id = "order_id" name="order_id" value = "<?php echo $subscribe['order_id']; ?>" required  lay-verify="required" autocomplete="off" placeholder="请输入订单号" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">订阅邮箱</label>
             <div class="layui-input-block">
-                <input type="email" name="email" value = "<?php echo $subscribe['email']; ?>" required lay-verify="required|email" autocomplete="off" placeholder="订阅邮箱" class="layui-input">
+                <input type="email" name="email" id = "email" value = "<?php echo $subscribe['email']; ?>" required lay-verify="required|email" autocomplete="off" placeholder="订阅邮箱" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item" style = "display:none;">
             <label class="layui-form-label">域名</label>
             <div class="layui-input-block">
-                <input type="text" name="domain" value = "<?php echo $_SERVER['HTTP_HOST']; ?>" autocomplete="off" placeholder="网站域名" class="layui-input">
+                <input type="text" name="domain" id = "domain" value = "<?php echo $_SERVER['HTTP_HOST']; ?>" autocomplete="off" placeholder="网站域名" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">到期时间</label>
             <div class="layui-input-block">
-            <input type="text" name="end_time" readonly="readonly" value = "<?php echo date("Y-m-d",$subscribe['end_time']); ?>" autocomplete="off" placeholder="订阅到期时间" class="layui-input">
+            <input type="text" name="end_time" id = "end_time" readonly="readonly" value = "<?php echo date("Y-m-d",$subscribe['end_time']); ?>" autocomplete="off" placeholder="订阅到期时间" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <button class="layui-btn" lay-submit="" lay-filter="set_subscribe">保存设置</button>
+            <button class="layui-btn" lay-submit="" lay-filter="reset_subscribe">删除订阅</button>
         </div>
 
     </form>

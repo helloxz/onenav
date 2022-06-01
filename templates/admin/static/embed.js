@@ -1,5 +1,12 @@
+layui.config({
+  base: './static/module/'
+}).extend({
+  iconHhysFa: 'iconHhys/iconHhysFa'
+});
+
+
 // 2022014
-layui.use(['element','table','layer','form','upload'], function(){
+layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     var element = layui.element;
     var table = layui.table;
     var form = layui.form;
@@ -377,15 +384,18 @@ layui.use(['element','table','layer','form','upload'], function(){
 
   //保存站点设置
   form.on('submit(set_site)', function(data){
+    var index = layer.load(1);
     $.post('/index.php?c=api&method=set_site',data.field,function(data,status){
       if(data.code == 0) {
+        layer.closeAll('loading');
         layer.msg(data.data, {icon: 1});
       }
       else{
+        layer.closeAll('loading');
         layer.msg(data.err_msg, {icon: 5});
       }
     });
-    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
@@ -393,7 +403,7 @@ layui.use(['element','table','layer','form','upload'], function(){
   form.on('submit(set_subscribe)', function(data){
     var order_id = data.field.order_id;
     var index = layer.load(1);
-    $.get('http://down.onenav.top/v1/check_subscribe.php',data.field,function(data,status){
+    $.get('https://onenav.xiaoz.top/v1/check_subscribe.php',data.field,function(data,status){
       
       if(data.code == 200) {
         //order_id = data.data.order_id;
@@ -418,6 +428,25 @@ layui.use(['element','table','layer','form','upload'], function(){
 
     });
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+  //清空订阅信息
+  form.on('submit(reset_subscribe)', function(data){
+    //存储到数据库中
+    $.post("index.php?c=api&method=set_subscribe",{order_id:'',email:'',end_time:null},function(data,status){
+      if(data.code == 0) {
+        //清空表单
+      $("#order_id").val('');
+      $("#email").val('');
+      //$("#domain").val('');
+      $("#end_time").val('');
+        layer.msg(data.data, {icon: 1});
+      }
+      else{
+        layer.closeAll('loading');
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
@@ -856,5 +885,18 @@ function delete_theme(name) {
         layer.msg(data.msg,{icon:5});
       }
     });
+  });
+}
+
+//验证是否订阅
+function check_subscribe(msg) {
+  $.get("/index.php?c=api&method=check_subscribe",function(data,status){
+    if( data.code == 200 ) {
+      return true;
+    }
+    else{
+      layer.msg(msg, {icon: 5});
+      return false;
+    }
   });
 }

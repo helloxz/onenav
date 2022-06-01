@@ -17,7 +17,7 @@
                 //var_dump($theme['info']->name);
             ?>
             <!-- 主题列表 -->
-            <div class="layui-col-lg3">
+            <div class="layui-col-lg3 layui-col-md6 layui-col-sm12">
                 <fieldset style = "padding:1em;border:0px;height:280px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
                     <legend style = "font-size:24px;"><?php echo $key; ?> - <?php echo $theme['info']->version ?></legend>
                     

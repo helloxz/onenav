@@ -21,10 +21,10 @@
   </div>
 
   <div class="layui-form-item">
-    <label class="layui-form-label">字体图标</label>
-    <div class="layui-input-block">
-      <input type="text" name="font_icon" placeholder="请输入字体图标，如：fa fa-bookmark-o" autocomplete="off" class="layui-input">
-    </div>
+      <label for="" class="layui-form-label">字体图标：</label>
+      <div class="layui-input-block">
+          <input name="font_icon" type="text" id="iconHhys2" value="" lay-filter="iconHhys2" class="layui-input">
+      </div>
   </div>
 
   <div class="layui-form-item">
@@ -74,3 +74,32 @@
 </div>
   
 <?php include_once('footer.php'); ?>
+<script>
+  //参考：https://gitee.com/luckygyl/iconFonts
+  layui.use(['iconHhysFa'], function(){
+  var iconHhysFa = layui.iconHhysFa;
+  iconHhysFa.render({
+      // 选择器，推荐使用input
+      elem: '#iconHhys2',
+      // 数据类型：fontClass/awesome，推荐使用fontClass
+      type: 'awesome',
+      // 是否开启搜索：true/false
+      search: true,
+      // fa 图标接口
+      url: './static/font-awesome/4.7.0/less/variables.less',
+      // 是否开启分页
+      page: true,
+      // 每页显示数量，默认12
+      limit: 30,
+      // 点击回调
+      value:'fa-bookmark-o', //自定义默认图标
+      click: function(data) {
+          console.log(data);
+      },
+      // 渲染成功后的回调
+      success: function(d) {
+          console.log(d);
+      }
+  });
+})
+</script>
