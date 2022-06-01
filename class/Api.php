@@ -5,7 +5,7 @@
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
-define("API_URL","http://down.onenav.top");
+define("API_URL","https://onenav.xiaoz.top");
 class Api {
     protected $db;
     public function __construct($db){
@@ -156,7 +156,7 @@ class Api {
      * name:返回错误（json）
      * 
      */
-    protected function err_msg($code,$err_msg){
+    public function err_msg($code,$err_msg){
         $data = [
             'code'      =>  $code,
             'err_msg'   =>  $err_msg
@@ -1463,6 +1463,66 @@ class Api {
             }
         } catch (\Throwable $th) {
             $this->return_json(-2000,'','网络请求失败，请重试！');
+        }
+    }
+    /**
+     * 验证订阅是否存在
+     */
+    public function is_subscribe() {
+        //获取订阅SESSION状态
+        session_start();
+        //获取session订阅状态
+        $is_subscribe = $_SESSION['subscribe'];
+        //如果订阅是空的，则请求接口获取订阅状态
+        if ( !isset($is_subscribe) ) {
+            //获取当前站点信息
+            $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
+            $domain = $_SERVER['HTTP_HOST'];
+        
+            $subscribe = unserialize($subscribe);
+            //api请求地址
+            $api_url = API_URL."/v1/check_subscribe.php?order_id=".$subscribe['order_id']."&email=".$subscribe['email']."&domain=".$domain;
+            try {
+                #GET HTTPS
+                $curl = curl_init($api_url);
+                #设置useragent
+                #curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)");
+                curl_setopt($curl, CURLOPT_FAILONERROR, true);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                #设置超时时间，最小为1s（可选）
+                curl_setopt($curl , CURLOPT_TIMEOUT, 30);
+    
+                $html = curl_exec($curl);
+                curl_close($curl);
+                //解析json
+                $data = json_decode($html);
+                //var_dump($data->data->end_time);
+                //echo strtotime($data->data->end_time);
+                //var_dump($data->code);
+                //如果状态码返回200，并且订阅没有到期
+                if( (intval($data->code) === 200) && ( $data->data->end_time > ( strtotime( date("Y-m-d",time()) ) )) ) {
+                    $_SESSION['subscribe'] = TRUE;
+                    return TRUE;
+                }
+                else if( intval($data->code === -1000 ) ) {
+                    $_SESSION['subscribe'] = FALSE;
+                    return FALSE;
+                }
+                else{
+                    $_SESSION['subscribe'] = NULL;
+                }
+            } catch (\Throwable $th) {
+                $_SESSION['subscribe'] = NULL;
+            }
+        }
+        if( $is_subscribe == TRUE ) {
+            return TRUE;
+        }
+        else{
+            return FALSE;
         }
     }
     /**
