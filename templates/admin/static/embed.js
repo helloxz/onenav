@@ -452,15 +452,18 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
 
    //保存站点设置
    form.on('submit(set_transition_page)', function(data){
+    var index = layer.load(1);
     $.post('/index.php?c=api&method=set_transition_page',data.field,function(data,status){
       if(data.code == 0) {
+        layer.closeAll('loading');
         layer.msg(data.data, {icon: 1});
       }
       else{
+        layer.closeAll('loading');
         layer.msg(data.err_msg, {icon: 5});
       }
     });
-    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 

@@ -46,12 +46,12 @@
             </div>
         </div>
 
-        <div class="layui-form-item layui-form-text">
+        <!-- <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">自定义footer，支持HTML(订阅可用)</label>
             <div class="layui-input-block">
                 <textarea name = "footer" placeholder="请参考帮助文档进行设置！" rows = "4" class="layui-textarea"><?php echo $transition_page['footer']; ?></textarea>
             </div>
-        </div>
+        </div> -->
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">广告1(订阅可用)</label>

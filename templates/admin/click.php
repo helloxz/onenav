@@ -21,6 +21,10 @@
 			padding-top:1em;
 			padding-bottom:1em;
 		}
+		#menu{
+			width:100%;
+			background-color: #343a40!important;
+		}
 	</style>
 	<?php echo $site['custom_header']; ?>
 	<?php
@@ -42,21 +46,29 @@
 	?>
 </head>
 <body>
-	<!-- 顶部导航菜单 -->
-	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
-	<a class="navbar-brand" href="/"><?php echo $site['title']; ?></a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-		<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="collapsibleNavbar">
-		<ul class="navbar-nav">
-			<!-- 输出自定义菜单 -->
-			<?php echo $transition_page['menu']; ?>
-			<!-- 输出自定义菜单END -->
-		</ul>
-	</div>  
-	</nav>
-	<!-- 顶部导航菜单END -->
+	<div id="menu">
+	<div class="container">
+		<div class = "row">
+			<div class="col-sm-8 offset-sm-2">
+				<!-- 顶部导航菜单 -->
+				<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+				<a class="navbar-brand" href="/"><?php echo $site['title']; ?></a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="collapsibleNavbar">
+					<ul class="navbar-nav">
+						<!-- 输出自定义菜单 -->
+						<?php echo $transition_page['menu']; ?>
+						<!-- 输出自定义菜单END -->
+					</ul>
+				</div>  
+				</nav>
+				<!-- 顶部导航菜单END -->
+			</div>
+		</div>
+	</div>
+	</div>
 	<div class="container" style = "margin-top:2em;">
 		<!-- 广告1 -->
 		<div class= "row">
@@ -139,10 +151,10 @@
 			<div class="col-sm-8 offset-sm-2">
 			<hr>
 			<div class="xcdn-footer">
-				<?php if( empty($transition_page['footer']) ){ ?>
+				<?php if( empty($site['custom_footer']) ){ ?>
 					&copy;2022 Powered by <a href="https://www.xiaoz.me/" title = "小z博客" rel = "nofollow" target = "_blank">xiaoz</a>
 				<?php }else{
-					echo $transition_page['footer'];
+					echo $site['custom_footer'];
 				} ?>
 			</div>
 			</div>
