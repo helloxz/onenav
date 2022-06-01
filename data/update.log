@@ -125,3 +125,7 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 
 20220527
 1. 新增订阅后在线更新
+
+20220601
+1. 过渡页面完善
+2. 新增分类字体图标选择
