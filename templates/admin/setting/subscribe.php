@@ -14,7 +14,7 @@
             <li>2. 可在线更新和下载主题（实现中...）</li>
             <li>3. 可享受一对一售后服务（仅限高级版和商业版）</li>
             <li>4. 可帮助OneNav持续发展，让OneNav变得更加美好</li>
-            <li>5. 更多高级功能（实现中...）</li>
+            <li>5. 更多高级功能（自定义版权、广告管理等）</li>
         </ol>
       </div>
     </div>
@@ -55,6 +55,7 @@
         <div class="layui-form-item">
             <button class="layui-btn" lay-submit="" lay-filter="set_subscribe">保存设置</button>
             <button class="layui-btn" lay-submit="" lay-filter="reset_subscribe">删除订阅</button>
+            <a class="layui-btn layui-btn-danger" rel = "nofollow" target = "_blank" title = "点此购买订阅" href="https://dwz.ovh/69h9q"><i class="fa fa-shopping-cart"></i> 购买订阅</a>
         </div>
 
     </form>
@@ -83,6 +84,7 @@
         <div class="layui-input-inline">
             <button id = "btn_update" class="layui-btn" lay-submit="" onclick = "update_main()">立即更新</button>
             <button id = "btn_updating" style = "display:none;" class="layui-btn layui-btn-disabled" >更新中，请勿关闭窗口</button>
+            <a href="https://dwz.ovh/7q4z6" title = "点此查看更新失败的原因" rel = "nofollow" target = "_blank">更新失败？</a>
         </div>
         <!-- 更新进度条 -->
         <div id="progress">
