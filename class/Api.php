@@ -1598,7 +1598,7 @@ class Api {
             if ( $file_size != $lentgh ) {
                 if ( $this->down_updater() ) {
                     //更新完毕后提示
-                    $this->return_json(200,"","更新程序准备就绪！");
+                    $this->return_json(200,"","更新程序更新完毕！");
                 }
                 else{
                     $this->return_json(-2000,"","更新程序下载失败，请检查目录权限！");
@@ -1606,14 +1606,14 @@ class Api {
                 
             }
             else {
-                $this->return_json(200,"","更新程序准备就绪！");
+                $this->return_json(200,"","更新程序（压缩包）准备就绪！");
             }
         }
         else if( is_file("update.php") ) {
-            $this->return_json(200,"","更新程序准备就绪！");
+            $this->return_json(200,"","更新程序（PHP）准备就绪！");
         }
         else{
-            $this->return_json(200,"","更新程序准备就绪！");
+            $this->return_json(200,"","更新程序（其它）准备就绪！");
         }
     }
     /**

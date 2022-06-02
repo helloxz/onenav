@@ -129,3 +129,4 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 20220601
 1. 过渡页面完善
 2. 新增分类字体图标选择
+3. 修复360 LJ浏览器登录自动切换内核问题
