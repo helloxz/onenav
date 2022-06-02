@@ -1,5 +1,12 @@
+layui.config({
+  base: './static/module/'
+}).extend({
+  iconHhysFa: 'iconHhys/iconHhysFa'
+});
+
+
 // 2022014
-layui.use(['element','table','layer','form','upload'], function(){
+layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     var element = layui.element;
     var table = layui.table;
     var form = layui.form;
@@ -377,29 +384,86 @@ layui.use(['element','table','layer','form','upload'], function(){
 
   //保存站点设置
   form.on('submit(set_site)', function(data){
+    var index = layer.load(1);
     $.post('/index.php?c=api&method=set_site',data.field,function(data,status){
       if(data.code == 0) {
+        layer.closeAll('loading');
         layer.msg(data.data, {icon: 1});
       }
       else{
+        layer.closeAll('loading');
         layer.msg(data.err_msg, {icon: 5});
       }
     });
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
+  //保存订阅信息
+  form.on('submit(set_subscribe)', function(data){
+    var order_id = data.field.order_id;
+    var index = layer.load(1);
+    $.get('https://onenav.xiaoz.top/v1/check_subscribe.php',data.field,function(data,status){
+      
+      if(data.code == 200) {
+        //order_id = data.data.order_id;
+        email = data.data.email;
+        end_time = data.data.end_time;
+        //存储到数据库中
+        $.post("index.php?c=api&method=set_subscribe",{order_id:order_id,email:email,end_time:end_time},function(data,status){
+          if(data.code == 0) {
+            layer.closeAll('loading');
+            layer.msg(data.data, {icon: 1});
+          }
+          else{
+            layer.closeAll('loading');
+            layer.msg(data.err_msg, {icon: 5});
+          }
+        });
+      }
+      else{
+        layer.closeAll('loading');
+        layer.msg(data.msg, {icon: 5});
+      }
+
+    });
     console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+  //清空订阅信息
+  form.on('submit(reset_subscribe)', function(data){
+    //存储到数据库中
+    $.post("index.php?c=api&method=set_subscribe",{order_id:'',email:'',end_time:null},function(data,status){
+      if(data.code == 0) {
+        //清空表单
+      $("#order_id").val('');
+      $("#email").val('');
+      //$("#domain").val('');
+      $("#end_time").val('');
+        layer.msg(data.data, {icon: 1});
+      }
+      else{
+        layer.closeAll('loading');
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
    //保存站点设置
    form.on('submit(set_transition_page)', function(data){
+    var index = layer.load(1);
     $.post('/index.php?c=api&method=set_transition_page',data.field,function(data,status){
       if(data.code == 0) {
+        layer.closeAll('loading');
         layer.msg(data.data, {icon: 1});
       }
       else{
+        layer.closeAll('loading');
         layer.msg(data.err_msg, {icon: 5});
       }
     });
-    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
@@ -808,4 +872,34 @@ function export_link(url, fileName) {
     layer.close(index);
   });
   
+}
+
+//删除主题
+function delete_theme(name) {
+  layer.confirm('确认删除此主题(' + name + ')?', {icon: 3, title:'重要提示'}, function(index){
+    $.post("index.php?c=api&method=delete_theme",{name:name},function(data,status){
+      if( data.code == 200 ) {
+        layer.msg(data.msg,{icon:1});
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+      else{
+        layer.msg(data.msg,{icon:5});
+      }
+    });
+  });
+}
+
+//验证是否订阅
+function check_subscribe(msg) {
+  $.get("/index.php?c=api&method=check_subscribe",function(data,status){
+    if( data.code == 200 ) {
+      return true;
+    }
+    else{
+      layer.msg(msg, {icon: 5});
+      return false;
+    }
+  });
 }

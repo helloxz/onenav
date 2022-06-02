@@ -5,6 +5,7 @@
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
+define("API_URL","https://onenav.xiaoz.top");
 class Api {
     protected $db;
     public function __construct($db){
@@ -155,7 +156,7 @@ class Api {
      * name:返回错误（json）
      * 
      */
-    protected function err_msg($code,$err_msg){
+    public function err_msg($code,$err_msg){
         $data = [
             'code'      =>  $code,
             'err_msg'   =>  $err_msg
@@ -738,53 +739,81 @@ class Api {
         $limit = $data['limit'];
         $token = $data['token'];
         $offset = ($data['page'] - 1) * $data['limit'];
-        $fid = @$data['category_id'];
+        //$fid = @$data['category_id'];
+        $count = $this->db->count('on_links','*');
         
-        //如果存在分类ID，则根据分类ID进行查询
-        if ($data['category_id'] != null) {
-            
-            $cid_sql = "WHERE fid = $fid";
-            //统计链接总数
-            $count = $this->db->count('on_links','*',[
-                'fid'   =>  $fid
-            ]);
-        }
-        else{
-            //统计链接总数，没有分类ID的情况
-            $count = $this->db->count('on_links','*');
-        }
         //如果成功登录，但token为空
         if( ($this->is_login()) && (empty($token)) ){
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ${cid_sql} ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         
         //如果token验证通过
         elseif( (!empty($token)) && ($this->auth($token)) ) {
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ${cid_sql} ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
-        //如果即没有登录成功，又没有token，则默认为游客
+        //如果即没有登录成功，又没有token，则默认为游客,游客查询链接属性为公有，分类为公有，不查询私有
         else{
-            $cid_sql = empty($fid) ? null : "AND fid = $fid";
-            if($cid_sql == null) {
-                //统计链接总数，不存在分类ID的情况
-                $count = $this->db->count('on_links','*',[ 'property'   =>  0 ]);
-            }
-            else{
-                //统计链接总数，存在分类ID的情况
-                $count = $this->db->count('on_links','*',[ 
-                    'property'  =>  0,
-                    'fid'       =>  $fid 
-                ]);
-            }
+            $c_sql = "SELECT COUNT(*) AS num FROM on_links WHERE property = 0 AND fid IN (SELECT id FROM on_categorys WHERE property = 0)";
+            $count = $this->db->query($c_sql)->fetchAll()[0]['num'];
+            $count = intval($count);
             
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 ${cid_sql} ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 AND fid IN (SELECT id FROM on_categorys WHERE property = 0) ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
 
-        //打印SQL
-        //echo $sql;
+       
+        //原生查询
+        $datas = $this->db->query($sql)->fetchAll();
+        $datas = [
+            'code'      =>  0,
+            'msg'       =>  '',
+            'count'     =>  $count,
+            'data'      =>  $datas
+        ];
+        exit(json_encode($datas));
+    }
+    /**
+     * 查询某个分类下面的链接
+     * 接收一个数组作为参数
+     */
+    public function q_category_link($data){
+        $limit = $data['limit'];
+        $token = $data['token'];
+        $offset = ($data['page'] - 1) * $data['limit'];
+        $fid = @$data['category_id'];
+        //$fid = @$data['category_id'];
+        $count = $this->db->count('on_links','*',[
+            'fid'   =>  $fid
+        ]);
 
-        //如果查询的总数大于limit，则以limit为准
-        //$count = ( $count > $limit) ? $limit : $count;
+        //如果FID是空的，则直接终止
+        if( empty($fid) ) {
+            $datas = [
+                'code'      =>  -2000,
+                'msg'       =>  '分类ID不能为空！',
+                'count'     =>  0,
+                'data'      =>  []
+            ];
+            exit(json_encode($datas));
+        }
+        
+        //如果成功登录，但token为空
+        if( ($this->is_login()) && (empty($token)) ){
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        }
+        
+        //如果token验证通过
+        elseif( (!empty($token)) && ($this->auth($token)) ) {
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        }
+        //如果即没有登录成功，又没有token，则默认为游客,游客查询链接属性为公有，分类为公有，不查询私有
+        else{
+            $c_sql = "SELECT COUNT(*) AS num FROM on_links WHERE property = 0 AND fid = $fid";
+            $count = $this->db->query($c_sql)->fetchAll()[0]['num'];
+            $count = intval($count);
+            
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 AND fid IN (SELECT id FROM on_categorys WHERE property = 0) ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        }
+
        
         //原生查询
         $datas = $this->db->query($sql)->fetchAll();
@@ -810,6 +839,16 @@ class Api {
         //var_dump($link_info);
         //如果是公开链接，则直接返回
         if ( $link_info['property'] == "0" ) {
+            //链接是公开的，但是分类是私有的，则不显示
+            $category_property = $this->db->get("on_categorys","property",[
+                "id"    =>  $link_info['fid']
+            ]);
+            $category_property = intval($category_property);
+            //分类属性为1，则说明是私有链接，则未认证用户不允许查询
+            if( $category_property === 1 ){
+                //进行认证
+                $this->auth($token);
+            }
             $datas = [
                 'code'      =>  0,
                 'data'      =>  $link_info
@@ -1163,6 +1202,64 @@ class Api {
         }
     }
     /**
+     * 删除主题
+     */
+    public function delete_theme($name) {
+        //验证授权
+        $this->auth($token);
+        //正则判断主题名称是否合法
+        $pattern = "/^[a-zA-Z0-9][a-zA-Z0-9-_]+[a-zA-Z0-9]$/";
+        if ( !preg_match($pattern,$name) ) {
+            $this->return_json(-2000,'',"主题名称不合法！");
+        }
+        //如果是默认主题，则不允许删除
+        if( ($name === 'default') || ($name === 'admin') ) {
+            $this->return_json(-2000,'',"默认主题不允许删除！");
+        }
+        //查询当前使用中的主题
+        $current_theme = $this->db->get('on_options','value',[ 'key'  =>  "theme" ]);
+        //如果是当前使用中的主题也不允许删除
+        if ( $current_theme == $name ) {
+            $this->return_json(-2000,'',"使用中的主题不允许删除！");
+        }
+        //删除主题
+        $this->deldir("templates/".$name);
+        
+        $this->deldir("data/templates/".$name);
+        //判断主题文件夹是否还存在
+        if( is_dir("templates/".$name) || is_dir("data/templates/".$name) ) {
+            $this->return_json(-2000,'',"删除失败，可能是权限不足！");
+        }
+        else{
+            $this->return_json(200,'',"主题已删除！");
+        }
+    }
+    /**
+     * 删除一个目录
+     */
+    protected function deldir($dir) {
+        //先删除目录下的文件：
+        $dh=opendir($dir);
+        while ($file=readdir($dh)) {
+          if($file!="." && $file!="..") {
+            $fullpath=$dir."/".$file;
+            if(!is_dir($fullpath)) {
+                unlink($fullpath);
+            } else {
+                $this->deldir($fullpath);
+            }
+          }
+        }
+       
+        closedir($dh);
+        //删除当前文件夹：
+        if(rmdir($dir)) {
+          return true;
+        } else {
+          return false;
+        }
+    }
+    /**
      * 获取主题参数
      */
     public function get_theme_config() {
@@ -1318,6 +1415,224 @@ class Api {
     public function check_login(){
         $status = $this->is_login() ? "true" : "false";
         $this->return_json(200,$status,"");
+    }
+    /**
+     * 验证订阅是否有效
+     */
+    public function check_subscribe() {
+        //验证token是否合法
+        $this->auth($token);
+        //获取订阅信息
+        //获取当前站点信息
+        $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
+        $domain = $_SERVER['HTTP_HOST'];
+    
+        $subscribe = unserialize($subscribe);
+        //api请求地址
+        $api_url = API_URL."/v1/check_subscribe.php?order_id=".$subscribe['order_id']."&email=".$subscribe['email']."&domain=".$domain;
+        
+        try {
+            #GET HTTPS
+            $curl = curl_init($api_url);
+            #设置useragent
+            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+            curl_setopt($curl, CURLOPT_FAILONERROR, true);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            #设置超时时间，最小为1s（可选）
+            curl_setopt($curl , CURLOPT_TIMEOUT, 30);
+
+            $html = curl_exec($curl);
+            curl_close($curl);
+            //解析json
+            $data = json_decode($html);
+            //var_dump($data->data->end_time);
+            //echo strtotime($data->data->end_time);
+            //var_dump($data->code);
+            //如果状态码返回200，并且订阅没有到期
+            if( (intval($data->code) === 200) && ( $data->data->end_time > ( strtotime( date("Y-m-d",time()) ) )) ) {
+                $this->return_json(200,$data->data,'success');
+            }
+            else if( intval($data->code === -1000 ) ) {
+                $this->return_json(-2000,'',$data->msg);
+            }
+            else{
+                $this->return_json(-2000,'',"请求接口失败，请重试！");
+            }
+        } catch (\Throwable $th) {
+            $this->return_json(-2000,'','网络请求失败，请重试！');
+        }
+    }
+    /**
+     * 验证订阅是否存在
+     */
+    public function is_subscribe() {
+        //获取订阅SESSION状态
+        session_start();
+        //获取session订阅状态
+        $is_subscribe = $_SESSION['subscribe'];
+        //如果订阅是空的，则请求接口获取订阅状态
+        if ( !isset($is_subscribe) ) {
+            //获取当前站点信息
+            $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
+            $domain = $_SERVER['HTTP_HOST'];
+        
+            $subscribe = unserialize($subscribe);
+            //api请求地址
+            $api_url = API_URL."/v1/check_subscribe.php?order_id=".$subscribe['order_id']."&email=".$subscribe['email']."&domain=".$domain;
+            try {
+                #GET HTTPS
+                $curl = curl_init($api_url);
+                #设置useragent
+                curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+                curl_setopt($curl, CURLOPT_FAILONERROR, true);
+                curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                #设置超时时间，最小为1s（可选）
+                curl_setopt($curl , CURLOPT_TIMEOUT, 30);
+    
+                $html = curl_exec($curl);
+                curl_close($curl);
+                //解析json
+                $data = json_decode($html);
+                //var_dump($data->data->end_time);
+                //echo strtotime($data->data->end_time);
+                //var_dump($data->code);
+                //如果状态码返回200，并且订阅没有到期
+                if( (intval($data->code) === 200) && ( $data->data->end_time > ( strtotime( date("Y-m-d",time()) ) )) ) {
+                    $_SESSION['subscribe'] = TRUE;
+                    return TRUE;
+                }
+                else if( intval($data->code === -1000 ) ) {
+                    $_SESSION['subscribe'] = FALSE;
+                    return FALSE;
+                }
+                else{
+                    $_SESSION['subscribe'] = NULL;
+                }
+            } catch (\Throwable $th) {
+                $_SESSION['subscribe'] = NULL;
+            }
+        }
+        if( $is_subscribe == TRUE ) {
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+    }
+    /**
+     * 无脑下载更新程序
+     */
+    public function down_updater() {
+        $url = API_URL."/update.tar.gz";
+        // echo $url;
+        // exit;
+        try {
+            //检查本地是否存在更新程序
+            $curl = curl_init($url);
+            #设置useragent
+            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+            curl_setopt($curl, CURLOPT_FAILONERROR, true);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            #设置超时时间，最小为1s（可选）
+            curl_setopt($curl , CURLOPT_TIMEOUT, 60);
+
+            $html = curl_exec($curl);
+            curl_close($curl);
+            //var_dump($html);
+            //return $html;
+            //写入文件
+            file_put_contents("update.tar.gz",$html);
+            //解压覆盖文件
+            //解压文件
+            $phar = new PharData('update.tar.gz');
+            //路径 要解压的文件 是否覆盖
+            $phar->extractTo('./', null, true);
+            return TRUE;
+        } catch (\Throwable $th) {
+            $this->return_json(-2000,"","更新程序下载失败！");
+        }
+        finally{
+            //再次判断更新程序是否存在
+            if( is_file("update.php") ) {
+                //判断是否大约0
+                $file_size = filesize("update.php");
+                if( $file_size < 100 ) {
+                    $this->return_json(-2000,"","更新程序异常，请检查目录权限！");
+                }
+                else{
+                    return TRUE;
+                }
+            }
+            else{
+                $this->return_json(-2000,"","更新程序下载失败，请检查目录权限！");
+            }
+        }
+    }
+    /**更新升级程序 */
+    public function up_updater() {
+        
+        //如果不存在，则下载更新程序
+        if( !is_file("update.php") ) {
+            if ( $this->down_updater() ) {
+                $this->return_json(200,"","更新程序准备就绪！");
+            }
+
+        }
+        //如果存在更新程序，验证大小，大小不匹配时进行更新
+        if( is_file("update.tar.gz") ) {
+            //获取header头
+            $header = get_headers(API_URL."/update.tar.gz",1);
+            $lentgh = $header['Content-Length'];
+            //获取文件大小
+            $file_size = filesize("update.tar.gz");
+            //如果本地文件大小和远程文件大小不一致，则下载更新
+            if ( $file_size != $lentgh ) {
+                if ( $this->down_updater() ) {
+                    //更新完毕后提示
+                    $this->return_json(200,"","更新程序更新完毕！");
+                }
+                else{
+                    $this->return_json(-2000,"","更新程序下载失败，请检查目录权限！");
+                }
+                
+            }
+            else {
+                $this->return_json(200,"","更新程序（压缩包）准备就绪！");
+            }
+        }
+        else if( is_file("update.php") ) {
+            $this->return_json(200,"","更新程序（PHP）准备就绪！");
+        }
+        else{
+            $this->return_json(200,"","更新程序（其它）准备就绪！");
+        }
+    }
+    /**
+     * 校验更新程序
+     */
+    public function check_version($version) {
+        //获取当前版本信息
+        $current_version = explode("-",file_get_contents("version.txt"));
+        $current_version = str_replace("v","",$current_version[0]);
+
+        //获取用户传递的版本
+        //$version = $_REQUEST['version'];
+
+        if( $version == $current_version ) {
+            $this->return_json(200,"","success");
+        }
+        else{
+            $this->return_json(-2000,"","更新失败，版本校验不匹配，请检查目录权限！");
+        }
     }
     
 }

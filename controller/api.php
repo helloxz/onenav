@@ -46,6 +46,10 @@ function add_category($api){
     $description = htmlspecialchars($description);
     //获取字体图标
     $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    //搜索字体图标是否包含'fa '，如果不包含则自动加上
+    if( !strstr($font_icon,'fa ') ) {
+        $font_icon = 'fa '.$font_icon;
+    }
     $api->add_category($token,$name,$property,$weight,$description,$font_icon,$fid);
 }
 /**
@@ -70,6 +74,10 @@ function edit_category($api){
     $description = htmlspecialchars($description);
     //字体图标
     $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    //搜索字体图标是否包含'fa '，如果不包含则自动加上
+    if( !strstr($font_icon,'fa ') ) {
+        $font_icon = 'fa '.$font_icon;
+    }
     $api->edit_category($token,$id,$name,$property,$weight,$description,$font_icon,$fid);
 }
 /**
@@ -158,6 +166,25 @@ function link_list($api){
         'category_id'   =>  $category_id
     ];
     $api->link_list($data);
+}
+
+/**
+ * 查询分类下的链接
+ */
+function q_category_link($api){
+    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
+    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
+    //获取token
+    $token = $_POST['token'];
+    //获取分类ID
+    $category_id = empty($_REQUEST['category_id']) ? null : intval($_REQUEST['category_id']);
+    $data = [
+        'page'          =>  $page,
+        'limit'         =>  $limit,
+        'token'         =>  $token,
+        'category_id'   =>  $category_id
+    ];
+    $api->q_category_link($data);
 }
 
 /**
@@ -276,9 +303,71 @@ function set_site($api) {
     $data['custom_footer'] = $_POST['custom_footer'];
     //序列化存储
     $value = serialize($data);
+
+    if( !empty($data['custom_footer']) ) {
+        if( !$api->is_subscribe() ) {
+            $api->err_msg(-2000,'保存失败，自定义footer需要订阅用户才能使用，若未订阅请留空！');
+        }
+        
+    }
     
 
     $api->set_option('s_site',$value);
+}
+
+//阻止非订阅用户保存设置
+function _deny_set($content,$err_msg) {
+    global $api;
+    //验证订阅,返回TRUE或FALSE
+    if ( !isset($_SESSION['subscribe']) ) {
+        //验证订阅,返回TRUE或FALSE
+        $result = $api->is_subscribe();
+    }
+    
+    //如果内容是空的，直接允许
+    if ( empty($content) ) {
+        return TRUE;
+    }
+    else{
+        if( $_SESSION['subscribe'] === TRUE ) {
+            return TRUE;
+        }
+        else{
+            $api->err_msg(-2000,$err_msg);
+        }
+
+    }
+}
+//设置订阅信息
+function set_subscribe($api) {
+    //获取订单ID
+    $data['order_id'] = htmlspecialchars( trim($_REQUEST['order_id']) );
+    //获取邮箱
+    $data['email'] = htmlspecialchars( trim($_REQUEST['email']) );
+    //到期时间
+    $data['end_time'] = htmlspecialchars( trim($_REQUEST['end_time']) );
+    //重置订阅状态
+    session_start();
+    $_SESSION['subscribe'] = NULL;
+
+    //序列化存储
+    $value = serialize($data);
+
+    //序列化存储到数据库
+    $api->set_option('s_subscribe',$value);
+}
+//检查订阅信息
+function check_subscribe($api) {
+    $api->check_subscribe();
+}
+//检查更新程序
+function up_updater($api) {
+    $api->up_updater();
+}
+//验证当前版本是否匹配
+function check_version($api) {
+    $version = $_REQUEST['version'];
+    $api->check_version($version);
 }
 
 //设置过渡页面
@@ -290,9 +379,24 @@ function set_transition_page($api) {
     $data['visitor_stay_time'] = intval($_POST['visitor_stay_time']);
     //获取管理员停留时间
     $data['admin_stay_time'] = intval($_POST['admin_stay_time']);
+    //获取菜单
+    $data['menu'] = $_POST['menu'];
+    //获取footer
+    $data['footer'] = $_POST['footer'];
+    //获取广告
+    $data['a_d_1'] = $_POST['a_d_1'];
+    $data['a_d_2'] = $_POST['a_d_2'];
+    
+
+    //验证订阅
+    _deny_set($data['menu'],'保存失败，过渡页菜单需要订阅用户才能使用！');
+    _deny_set($data['footer'],'保存失败，自定义footer需要订阅用户才能使用！');
+    _deny_set($data['a_d_1'],'保存失败，自定义广告需要订阅用户才能使用！');
+    _deny_set($data['a_d_2'],'保存失败，自定义广告需要订阅用户才能使用！');
     
     //序列化存储
-    $value = serialize($data);   
+    $value = serialize($data);
+    
 
     $api->set_option('s_transition_page',$value);
 }
@@ -407,4 +511,10 @@ EOF;
 //获取用户登录状态
 function check_login($api) {
     $api->check_login();
+}
+
+//删除主题
+function delete_theme($api) {
+    $name = $_REQUEST['name'];
+    $api->delete_theme($name);
 }

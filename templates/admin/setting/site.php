@@ -59,7 +59,7 @@
         </div>
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">自定义footer</label>
+            <label class="layui-form-label">自定义footer(支持HTML代码，订阅可用)</label>
             <div class="layui-input-block">
                 <textarea name = "custom_footer" placeholder="自定义站点底部信息，请填写HTML代码" class="layui-textarea"><?php echo $site['custom_footer']; ?></textarea>
             </div>

@@ -241,6 +241,20 @@ if( $page == 'setting/site' ) {
     $site = unserialize($site);
 }
 
+//站点订阅页面
+if( $page == 'setting/subscribe' ) {
+    //获取当前站点信息
+    $subscribe = $db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
+    
+    $subscribe = unserialize($subscribe);
+
+    //获取当前版本信息
+    $current_version = explode("-",file_get_contents("version.txt"));
+    $current_version = str_replace("v","",$current_version[0]);
+
+    
+}
+
 //过渡页设置页面
 if( $page == 'setting/transition_page' ) {
     //获取当前站点信息

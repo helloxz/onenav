@@ -17,21 +17,24 @@
                 //var_dump($theme['info']->name);
             ?>
             <!-- 主题列表 -->
-            <div class="layui-col-lg3">
-                <fieldset style = "padding:1em;border:0px;height:170px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
-                    <legend style = "font-size:32px;"><?php echo $key; ?></legend>
-                    <p><h2><?php echo $theme['info']->name ?></h2></p>
-                    <p>版本：<?php echo $theme['info']->version ?></p>
-                    <p>更新时间：<?php echo $theme['info']->update ?></p>
-                    <br />
+            <div class="layui-col-lg3 layui-col-md6 layui-col-sm12">
+                <fieldset style = "padding:1em;border:0px;height:280px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
+                    <legend style = "font-size:24px;"><?php echo $key; ?> - <?php echo $theme['info']->version ?></legend>
+                    
+                    <!-- 主题图片 -->
+                    <div class = "screenshot"><p><img src="<?php echo $theme['info']->screenshot; ?>" alt=""></p></div>
+                    <!-- 主题图片END -->
+                    
                     <p>
                     <div class="layui-btn-group">
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "set_theme('<?php echo $key; ?>')">使用</button>
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail('<?php echo $key; ?>')">详情</button>
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_config('<?php echo $key; ?>')">参数设置</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick = "delete_theme('<?php echo $key; ?>')">删除</button>
                         <?php if( $current_them == $key ) { ?>
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">当前主题</button>
                         <?php } ?>
+
                     </div>
                     </p>
                 </fieldset>
