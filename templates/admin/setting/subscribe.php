@@ -130,10 +130,12 @@
         //如果当前版本和最新版本相同，则不能更新
         if (current_version >= new_version) {
             layer.msg("已经是最新版本，无需更新！",{icon:5});
+            return false;
         }
         //如果可用版本为空
         if ( new_version == '' ) {
             layer.msg("无可用版本，无需更新！",{icon:5});
+            return false;
         }
         
         //否则可以更新
@@ -174,8 +176,9 @@
                                         if(data.code == 200) {
                                             update_status("100%","更新完成，请前往后台检查<a href = '/index.php?c=admin'>更新数据库</a>！");
                                             $("#update_log").append("更新完成，请前往后台检查<a href = '/index.php?c=admin'>更新数据库</a>！<br />");
-                                            $("#btn_update").show();
-                                            $("#btn_updating").hide();
+                                            //$("#btn_update").show();
+                                            //$("#btn_updating").hide();
+                                            $("#btn_updating").show();
                                         }
                                         else {
                                             update_error(data.msg);
