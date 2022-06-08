@@ -57,6 +57,7 @@ docker run -itd --name="onenav" -p 80:80 \
 * OneNav：[https://nav.rss.ink/](https://nav.rss.ink/)
 * 千行书签：[http://www.52qx.club/](http://www.52qx.club/)
 * 纽及书签：[http://www.1006788.com/](http://www.1006788.com/)
+* DiscoveryNav：[https://nav.miooku.com/](https://nav.miooku.com/)
 
 ## 联系我
 
