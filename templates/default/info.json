@@ -7,6 +7,11 @@
     "update": "2022\/04\/29",
     "author": "xiaoz<xiaoz93@outlook.com>",
     "screenshot": "https:\/\/img.rss.ink\/imgs\/2022\/03\/42ed3ef2c4a50f6d.png",
+    "demo":"",
+    "require":{
+        "min":"0.9.20",
+        "max":""
+    },
     "config": {
         "full_width_mode":"off",
         "link_description":"show",
