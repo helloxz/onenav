@@ -1,63 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
+
 <head>
-	<meta charset="utf-8" />
-	<title>OneNav后台登录</title>
-	<meta name="generator" content="EverEdit" />
-	<meta name="author" content="" />
-	<meta name="keywords" content="" />
-	<meta name="description" content="" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link rel='stylesheet' href='static/layui/css/layui.css'>
-	  <link rel='stylesheet' href='templates/admin/static/style.css'>
-	  <style>
-		  body{
-			  /* background:url(templates/admin/static/bg.jpg); */
-			  background-color:rgba(0, 0, 51, 0.8);
-			  
-		  }
-		  
-	  </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./templates/admin/static/css/new.css">
+  <link rel='stylesheet' href='static/layui/css/layui.css'>
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>OneNav管理员登录</title>
+  <script>
+    window.onload = function () {
+      document.querySelector(".login").style.opacity = 1;
+    }
+  </script>
 </head>
-<body>
 
-<div class="layui-container">
-	<div class="layui-row">
-		<div class="login-logo">
-			<h1>登录OneNav</h1>
-		</div>
-		<div class="layui-col-lg4 layui-col-md-offset4" style ="margin-top:4em;">
-		<form class="layui-form layui-form-pane" action="">
-  <div class="layui-form-item">
-    <label class="layui-form-label"><i class="layui-icon layui-icon-username"></i></label>
-    <div class="layui-input-block">
-      <input type="text" name="user" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
-    </div>
+<body class="login">
+  <div class="root">
+    <section class="left">
+      <img class="cover" src="./templates/admin/static/image/backgroundLogin.png" />
+    </section>
+    <section class="right">
+      <!-- PC版的样式 -->
+      <h2>OneNav后台管理系统</h2>
+      <div class="login_frame">
+        <div class="login_box">
+          <h4>管理登录</h4>
+          <h6>亲爱的管理员欢迎回来！</h6>
+          <form action="" method="post">
+            <div class="inp">
+              <span class="label">用户名</span>
+              <input type="text" id = "user" name="user" placeholder="请输入账号" />
+            </div>
+            <div class="inp">
+              <span class="label">用户密码</span>
+              <input type="password" id = "password" name="password" placeholder="请输入密码" />
+            </div>
+            <div class="submit">
+              <input type="submit" lay-submit lay-filter="new_login" class="submit" value="登录">
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
   </div>
-  <div class="layui-form-item">
-    <label class="layui-form-label"><i class="layui-icon layui-icon-password"></i></label>
-    <div class="layui-input-block">
-      <input type="password" name="password" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
-    </div>
+  <div class="mobile">
+    <!-- 手机版的样式 -->
+    <h1>OneNav</h1>
+    <form action="" method="post">
+      <div class="inp">
+        <span class="label">用户名</span>
+        <input type="text" id = "m_user" name="user" placeholder="请输入账号" />
+      </div>
+      <div class="inp">
+        <span class="label">用户密码</span>
+        <input type="password" id = "m_password" name="password" placeholder="请输入密码" />
+      </div>
+      <div class="submit">
+        <input type="submit" lay-submit lay-filter="new_mobile_login" class="submit" value="登录">
+      </div>
+    </form>
   </div>
-  
-  <div class="layui-form-item">
-    <button class="layui-btn" lay-submit lay-filter="login" style = "width:100%;">登录</button>
-  </div>
-  
-  <div class="layui-form-item layui-hide-sm layui-hide-md layui-hide-lg">
-    <button class="layui-btn" lay-submit lay-filter="mobile_login" style = "width:100%;">手机登录</button>
-  </div>
-
-  
-</form>
-		</div>
-	</div>
-</div>
-
-
+  <footer>© 2022 Powered by <a style = "color:#FFFFFF;padding-left:6px;" href = "https://www.onenav.top/" target = "_blank" title = "开源免费书签管理系统"> OneNav</a></footer>
+</body>
+<script>
+  //自己封装的弹出框
+  function alt(text) {
+    const t = document.createElement("div")
+    t.innerText = text;
+    Object.assign(t.style, {
+      position: 'fixed',
+      maxWidth: '300px',
+      top: '50px',
+      left: '0px',
+      right: '0px',
+      margin: '0 auto',
+      color: '#000',
+      background: '#fff',
+      boxShadow: '0px 3px 4px rgba(197, 197, 197, 0.115)',
+      padding: '15px 20px',
+      borderRadius: '8px',
+      transition: 'all .5s',
+      opacity: 0,
+      transform: 'translateY(-10px)'
+    })
+    document.body.append(t)
+    setTimeout(_ => {
+      t.style.transform = 'translateY(10px)'
+      t.style.opacity = 1;
+    }, 100)
+    setTimeout(_ => {
+      t.style.transform = 'translateY(-10px)'
+      t.style.opacity = 0;
+    }, 3000)
+  }
+</script>
 <script src = 'static/js/jquery.min.js'></script>
 <script src = 'static/layui/layui.js'></script>
 <script src="templates/admin/static/embed.js"></script>
-</body>
 </html>
