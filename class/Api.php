@@ -177,6 +177,12 @@ class Api {
             if( !$this->is_login() ) {
                 $this->err_msg(-1002,'Authorization failure!');
             }
+            else if( $this->is_login() ){
+                return TRUE;
+            }
+            else{
+                $this->err_msg(-1002,'Cookie authorization failure!');
+            }
         }
         else if ( empty($SecretKey) ) {
             $this->err_msg(-2000,'请先生成SecretKey！');
@@ -1412,9 +1418,12 @@ class Api {
     /**
      * 用户状态
      */
-    public function check_login(){
-        $status = $this->is_login() ? "true" : "false";
-        $this->return_json(200,$status,"");
+    public function check_login($token){
+        $re = $this->auth($token);
+        
+        if( $re ) {
+            $this->return_json(200,"true","success");
+        }
     }
     /**
      * 验证订阅是否有效
@@ -1464,6 +1473,75 @@ class Api {
         } catch (\Throwable $th) {
             $this->return_json(-2000,'','网络请求失败，请重试！');
         }
+    }
+    /**
+     * 下载主题
+     */
+    public function down_theme($data) {
+        //主题名称
+        $name = $data['name'];
+        //key-value
+        $key = $data['key'];
+        $value = $data['value'];
+        //拼接主题URL
+        $url = API_URL."/v1/down_theme.php?name=${name}&key=${key}&value=${value}";
+        //验证token是否合法
+        $this->auth($token);
+        //检查主题是否已经存在
+        if ( $data['type'] == 'download' ) {
+            $theme1 = "templates/".$name;
+            $theme2 = "data/templates/".$name;
+
+            if( is_dir($theme1) || is_dir($theme2) ) {
+                $this->return_json(-2000,'','主题已存在，无需重复下载！');
+            }
+        }
+        //如果返回404状态
+        $res = get_headers($url,1);
+        if( strstr($res[0],'404') ) {
+            $this->return_json(-2000,'','远程服务器上不存在此主题！');
+        }
+        //判断主题目录是否存在,如果curl_host是alpine，则视为容器，容器则将主题目录设置为data/templates
+        $curl_host = curl_version()['host'];
+        if( strstr($curl_host,'alpine') ) {
+            $theme_dir = "data/templates";
+        }
+        else{
+            $theme_dir = "templates";
+        }
+        //主题完整压缩包路径
+        $file_name = $theme_dir."/${name}.tar.gz";
+        if( !is_dir($theme_dir) ) {
+            mkdir($theme_dir,0755);
+        }
+        
+        //尝试下载主题
+        try {
+            //下载主题，并设置超时时间为120s
+            $content = $this->curl_get($url,120);
+            //写入主题
+            $re = file_put_contents($theme_dir."/${name}.tar.gz",$content);
+            //如果写入主题失败了，说明权限不粗糙
+            if( !$re ) {
+                $this->return_json(-2000,'','主题写入失败，请检查目录权限！');
+            }
+            else{
+                //解压文件
+                $phar = new PharData($file_name);
+                //路径 要解压的文件 是否覆盖
+                $phar->extractTo($theme_dir."/${name}", null, true);
+                //删除主题
+                unlink($file_name);
+                $this->return_json(200,'','主题下载成功！');
+            }
+
+        } catch (\Throwable $th) {
+            $this->return_json(-2000,'','主题下载失败，请检查目录权限！');
+        }
+        finally{
+            unlink($file_name);
+        }
+
     }
     /**
      * 验证订阅是否存在
@@ -1634,6 +1712,24 @@ class Api {
             $this->return_json(-2000,"","更新失败，版本校验不匹配，请检查目录权限！");
         }
     }
+
+    //curl get请求
+    protected function curl_get($url,$timeout = 10) {
+    $curl = curl_init($url);
+	#设置useragent
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+    curl_setopt($curl, CURLOPT_FAILONERROR, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    #设置超时时间，最小为1s（可选）
+    curl_setopt($curl , CURLOPT_TIMEOUT, $timeout);
+
+    $html = curl_exec($curl);
+    curl_close($curl);
+    return $html;
+}
     
 }
 

@@ -46,3 +46,21 @@ function g_extend_js() {
         echo '';
     }
 }
+
+//curl get请求
+function curl_get($url,$timeout = 10) {
+    $curl = curl_init($url);
+	#设置useragent
+    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+    curl_setopt($curl, CURLOPT_FAILONERROR, true);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    #设置超时时间，最小为1s（可选）
+    curl_setopt($curl , CURLOPT_TIMEOUT, $timeout);
+
+    $html = curl_exec($curl);
+    curl_close($curl);
+    return $html;
+}

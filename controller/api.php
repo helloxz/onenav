@@ -510,11 +510,23 @@ EOF;
 
 //获取用户登录状态
 function check_login($api) {
-    $api->check_login();
+    $token = trim($_REQUEST['token']);
+    $api->check_login($token);
 }
 
 //删除主题
 function delete_theme($api) {
     $name = $_REQUEST['name'];
     $api->delete_theme($name);
+}
+
+//下载主题
+function down_theme() {
+    global $api;
+    $data['name'] = trim($_REQUEST['name']);
+    $data['key'] = trim( $_REQUEST['key'] );
+    $data['value'] = trim( $_REQUEST['value'] );
+    $data['type'] = trim( $_REQUEST['type'] );
+
+    $api->down_theme($data);
 }
