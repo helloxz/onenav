@@ -1,6 +1,6 @@
 # OneNav
 
-OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使用PHP + SQLite 3开发，界面简洁，安装简单，使用方便。OneNav可帮助你你将浏览器书签集中式管理，解决跨设备、跨平台、跨浏览器之间同步和访问困难问题，做到一处部署，随处访问。
+OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP + SQLite 3开发，界面简洁，安装简单，使用方便。OneNav可帮助你你将浏览器书签集中式管理，解决跨设备、跨平台、跨浏览器之间同步和访问困难问题，做到一处部署，随处访问。
 
 ![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
 
@@ -9,6 +9,12 @@ OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使
 ![](https://img.rss.ink/imgs/2022/03/cba9f1946776a8f0.png)
 
 ![](https://img.rss.ink/imgs/2022/03/4b1d6c95484e69bc.png)
+
+![](https://img.rss.ink/imgs/2022/06/08/401b42279dd971f0.png)
+
+![](https://img.rss.ink/imgs/2022/06/07/1a2f6c3f81b64f6a.png)
+
+![](https://img.rss.ink/imgs/2022/06/06/172432e9d3564113.png)
 
 ![](https://i.bmp.ovh/imgs/2020/12/abba0af566f3c16a.png)
 
@@ -40,15 +46,20 @@ OneNav是一款开源免费的书签（导航）管理程序，由xiaoz使用使
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav:0.9.22
+    helloz/onenav:0.9.23
 ```
 * 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
-* `0.9.22`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
+* `0.9.23`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
 ## Demo
+
+* **官方演示站点：**[http://demo.onenav.top/](http://demo.onenav.top/index.php?c=login)
+* 账号/密码：`xiaoz`/`xiaoz.me`
+
+___
 
 以下是OneNav部分用户演示站，排名不分先后。
 
