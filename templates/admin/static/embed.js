@@ -269,6 +269,29 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
+  //新的登录
+  form.on('submit(new_login)', function(data){
+    //获取用户名
+    var user = $("#user").val();
+    //获取密码
+    var password = $("#password").val();
+    if ( user == '' || password == '' ) {
+      layer.msg('用户名或密码不能为空！', {icon: 5});
+      return false;
+    }
+    $.post('/index.php?c=login&check=login',{user:user,password:password},function(data,status){
+      //如果添加成功
+      if(data.code == 0) {
+        window.location.href = '/index.php?c=admin';
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
   //初始化设置onenav密码
   form.on('submit(init_onenav)', function(data){
     console.log(data.field.username);
@@ -322,6 +345,30 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
+  //新的手机登录
+  form.on('submit(new_mobile_login)', function(data){
+    //获取用户名
+    var user = $("#m_user").val();
+    //获取密码
+    var password = $("#m_password").val();
+    if ( user == '' || password == '' ) {
+      layer.msg('用户名或密码不能为空！', {icon: 5});
+      return false;
+    }
+
+    $.post('/index.php?c=login&check=login',{user:user,password:password},function(data,status){
+      //如果登录成功
+      if(data.code == 0) {
+        window.location.href = '/';
+      }
+      else{
+        layer.msg(data.err_msg, {icon: 5});
+      }
+    });
+    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
   //筛选链接
   form.on('submit(screen_link)', function(data){
     fid = data.field.fid;
@@ -333,7 +380,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     var tableIns = table.render({
       elem: '#link_list'
       ,height: 520
-      ,url: 'index.php?c=api&method=link_list' //数据接口
+      ,url: 'index.php?c=api&method=q_category_link' //数据接口
       ,method: 'post'
       ,page: true //开启分页
       ,toolbar: '#linktool'

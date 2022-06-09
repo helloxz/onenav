@@ -113,6 +113,7 @@
 .screenshot img{
     max-width: auto;
     max-height: 200px;
+    max-width:96%;
 }
 
 #progress{

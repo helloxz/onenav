@@ -11,7 +11,7 @@
         <ol>
             <li>您可以前往：<a href="https://dwz.ovh/69h9q" rel = "nofollow" target = "_blank" title = "购买订阅服务">https://dwz.ovh/69h9q</a> 购买订阅服务，订阅后可以：</li>
             <li>1. 享受一键更新OneNav</li>
-            <li>2. 可在线更新和下载主题（实现中...）</li>
+            <li>2. 可在线下载和更新主题</li>
             <li>3. 可享受一对一售后服务（仅限高级版和商业版）</li>
             <li>4. 可帮助OneNav持续发展，让OneNav变得更加美好</li>
             <li>5. 更多高级功能（自定义版权、广告管理等）</li>
