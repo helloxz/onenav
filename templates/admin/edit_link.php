@@ -4,6 +4,14 @@
 <div class="layui-body">
 <!-- 内容主体区域 -->
 <div class="layui-row content-body place-holder">
+    <!-- 说明提示框 -->
+    <div class="layui-col-lg12">
+      <div class="setting-msg">
+        <p>1. 权重越大，排序越靠前</p>
+        <p>2. 识别功能可以自动获取链接标题和描述信息，但不确保一定成功</p>
+      </div>
+    </div>
+    <!-- 说明提示框END -->
     <div class="layui-col-lg12">
     <form class="layui-form">
     <div class="layui-form-item" style = "display:none;">
