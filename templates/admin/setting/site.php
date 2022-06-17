@@ -50,7 +50,12 @@
             <textarea placeholder="网站描述，一般不超过200字符" name = "description" class="layui-textarea"><?php echo $site['description']; ?></textarea>
             </div>
         </div>
-
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">是否直链</label>
+            <div class="layui-input-block">
+                <input type="checkbox" <?php if($site['straight']=="open"){echo 'checked=""';}  ?> name="straight" value="open" lay-skin="switch" lay-filter="switchTest" title="开关">
+            </div>
+        </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">自定义header</label>
             <div class="layui-input-block">
