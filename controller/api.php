@@ -295,6 +295,8 @@ function set_site($api) {
     $data['subtitle'] = htmlspecialchars($_POST['subtitle']);
     //获取关键词
     $data['keywords'] = htmlspecialchars($_POST['keywords']);
+    //获取是否直链
+    $data['straight'] = htmlspecialchars($_POST['straight']);
     //获取描述
     $data['description'] = htmlspecialchars($_POST['description']);
     //获取自定义header

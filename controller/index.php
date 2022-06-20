@@ -22,7 +22,7 @@ if( is_login() ){
             "fid"   =>  $value['id'],
             "ORDER"     =>  ["weight" => "DESC"]
         ]);
-        
+
         foreach ($category_subs as $category_sub) {
             array_push($categorys,$category_sub);
         }
@@ -44,11 +44,11 @@ if( is_login() ){
     function get_links($fid) {
         global $db;
         $fid = intval($fid);
-        $links = $db->select('on_links','*',[ 
+        $links = $db->select('on_links','*',[
                 'fid'   =>  $fid,
                 'ORDER' =>  ["weight" => "DESC"]
             ]);
-        return $links;
+        return handle_link($links);
     }
     //右键菜单标识
     $onenav['right_menu'] = 'admin_menu();';
@@ -73,7 +73,7 @@ else{
             'property'  =>  0,
             "ORDER"     =>  ["weight" => "DESC"]
         ]);
-        
+
         foreach ($category_subs as $category_sub) {
             array_push($categorys,$category_sub);
         }
@@ -95,17 +95,44 @@ else{
     function get_links($fid) {
         global $db;
         $fid = intval($fid);
-        $links = $db->select('on_links','*',[ 
+        $links = $db->select('on_links','*',[
             'fid' =>  $fid,
             'property'  =>  0,
             'ORDER' =>  ["weight" => "DESC"]
         ]);
-        return $links;
+        return handle_link($links);
     }
     //右键菜单标识
     $onenav['right_menu'] = 'user_menu();';
 }
-
+//处理得到的转换链接数据
+function handle_link($data)
+{
+    if (empty($data)) {
+        return $data;
+    }
+    global $db;
+    $site = $db->get('on_options', 'value', ['key' => "s_site"]);
+    $site = unserialize($site);
+    $type = 1; //模式1 原链接
+    if (! empty($site['straight']) && $site['straight'] == "open") {
+        //有且只有开关的时候  才处理
+        $type = 2; //模式2  新链接
+    }
+    $hrefLink = "";
+    foreach ($data as &$value) {
+        switch ($type) {
+            case "1":
+                $hrefLink = "/index.php?c=click&id=" . $value['id'];
+                break;
+            case "2":
+                $hrefLink = $value['url'];
+                break;
+        }
+        $value['href_link'] = $hrefLink;
+    }
+    return $data;
+}
 //获取版本号
 function get_version(){
     if( file_exists('version.txt') ) {
@@ -116,7 +143,7 @@ function get_version(){
         $version = 'null';
         return $version;
     }
-} 
+}
 
 //将URL转换为base64编码
 function base64($url){
