@@ -14,6 +14,9 @@ $key = md5($username.$password.'onenav'.$_SERVER['HTTP_USER_AGENT']);
 //获取cookie
 $cookie = $_COOKIE['key'];
 
+//获取版本号
+$version = new_get_version();
+
 //如果已经登录，直接跳转
 if( is_login() ){
     header('location:index.php?c=admin');

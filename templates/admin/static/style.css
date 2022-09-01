@@ -100,6 +100,34 @@
 	-ms-box-sizing: border-box; /*IE8*/
 	box-sizing: border-box; 
 }
+
+.page-msg{
+    width:100%;
+    color: #FF5722;
+    border-left: 3px solid #FF5722;
+    background-color: #F0F0F0;
+    padding:0.8em;
+    border-radius: 1px;
+    margin-bottom:2em;
+    -moz-box-sizing: border-box; /*Firefox3.5+*/
+	-webkit-box-sizing: border-box; /*Safari3.2+*/
+	-o-box-sizing: border-box; /*Opera9.6*/
+	-ms-box-sizing: border-box; /*IE8*/
+	box-sizing: border-box; 
+}
+
+.page-msg a{
+    color:#01AAED;
+}
+
+.page-msg ol li{
+    list-style-type:decimal;
+}
+
+.page-msg ol{
+    margin-left: 1.5em;
+}
+
 .setting-msg a{
     color:#01AAED;
 }

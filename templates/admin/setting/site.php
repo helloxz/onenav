@@ -44,6 +44,19 @@
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">直链模式</label>
+            <div class="layui-input-block">
+                <?php if( $site['link_model'] === 'direct' ) { ?>
+                    <input type="radio" name="link_model" value="jump" title="关闭">
+                    <input type="radio" name="link_model" value="direct" title="开启" checked>
+                <?php }else{ ?>
+                    <input type="radio" name="link_model" value="jump" title="关闭" checked>
+                    <input type="radio" name="link_model" value="direct" title="开启">
+                <?php } ?>
+            </div>
+        </div>
+
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">网站描述</label>
             <div class="layui-input-block">

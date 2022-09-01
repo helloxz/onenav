@@ -31,6 +31,7 @@
             <dd><a href="/index.php?c=admin&page=setting/site">站点设置</a></dd>
             <dd><a href="/index.php?c=admin&page=setting/theme">主题设置</a></dd>
             <dd><a href="/index.php?c=admin&page=setting/transition_page">过渡页面</a></dd>
+            <dd><a href="/index.php?c=admin&page=setting/backup">数据备份</a></dd>
             <dd><a href="/index.php?c=admin&page=setting/api">获取API</a></dd>
           </dl>
         </li>

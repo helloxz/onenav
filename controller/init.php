@@ -12,6 +12,7 @@ function check_env() {
     $ext = get_loaded_extensions();
     //检查PHP版本，需要大于5.6小于8.0
     $php_version = floatval(PHP_VERSION);
+    $uri = $_SERVER["REQUEST_URI"];
     
     if( ( $php_version < 5.6 ) || ( $php_version > 8 ) ) {
         exit("当前PHP版本{$php_version}不满足要求，需要5.6 <= PHP <= 7.4");
@@ -24,6 +25,11 @@ function check_env() {
     //如果配置文件存在
     if( file_exists("data/config.php") ) {
         exit("配置文件已存在，无需再次初始化!");
+    }
+    //检查是否是二级目录
+    $pattern = '/\/[a-z0-9]+$/';
+    if( preg_match_all($pattern,$uri) ) {
+        exit("暂不支持二级目录安装!");
     }
     return TRUE;
 }

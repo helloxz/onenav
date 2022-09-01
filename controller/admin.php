@@ -9,18 +9,18 @@ require('functions/helper.php');
 check_auth($site_setting['user'],$site_setting['password']);
 
 //获取版本号
-function get_version(){
-    if( file_exists('version.txt') ) {
-        $version = @file_get_contents('version.txt');
-        return $version;
-    }
-    else{
-        $version = 'null';
-        return $version;
-    }
-}
+// function get_version(){
+//     if( file_exists('version.txt') ) {
+//         $version = @file_get_contents('version.txt');
+//         return $version;
+//     }
+//     else{
+//         $version = 'null';
+//         return $version;
+//     }
+// }
 //获取版本号
-$version = get_version();
+$version = new_get_version();
 
 $page = empty($_GET['page']) ? 'index' : $_GET['page'];
 //如果页面是修改edit_category
@@ -85,6 +85,12 @@ if ( $page == 'add_category' ) {
 if( $page == 'setting/api' ) {
     //查询SecretKey
     $SecretKey = $db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
+    
+}
+
+//备份页面
+if( $page == 'setting/backup' ) {
+    
     
 }
 
