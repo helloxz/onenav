@@ -18,7 +18,6 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 
 ![](https://i.bmp.ovh/imgs/2020/12/abba0af566f3c16a.png)
 
-
 ## 功能特色
 
 * 支持后台管理
