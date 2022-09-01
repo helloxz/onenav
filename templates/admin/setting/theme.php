@@ -22,7 +22,10 @@
             <!-- 主题列表 -->
             <div class="layui-col-lg3 layui-col-md6 layui-col-sm12">
                 <fieldset style = "padding:1em;border:0px;height:280px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
-                    <legend style = "font-size:24px;"><?php echo $key; ?> - <?php echo $theme['info']->version ?></legend>
+                    <legend style = "font-size:24px;" id="<?php echo $key; ?>">
+                        <?php echo $key; ?> - <?php echo $theme['info']->version ?>
+                        <span class="renewable" style="color:#FF5722;font-size:14px;"></span>
+                    </legend>
                     
                     <!-- 主题图片 -->
                     <div class = "screenshot"><p><img layer-src="<?php echo $theme['info']->screenshot; ?>" src="<?php echo $theme['info']->screenshot; ?>" alt=""></p></div>
@@ -197,6 +200,35 @@ function update_theme(name,version){
     });
     
 }
+
+//遍历所有主题，检查是否有更新
+function check_update(){
+    //请求远程主题列表
+    $.get("https://onenav.xiaoz.top/v1/theme_list.php",function(data,status){
+        let result = data.data;
+        //console.log(result.5iux);
+        for (const obj in result) {
+            //获取主题名称
+            let value = $("#" + obj).text();
+            //如果获取到的数据为空
+            if( value == '' ) {
+                continue;
+            }
+            //console.log(obj);
+            //获取最新版本
+            let latest_version = result[obj].version;
+            //获取当前版本
+            let current_version = value.split(' - ')[1];
+            //如果存在最新版本
+            if( latest_version > current_version ) {
+                console.log("#" + obj + ".renewable");
+                $("#" + obj + " .renewable").append(`(可更新至${latest_version})`);
+            }
+        }
+    });
+}
+check_update();
+
 
 layer.photos({
   photos: '#layer-photos'

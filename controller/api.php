@@ -301,6 +301,8 @@ function set_site($api) {
     $data['custom_header'] = $_POST['custom_header'];
     //获取自定义footer
     $data['custom_footer'] = $_POST['custom_footer'];
+    //获取链接模式
+    $data['link_model'] = $_POST['link_model'];
     //序列化存储
     $value = serialize($data);
 
@@ -529,4 +531,30 @@ function down_theme() {
     $data['type'] = trim( $_REQUEST['type'] );
 
     $api->down_theme($data);
+}
+
+//备份数据库
+function backup_db() {
+    global $api;
+    $api->backup_db();
+}
+
+//数据库备份列表
+function backup_db_list() {
+    global $api;
+    $api->backup_db_list();
+}
+
+//删除单个数据库备份
+function del_backup_db() {
+    global $api;
+    $name = @$_REQUEST['name'];
+    $api->del_backup_db($name);
+}
+
+//回滚数据库
+function restore_db() {
+    global $api;
+    $name = @$_REQUEST['name'];
+    $api->restore_db($name);
 }

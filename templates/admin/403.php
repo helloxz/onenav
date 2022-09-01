@@ -7,7 +7,7 @@
 	<meta name="keywords" content="" />
 	<meta name="description" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://lib.sinaapp.com/js/bootstrap/4.3.1/css/bootstrap.min.css" type="" media=""/>
+	<link rel="stylesheet" href="static/bootstrap4/css/bootstrap.min.css" type="" media=""/>
 </head>
 <body>
 	<div class="container" style = "margin-top:2em;">
@@ -20,7 +20,7 @@
 					<?php echo $msg; ?>
 				</div>
 				<hr>
-				<div class="xcdn-footer">Powered by <a href="https://www.xiaoz.me/" title = "小z博客" rel = "nofollow" target = "_blank">xiaoz</a></div>
+				<div class="xcdn-footer">Powered by <a href="https://www.onenav.top/" title = "开源免费的书签管理系统" target = "_blank">OneNav</a></div>
 			</div>
 		</div>
 	</div>

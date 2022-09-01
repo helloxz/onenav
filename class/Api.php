@@ -1604,6 +1604,22 @@ class Api {
         }
     }
     /**
+     * name:验证订阅，订阅不存在，则阻止
+     */
+    public function check_is_subscribe(){
+        $result = $this->is_subscribe();
+
+        if( $result === FALSE ) {
+            $this->return_json(-2000,'','该功能需要订阅后才能使用！');
+        }
+        else if( $result === TRUE ) {
+            return TRUE;
+        }
+        else{
+            $this->return_json(-2000,'','该功能需要订阅后才能使用！');
+        }
+    }
+    /**
      * 无脑下载更新程序
      */
     public function down_updater() {
@@ -1715,21 +1731,181 @@ class Api {
 
     //curl get请求
     protected function curl_get($url,$timeout = 10) {
-    $curl = curl_init($url);
-	#设置useragent
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
-    curl_setopt($curl, CURLOPT_FAILONERROR, true);
-    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    #设置超时时间，最小为1s（可选）
-    curl_setopt($curl , CURLOPT_TIMEOUT, $timeout);
+        $curl = curl_init($url);
+        #设置useragent
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        #设置超时时间，最小为1s（可选）
+        curl_setopt($curl , CURLOPT_TIMEOUT, $timeout);
 
-    $html = curl_exec($curl);
-    curl_close($curl);
-    return $html;
-}
+        $html = curl_exec($curl);
+        curl_close($curl);
+        return $html;
+    }
+
+    /**
+     * name:数据库备份接口
+     */
+    public function backup_db(){
+        //验证请求
+        $this->auth($token);
+
+        //验证订阅
+        $this->check_is_subscribe();
+
+        $backup_dir = 'data/backup/';
+
+        //判断目录是否存在，不存在则创建
+        if( !is_dir($backup_dir) ) {
+            try {
+                mkdir($backup_dir,0755);
+            } catch (\Throwable $th) {
+                $this->return_json(-2000,'','备份目录创建失败，请检查目录权限！');
+            }
+        }
+        //尝试拷贝数据库进行备份
+        try {
+            //获取当前版本信息
+            $current_version = explode("-",file_get_contents("version.txt"));
+            $current_version = str_replace("v","",$current_version[0]);
+            $db_name = 'onenav_'.date("YmdHi",time()).'_'.$current_version.'.db3';
+            $backup_db_path = $backup_dir.$db_name;
+            copy('data/onenav.db3',$backup_db_path);
+            $this->return_json(200,$db_name,'success');
+        } catch (\Throwable $th) {
+            $this->return_json(-2000,'','备份目录创建失败，请检查目录权限！');
+        }
+        
+    }
+    /**
+     * name:数据库备份列表
+     */
+    public function backup_db_list() {
+        //验证请求
+        $this->auth($token);
+        //验证订阅
+        $this->check_is_subscribe();
+
+        //备份目录
+        $backup_dir = 'data/backup/';
+
+        //遍历备份列表
+        $dbs = scandir($backup_dir);
+        $newdbs = $dbs;
+        
+        //去除.和..
+        for ($i=0; $i < count($dbs); $i++) { 
+            if( ($dbs[$i] == '.') || ($dbs[$i] == '..') ) {
+                unset($newdbs[$i]);
+            }
+        }
+
+        //将删除后的数组重新赋值
+        $dbs = $newdbs;
+
+        //获取备份列表个数
+        $num = count($dbs);
+        
+        //排序处理，按时间从大到小排序
+        rsort($dbs,2);
+
+        //如果大于10个，则删减为10个
+        if( $num > 10 ) {
+            for ($i=$num; $i > 10; $i--) { 
+                //物理删除数据库
+                unlink($backup_dir.$dbs[$i-1]);
+                //删除数组最后一个元素
+                array_pop($dbs);
+            }
+            $count = 10;
+        }
+        else{
+            $count = $num;
+        }
+
+        //声明一个空数组
+        $data = [];
+        //遍历数据库，获取时间，大小
+        foreach ($dbs as $key => $value) {
+            $arr['id'] = $key;
+            $arr['name'] =   $value;
+            $arr['mtime'] = date("Y-m-d H:i:s",filemtime($backup_dir.$value));
+            $arr['size'] = (filesize($backup_dir.$value) / 1024).'KB';
+
+            $data[$key] = $arr;
+        }
+
+        $datas = [
+            'code'      =>  0,
+            'msg'       =>  '',
+            'count'     =>  $count,
+            'data'      =>  $data
+        ];
+        exit(json_encode($datas));
+    }
+    /**
+     * name:删除单个数据库备份
+     * @param $name：数据库名称
+     */
+    public function del_backup_db($name) {
+        //验证请求
+        $this->auth($token);
+
+        //验证订阅
+        $this->check_is_subscribe();
+
+        //使用正则表达式判断数据库名称是否合法
+        $pattern = '/^onenav_[0-9\-]+_[0-9.]+(db3)$/';
+
+        if( !preg_match_all($pattern,$name) ) {
+            $this->return_json(-2000,'','数据库名称不合法！');
+        }
+
+        //数据库目录
+        $backup_dir = 'data/backup/';
+
+        //删除数据库
+        try {
+            unlink($backup_dir.$name);
+            $this->return_json(200,'',"备份数据库已被删除！");
+        } catch (\Throwable $th) {
+            $this->return_json(-2000,'',"删除失败，请检查目录权限！");
+        }
+    }
+
+    /**
+     * name:恢复数据库备份
+     * @param $name：备份数据库名称
+     */
+    public function restore_db($name) {
+        //验证请求
+        $this->auth($token);
+
+        //验证订阅
+        $this->check_is_subscribe();
+
+        //使用正则表达式判断数据库名称是否合法
+        $pattern = '/^onenav_[0-9\-]+_[0-9.]+(db3)$/';
+
+        if( !preg_match_all($pattern,$name) ) {
+            $this->return_json(-2000,'','数据库名称不合法！');
+        }
+
+        //数据库目录
+        $backup_dir = 'data/backup/';
+
+        //恢复数据库
+        try {
+            copy($backup_dir.$name,'data/onenav.db3');
+            $this->return_json(200,'','数据库已回滚为'.$name);
+        } catch (\Throwable $th) {
+            $this->return_json(-2000,'',"回滚失败，请检查目录权限！");
+        }
+    }
     
 }
 

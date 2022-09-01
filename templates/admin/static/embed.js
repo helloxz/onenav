@@ -294,7 +294,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
 
   //初始化设置onenav密码
   form.on('submit(init_onenav)', function(data){
-    console.log(data.field.username);
+    //console.log(data.field.username);
     
     let username = data.field.username;
     let password = data.field.password;
@@ -302,7 +302,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     //正则验证用户名、密码
     var u_patt = /^[0-9a-z]{3,32}$/;
     if ( !u_patt.test(username) ) {
-      layer.msg("用户名需要3-32位的字母或数字组合！", {icon: 5});
+      layer.msg("用户名需要3-32位的小写字母或数字组合！", {icon: 5});
       return false;
     }
     //正则验证密码

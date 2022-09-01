@@ -64,3 +64,17 @@ function curl_get($url,$timeout = 10) {
     curl_close($curl);
     return $html;
 }
+
+//获取版本号，新写的
+function new_get_version(){
+    if( file_exists('version.txt') ) {
+        $version = @file_get_contents('version.txt');
+        $version = explode("-",$version)[0];
+        $version = str_replace("v","",$version);
+        return $version;
+    }
+    else{
+        $version = 'null';
+        return $version;
+    }
+}

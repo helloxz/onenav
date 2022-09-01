@@ -5,7 +5,12 @@
 <!-- 内容主体区域 -->
 <div class="layui-row content-body place-holder">
     <div class="layui-col-lg6 layui-col-md-offset3">
-      <div class="setting-msg">仅支持 <em>.html</em> 格式导入，导入时会自动创建不存在的分类，使用前请参考<a href="https://dwz.ovh/ij3mq" target="_blank" rel = "nofollow">帮助文档</a> 。</div>
+      <div class="page-msg">
+        <ol>
+          <li>仅支持 <em>.html</em> 格式导入，导入时会自动创建不存在的分类，使用前请参考<a href="https://dwz.ovh/ij3mq" target="_blank" rel = "nofollow">帮助文档</a> 。</li>
+          <li>导入前，建议先<a href="/index.php?c=admin&page=setting/backup">备份数据库</a></li>
+        </ol>
+      </div>
     <!-- 上传 -->
     <div class="layui-upload-drag" id="up_html">
       <i class="layui-icon layui-icon-upload"></i>

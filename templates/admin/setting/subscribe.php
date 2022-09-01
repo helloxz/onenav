@@ -15,6 +15,7 @@
             <li>3. 可享受一对一售后服务（仅限高级版和商业版）</li>
             <li>4. 可帮助OneNav持续发展，让OneNav变得更加美好</li>
             <li>5. 更多高级功能（自定义版权、广告管理等）</li>
+            <li>6. 数据库备份</li>
         </ol>
       </div>
     </div>
@@ -176,11 +177,25 @@
                                     //校验新版本
                                     $.get("/index.php?c=api&method=check_version",{version:new_version},function(data,status){
                                         if(data.code == 200) {
-                                            update_status("100%","更新完成，请前往后台检查<a href = '/index.php?c=admin'>更新数据库</a>！");
-                                            $("#update_log").append("更新完成，请前往后台检查<a href = '/index.php?c=admin'>更新数据库</a>！<br />");
+                                            update_status("100%","更新完成，5s后自动跳转到后台首页检查数据库更新！");
+                                            $("#update_log").append("更新完成，5s后自动跳转到后台首页检查数据库更新！<br />");
                                             //$("#btn_update").show();
                                             //$("#btn_updating").hide();
                                             $("#btn_updating").show();
+                                            //备份数据库
+                                            $.get("/index.php?c=api&method=backup_db",function(data,status){
+                                            if( data.code == 200 ) {
+                                                console.log('数据库备份成功！');
+                                                //3s后跳转到后台首页，方便更新数据库
+                                                setTimeout(() => {
+                                                    window.location = "/index.php?c=admin";
+                                                }, 5000);
+                                            }
+                                            else{
+                                                layer.msg('数据库备份失败，请检查目录权限',{icon:5});
+                                            }
+                                            });
+                                            
                                         }
                                         else {
                                             update_error(data.msg);
