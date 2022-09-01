@@ -1795,24 +1795,29 @@ class Api {
 
         //遍历备份列表
         $dbs = scandir($backup_dir);
+        $newdbs = $dbs;
+        
         //去除.和..
         for ($i=0; $i < count($dbs); $i++) { 
             if( ($dbs[$i] == '.') || ($dbs[$i] == '..') ) {
-                unset($dbs[$i]);
+                unset($newdbs[$i]);
             }
         }
 
+        //将删除后的数组重新赋值
+        $dbs = $newdbs;
+
         //获取备份列表个数
         $num = count($dbs);
-
+        
         //排序处理，按时间从大到小排序
-        rsort($dbs,1);
+        rsort($dbs,2);
 
         //如果大于10个，则删减为10个
         if( $num > 10 ) {
             for ($i=$num; $i > 10; $i--) { 
                 //物理删除数据库
-                unlink($backup_dir.$dbs[$i]);
+                unlink($backup_dir.$dbs[$i-1]);
                 //删除数组最后一个元素
                 array_pop($dbs);
             }
@@ -1821,8 +1826,6 @@ class Api {
         else{
             $count = $num;
         }
-
-        //var_dump($dbs);
 
         //声明一个空数组
         $data = [];
