@@ -27,7 +27,7 @@ function check_env() {
         exit("配置文件已存在，无需再次初始化!");
     }
     //检查是否是二级目录
-    $pattern = '/\/[a-z0-9]+$/';
+    $pattern = '/\/[a-z0-9\/]+$/';
     if( preg_match_all($pattern,$uri) ) {
         exit("暂不支持二级目录安装!");
     }
