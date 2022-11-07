@@ -18,6 +18,8 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 
 ![](https://i.bmp.ovh/imgs/2020/12/abba0af566f3c16a.png)
 
+> **特别声明：未经作者允许，请勿将OneNav进行获利行为或进行商业行为，亦不得用于非法用途，否则自行承担相应法律责任！！！**
+
 ## 功能特色
 
 * 支持后台管理
@@ -31,6 +33,7 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 * 支持二级分类
 * 支持Chromium内核的[浏览器扩展](https://dwz.ovh/4kxn2)（插件）
 * 支持在线更新
+* 手机版后台
 
 ## 安装
 
@@ -46,11 +49,11 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav:0.9.23
+    helloz/onenav:0.9.25
 ```
 * 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
-* `0.9.23`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
+* `0.9.25`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
