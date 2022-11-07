@@ -23,6 +23,7 @@
       <!-- 最右侧的操作选项 -->
       <script type="text/html" id="tooloption">
         <a class="layui-btn layui-btn-xs" lay-event="restore">回滚</a>
+        <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
       </script>  
       <!-- 操作选项END -->
@@ -109,7 +110,12 @@
         });
         
       });
-    } else if(layEvent === 'del'){ //删除
+    } 
+    else if( layEvent === 'download' ) {
+      var data = obj.data; //获得当前行数据
+      window.location.href = "?c=api&method=down_db&name=" + data.name;
+    }
+    else if(layEvent === 'del'){ //删除
       layer.confirm('确定删除吗？', {icon:3,title:'提示'},function(index){
         
         $.get("/index.php?c=api&method=del_backup_db",{name:data.name},function(data,status){

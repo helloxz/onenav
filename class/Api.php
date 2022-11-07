@@ -172,6 +172,11 @@ class Api {
         //计算正确的token：用户名 + TOKEN
         $SecretKey = @$this->db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
         $token_yes = md5(USER.$SecretKey);
+        //获取header中的X-token
+        $xtoken = $_SERVER['HTTP_X_TOKEN'];
+        if( $xtoken === $token_yes ) {
+            return TRUE;
+        }
         //如果token为空，则验证cookie
         if(empty($token)) {
             if( !$this->is_login() ) {
@@ -191,7 +196,7 @@ class Api {
             $this->err_msg(-1002,'Authorization failure!');
         }
         else{
-            return true;
+            return TRUE;
         }
     }
     /**
@@ -213,8 +218,8 @@ class Api {
         $data = [
             'fid'           =>  $fid,
             'title'         =>  htmlspecialchars($title,ENT_QUOTES),
-            'url'           =>  htmlspecialchars($url,ENT_QUOTES),
-            'url_standby'   =>  htmlspecialchars($url_standby,ENT_QUOTES),
+            'url'           =>  $url,
+            'url_standby'   =>  $url_standby,
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
@@ -569,8 +574,8 @@ class Api {
         $this->check_link([
             'fid'           =>  $fid,
             'title'         =>  htmlspecialchars($title,ENT_QUOTES),
-            'url'           =>  htmlspecialchars($url,ENT_QUOTES),
-            'url_standby'   =>  htmlspecialchars($url_standby,ENT_QUOTES)
+            'url'           =>  $url,
+            'url_standby'   =>  $url_standby
         ]);
         //查询ID是否存在
         $count = $this->db->count('on_links',[ 'id' => $id]);
@@ -685,7 +690,7 @@ class Api {
         $token = @$_POST['token'];
         $offset = ($page - 1) * $limit;
         //如果成功登录，则查询所有
-        if( $this->is_login() ){
+        if( $this->is_login() || $this->auth('') ){
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
             //统计总数
             $count = $this->db->count('on_categorys','*');
@@ -757,6 +762,10 @@ class Api {
         elseif( (!empty($token)) && ($this->auth($token)) ) {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
+
+        else if( $this->auth("") === TRUE ) {
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        }
         //如果即没有登录成功，又没有token，则默认为游客,游客查询链接属性为公有，分类为公有，不查询私有
         else{
             $c_sql = "SELECT COUNT(*) AS num FROM on_links WHERE property = 0 AND fid IN (SELECT id FROM on_categorys WHERE property = 0)";
@@ -806,6 +815,10 @@ class Api {
         if( ($this->is_login()) && (empty($token)) ){
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
+        //通过header获取token成功
+        else if( $this->auth("") ) {
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        }
         
         //如果token验证通过
         elseif( (!empty($token)) && ($this->auth($token)) ) {
@@ -817,7 +830,7 @@ class Api {
             $count = $this->db->query($c_sql)->fetchAll()[0]['num'];
             $count = intval($count);
             
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 AND fid IN (SELECT id FROM on_categorys WHERE property = 0) ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE property = 0 AND fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
 
        
@@ -1905,6 +1918,72 @@ class Api {
         } catch (\Throwable $th) {
             $this->return_json(-2000,'',"回滚失败，请检查目录权限！");
         }
+    }
+
+    /**
+     * name:获取OneNav信息
+     */
+    public function app_info($token) {
+        //验证请求
+        $this->auth($token);
+        //获取PHP版本
+        $data['php_version'] = PHP_VERSION;
+        //获取OneNav版本
+        $data['onenav_version'] = file_get_contents("version.txt");
+        //获取分类数量
+        $data['cat_num'] = $this->db->count("on_categorys");
+        //获取链接数量
+        $data['link_num'] = $this->db->count("on_links");
+        //获取用户名
+        $data['username'] = USER;
+
+        //返回JSON数据
+        $this->return_json(200,$data,"success");
+    }
+
+    /**
+     * name:下载数据库
+     */
+    public function down_db($name) {
+        //验证请求
+        $this->auth($token);
+
+        //使用正则表达式判断数据库名称是否合法
+        $pattern = '/^onenav_[0-9\-]+_[0-9.]+(db3)$/';
+
+        if( !preg_match_all($pattern,$name) ) {
+            $this->return_json(-2000,'','数据库名称不合法！');
+        }
+
+        //数据库目录
+        $backup_dir = 'data/backup/';
+        
+        //拼接数据库路径
+        $full_path = $backup_dir.$name;
+
+        if( !file_exists($full_path) ) {
+            header('HTTP/1.1 404 NOT FOUND');
+        }
+        else{
+            // 以只读和二进制模式打开文件
+            $file = fopen($full_path, "rb");
+
+            // 告诉浏览器这是一个文件流格式的文件
+            Header("Content-type: application/octet-stream");
+            // 请求范围的度量单位
+            Header("Accept-Ranges: bytes");
+            // Content-Length是指定包含于请求或响应中数据的字节长度
+            Header("Accept-Length: " . filesize($full_path));
+            // 用来告诉浏览器，文件是可以当做附件被下载，下载后的文件名称为$file_name该变量的值。
+            Header("Content-Disposition: attachment; filename=" . $name);
+
+            // 读取文件内容并直接输出到浏览器
+            echo fread($file, filesize($full_path));
+            fclose($file);
+
+            exit();
+        }
+
     }
     
 }

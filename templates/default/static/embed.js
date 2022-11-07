@@ -119,11 +119,14 @@ function admin_menu() {
               link_id = link_id.replace('id_','');
               var domain = get_domain();
               var url = domain + '/click/' + link_id;
+              
               mdui.dialog({
                 'title':link_title,
                 'cssClass':'show_qrcode',
-                'content':'<img src = "https://qr.png.pub/v1/?text=' + url + '" />'
+                'content':`<div id="qrcode"></div>`
               });
+              
+              let qrcode = new QRCode(document.getElementById('qrcode'), url);
           }},
           "copy":{name:"复制链接",icon:"copy",callback:function(){
             link_url = $(this).attr('link-url');
@@ -177,11 +180,14 @@ $.contextMenu({
           link_id = link_id.replace('id_','');
           var domain = get_domain();
           var url = domain + '/click/' + link_id;
+
           mdui.dialog({
             'title':link_title,
             'cssClass':'show_qrcode',
-            'content':'<img src = "https://qr.png.pub/v1/?text=' + url + '" />'
+            'content':`<div id="qrcode"></div>`
           });
+
+          let qrcode = new QRCode(document.getElementById('qrcode'), url);
       }},
       "copy":{name:"复制链接",icon:"copy",callback:function(){
         link_url = $(this).attr('link-url');

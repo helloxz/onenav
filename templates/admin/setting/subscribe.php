@@ -18,6 +18,10 @@
             <li>6. 数据库备份</li>
         </ol>
       </div>
+      <div class="setting-msg">
+        <p>1. 系统检测到您的域名为<strong style="color:#31BDEC;"><code><?php echo $_SERVER['HTTP_HOST']; ?></code></strong>，购买订阅时请填写此域名！</p>
+        <p>2. 若域名填写错误或更换域名，请前往<a title = "修改OneNav订阅域名" href="https://www.onenav.top/msub.html" target="_blank">https://www.onenav.top/msub.html</a>修改订阅！</p>
+      </div>
     </div>
     <!-- 说明提示框END -->
     <!-- 订阅表格 -->
