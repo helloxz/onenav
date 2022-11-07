@@ -306,7 +306,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
       return false;
     }
     //正则验证密码
-    let p_patt = /^[0-9a-zA-Z!@#$%^&*.()]{6,16}$/;
+    let p_patt = /^[0-9a-zA-Z!@#%^*.()]{6,16}$/;
     if ( !p_patt.test(password) ) {
       layer.msg("密码需要6-16字母、数字或特殊字符！", {icon: 5});
       return false;
@@ -359,7 +359,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     $.post('/index.php?c=login&check=login',{user:user,password:password},function(data,status){
       //如果登录成功
       if(data.code == 0) {
-        window.location.href = '/';
+        window.location.href = '/index.php?c=mobile';
       }
       else{
         layer.msg(data.err_msg, {icon: 5});

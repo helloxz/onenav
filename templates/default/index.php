@@ -248,7 +248,7 @@
 
 		
 	</div>
-	<div class="mdui-divider" style = "margin-top:2em;"></div>
+	<div class="mdui-divider"></div>
 	<!--正文内容部分END-->
 	<!-- footer部分 -->
 	<!-- 未经作者授权，请勿去掉版权，否则可能影响作者更新代码的积极性或直接放弃维护此项目。 -->
@@ -260,11 +260,13 @@
 		} ?>
 	</footer>
 	<!-- footerend -->
+	
 </body>
 <script src = 'static/js/jquery.min.js'></script>
 <script src="static/layer/layer.js"></script>
 <script src = 'static/jQuery-contextMenu/jquery.contextMenu.min.js'></script>
 <script src = 'static/js/clipBoard.min.js'></script>
+<script src = 'static/js/qrcode.min.js'></script>
 <script src = "templates/<?php echo $template; ?>/static/holmes.js"></script>
 <script src="templates/<?php echo $template; ?>/static/embed.js?v=<?php echo $version; ?>"></script>
 <script>

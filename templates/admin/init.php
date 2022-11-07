@@ -60,6 +60,6 @@
 
 <script src = 'static/js/jquery.min.js'></script>
 <script src = 'static/layui/layui.js'></script>
-<script src="templates/admin/static/embed.js"></script>
+<script src="templates/admin/static/embed.js?v=0.9.25"></script>
 </body>
 </html>

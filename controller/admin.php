@@ -184,6 +184,7 @@ if( $page == 'setting/theme' ) {
                 case '.':
                 case '..':
                 case 'admin':
+                case 'mobile':
                     continue;
                     break;
                 default:
