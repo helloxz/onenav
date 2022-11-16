@@ -8,7 +8,7 @@
 
 //允许跨域访问
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type, AccessToken, X-CSRF-Token, Authorization, Token,X-Token,X-Cid");
+header("Access-Control-Allow-Headers: Access-Control-Allow-Private-Network,Content-Type, AccessToken, X-CSRF-Token, Authorization, Token,X-Token,X-Cid");
 require('./class/Api.php');
 
 $api = new Api($db);
