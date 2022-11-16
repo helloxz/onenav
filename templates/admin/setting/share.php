@@ -172,7 +172,7 @@
         }
       }}
       ,{field:'password', width:200, title: '密码'}
-      ,{field:'password', width:200, title: '备注'}
+      ,{field:'note', width:200, title: '备注'}
       ,{fixed: 'right', title:'操作', toolbar: '#tooloption'}
     ]]
     
