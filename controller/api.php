@@ -574,3 +574,53 @@ function down_db() {
     $name = $_GET['name'];
     $api->down_db($name);
 }
+
+//创建分享
+function create_share() {
+    global $api;
+
+    $data['add_time'] = date("Y-m-d H:i:s",time());
+    $data['expire_time'] = $_POST['expire_time'];
+    $data['password'] = trim($_POST['password']);
+    $data['cid'] = intval($_POST['cid']);
+    $data['note'] = $_POST['note'];
+
+    $api->create_share($data);
+}
+
+//分享列表
+function share_list() {
+    global $api;
+    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
+    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
+
+    $data = [
+        'page'          =>  $page,
+        'limit'         =>  $limit
+    ];
+
+    $api->share_list($data);
+}
+
+//获取SID下的链接
+function get_sid_links() {
+    global $api;
+    $data['sid'] = trim($_POST['sid']);
+    $data['password'] = trim($_POST['password']);
+    $api->get_sid_links($data);
+}
+
+//删除分享
+function del_share() {
+    global $api;
+    $data['id'] = intval($_GET['id']);
+    //var_dump($data['id']);
+
+    $api->del_share($data);
+}
+
+//站点信息
+function site_info() {
+    global $api;
+    $api->site_info();
+}
