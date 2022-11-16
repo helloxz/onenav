@@ -5,6 +5,8 @@
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
+//载入通用函数
+require("./functions/helper.php");
 define("API_URL","https://onenav.xiaoz.top");
 class Api {
     protected $db;
@@ -1984,6 +1986,196 @@ class Api {
             exit();
         }
 
+    }
+
+    /**
+     * name:创建分享
+     */
+    public function create_share($data) {
+        //验证请求
+        $this->auth($token);
+
+        //如果订阅不存在
+        if ( $this->is_subscribe() === FALSE ) {
+            $this->return_json(-2000,'','此功能需要订阅后才能使用！');
+        }
+
+        //设置默认数据
+        //随机8位分享ID
+        $data['sid'] = GetRandStr(8);
+        
+        /**
+         * 判断到期时间
+         */
+        //获取当前时间
+        $c_time = strtotime( $data['add_time'] );
+        $e_time = strtotime( $data['expire_time'] );
+
+        if( $c_time > $e_time ) {
+            $this->return_json(-2000,'','到期日期不能小于当前日期！');
+        }
+
+        /**
+         * 判断密码
+         */
+        if( strlen($data['password']) > 16 ) {
+            $this->return_json(-2000,'','密码长度不能超过16位！');
+        }
+        $pattern = "/[A-Za-z0-9]{4,16}/";
+        //var_dump(preg_match($pattern,$data['password']));
+        if( !empty($data['password']) && !preg_match($pattern,$data['password']) ) {
+            $this->return_json(-2000,'','密码只能由4-16位字母和数字组成！');
+        }
+
+        //插入数据库
+        $result = $this->db->insert("on_shares",$data);
+
+        if( $result ) {
+            $this->return_json(200,'','success');
+        }
+        else{
+            $this->return_json(-2000,'','写入数据库失败！');
+        }
+    }
+    /**
+     * 分享列表
+     */
+    public function share_list($data){
+        //验证请求
+        $this->auth($token);
+
+        $limit = $data['limit'];
+        $offset = ($data['page'] - 1) * $data['limit'];
+        //$fid = @$data['category_id'];
+        $count = $this->db->count('on_shares','*');
+        
+        $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_shares.cid) AS category_name FROM on_shares ORDER BY id DESC LIMIT {$limit} OFFSET {$offset}";
+
+       
+        //原生查询
+        $datas = $this->db->query($sql)->fetchAll();
+
+        $datas = [
+            'code'      =>  0,
+            'msg'       =>  '',
+            'count'     =>  $count,
+            'data'      =>  $datas
+        ];
+        exit(json_encode($datas));
+    }
+
+    /**
+     * name:根据分享的SID查询指定分类下的所有链接
+     */
+    public function get_sid_links($data) {
+        //获得SID
+        $sid = $data['sid'];
+        //获得密码
+        $password = $data['password'];
+        //判断SID是否合法
+        $pattern = "/[A-Za-z0-9]{8}$/";
+
+        if( (strlen($sid) !== 8) || !preg_match($pattern,$sid) ) {
+            $this->return_json(-2000,'','SID不合法！');
+        }
+
+        //根据SID查询得到分类ID
+        $share_data = $this->db->get("on_shares","*",[
+            "sid"   =>  $sid
+        ]);
+
+        //如果没有查询到数据
+        if( empty($share_data) ) {
+            $this->return_json(-2000,'','SID不存在！');
+        }
+
+        $cid = $share_data['cid'];
+
+        //查询分类名称
+        $category_info = $this->db->get("on_categorys",["name"],[
+            "id"    =>  $cid
+        ]);
+        $category_name = $category_info["name"];
+
+        //如果链接已经过期
+        $c_time = strtotime( date("Y-m-d H:i:s",time()) );
+        
+        if ( $c_time > strtotime($share_data['expire_time']) ) {
+            $this->return_json(-2000,'','链接已过期！');
+        }
+        //如果分享密码不为空，则验证密码
+        if ( !empty($share_data['password']) && ( $share_data['password'] ==  $password) ) {
+            //根据分类ID（cid）查询该分类下的所有链接
+            $results = $this->db->select("on_links","*",[
+                "fid"   =>  $cid,
+                "ORDER" => ["weight" => "DESC","id" => "DESC"]
+            ]);
+
+            $data = [
+                "category_name" =>  $category_name,
+                "expire_time"   =>  $share_data["expire_time"],
+                "results"       =>  $results
+            ];
+
+            $this->return_json(200,$data,'success');
+        }
+        else if ( empty($share_data['password']) ) {
+            //根据分类ID（cid）查询该分类下的所有链接
+            $results = $this->db->select("on_links","*",[
+                "fid"   =>  $cid,
+                "ORDER" => ["weight" => "DESC","id" => "DESC"]
+            ]);
+
+            $data = [
+                "category_name" =>  $category_name,
+                "expire_time"   =>  $share_data["expire_time"],
+                "results"       =>  $results
+            ];
+
+            $this->return_json(200,$data,'success');
+        }
+        else{
+            $this->return_json(401,'','密码错误！');
+        }
+
+    }
+
+    /**
+     * name：删除分享
+     */
+    public function del_share($data) {
+        //验证请求
+        $this->auth($token);
+
+        $id = $data['id'];
+
+        
+
+        //如果id为空
+        if( empty($id) ){
+            $this->return_json(-2000,$results,'ID不能为空！');
+        }
+
+        $data = $this->db->delete('on_shares',[ 'id' => $id] );
+        
+        if( $data ) {
+            $this->return_json(200,'','success');
+        }
+        else{
+            $this->return_json(-2000,'','删除失败！');
+        }
+
+    }
+
+    /**
+     * name:获取站点信息，不需要授权
+     */
+    public function site_info() {
+        //获取当前站点信息
+        $site = $this->db->get('on_options','value',[ 'key'  =>  "s_site" ]);
+        $site = unserialize($site);
+
+        $this->return_json(200,$site,'success');
     }
     
 }

@@ -165,3 +165,6 @@ footer a{
     /* box-shadow:1px 0 5px 0 #eeeeee; */
     border-right: 0.5px solid rgba(0, 0, 0, 0.12);
 }
+#qrcode img{
+    max-width: 200px;
+}

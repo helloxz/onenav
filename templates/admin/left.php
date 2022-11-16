@@ -18,6 +18,7 @@
             <dd><a href="/index.php?c=admin&page=link_list">我的链接</a></dd>
             <dd><a href="/index.php?c=admin&page=add_link">添加链接</a></dd>
             <dd><a href="/index.php?c=admin&page=imp_link">书签导入</a></dd>
+            <dd><a href="/index.php?c=admin&page=setting/share">书签分享</a></dd>
           </dl>
         </li>
       </ul>

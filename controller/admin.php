@@ -23,6 +23,12 @@ check_auth($site_setting['user'],$site_setting['password']);
 $version = new_get_version();
 
 $page = empty($_GET['page']) ? 'index' : $_GET['page'];
+
+//如果是后台首页，则判断是否是手机访问，并决定是否跳转到手机版页面
+if( $page == 'index' ) {
+    jump_mobile();
+}
+
 //如果页面是修改edit_category
 if ( $page == 'edit_category' ) {
     //获取id
@@ -122,7 +128,7 @@ if ( $page == "link_list" ) {
 }
 
 //如果页面是添加链接页面
-if ( ($page == 'add_link') || ($page == 'add_link_tpl') || ($page == 'add_quick_tpl') ) {
+if ( ($page == 'add_link') || ($page == 'add_link_tpl') || ($page == 'add_quick_tpl') || ($page == 'setting/share') ) {
     //查询所有分类信息
     $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weight'    =>  'DESC'] ]);
     //checked按钮
@@ -185,6 +191,7 @@ if( $page == 'setting/theme' ) {
                 case '..':
                 case 'admin':
                 case 'mobile':
+                case 'universal':
                     continue;
                     break;
                 default:

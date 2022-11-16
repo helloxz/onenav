@@ -6,6 +6,7 @@
 <script src = 'static/js/jquery.min.js'></script>
 <script src = 'static/layui/layui.js'></script>
 <script src="static/js/md5.min.js"></script>
+<script src = "static/js/clipBoard.min.js"></script>
 <script src="templates/admin/static/embed.js?v=<?php echo $version; ?>"></script>
 </body>
 </html>

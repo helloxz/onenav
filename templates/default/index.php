@@ -146,9 +146,9 @@
 			</li>
 		</a>
 		<?php } else { ?>
-		<a href="/index.php?c=admin&page=logout" title="退出" class="mdui-hidden-sm-up">
+		<a href="/index.php?c=mobile" title="后台管理" class="mdui-hidden-sm-up">
 			<li class="mdui-list-item mdui-ripple">
-			<div class="mdui-list-item-content category-name"><i class="fa fa-dashboard"></i> 退出</div>
+			<div class="mdui-list-item-content category-name"><i class="fa fa-dashboard"></i> 后台管理</div>
 		</li>
 		</a>
 		<?php } ?>
