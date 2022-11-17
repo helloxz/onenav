@@ -691,8 +691,13 @@ class Api {
     public function category_list($page,$limit){
         $token = @$_POST['token'];
         $offset = ($page - 1) * $limit;
-        //如果成功登录，则查询所有
-        if( $this->is_login() || $this->auth('') ){
+        /**
+         * name:如果成功登录，则查询所有
+         * 
+         */
+
+        //如果使用cookie登录成功，或者token不为空，则使用token进行验证
+        if( $this->is_login() || ( !empty($token) && $this->auth($token) ) ){
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
             //统计总数
             $count = $this->db->count('on_categorys','*');
@@ -755,7 +760,7 @@ class Api {
         //$fid = @$data['category_id'];
         $count = $this->db->count('on_links','*');
         
-        //如果成功登录，但token为空
+        //如果成功登录，但token为空，获取所有
         if( ($this->is_login()) && (empty($token)) ){
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
@@ -765,6 +770,7 @@ class Api {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
 
+        //如果通过header传递的token验证成功，则获取所有
         else if( $this->auth("") === TRUE ) {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }

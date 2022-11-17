@@ -171,3 +171,6 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 2. 新增：分类目录分享功能
 3. 修复默认主题的一些BUG
 4. 其它优化和BUG修复
+
+20221117
+1. 修复获取分类目录失败的BUG
