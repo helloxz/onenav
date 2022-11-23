@@ -204,7 +204,7 @@ class Api {
     /**
      * name:添加链接
      */
-    public function add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = ''){
+    public function add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = '',$font_icon=''){
         $this->auth($token);
         $fid = intval($fid);
         //检测链接是否合法
@@ -225,7 +225,8 @@ class Api {
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'add_time'      =>  time(),
             'weight'        =>  $weight,
-            'property'      =>  $property
+            'property'      =>  $property,
+            'font_icon'     =>  $font_icon
         ];
         //插入数据库
         $re = $this->db->insert('on_links',$data);
@@ -531,6 +532,45 @@ class Api {
             }
         }
     }
+
+    /**
+     * 图标上传
+     * type:上传类型
+     */
+    public function uploadImages($token,$type){
+        $this->auth($token);
+        if ($_FILES["file"]["error"] > 0)
+        {
+            $this->err_msg(-1015,'File upload failed!');
+        }
+        else
+        {
+            //根据时间生成文件名
+            $filename = $_FILES["file"]["name"];
+            //获取文件后缀
+            $suffix = explode('.',$filename);
+            $suffix = strtolower(end($suffix));
+            
+            //临时文件位置
+            $temp = $_FILES["file"]["tmp_name"];
+            if( $suffix != 'ico' && $suffix != 'jpg' && $suffix != 'png' && $suffix != 'bmp' ) {
+                //删除临时文件
+                unlink($filename);
+                $this->err_msg(-1014,'Unsupported file suffix name!');
+            }
+            
+            $newfilename='upload/'.time().'.'.$suffix;
+
+            if( copy($temp,$newfilename) ) {
+                $data = [
+                    'code'      =>  0,
+                    'file_name' =>  $newfilename
+                ];
+                exit(json_encode($data));
+            }
+        }
+    }
+
     /**
      * 导出HTML链接进行备份
      */

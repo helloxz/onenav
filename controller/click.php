@@ -13,7 +13,7 @@ if(empty($id)) {
 }
 
 //查询链接信息
-$link = $db->get('on_links',['id','fid','url','url_standby','property','click','title','description'],[
+$link = $db->get('on_links',['id','fid','url','url_standby','property','click','title','description','font_icon'],[
     'id'    =>  $id
 ]);
 

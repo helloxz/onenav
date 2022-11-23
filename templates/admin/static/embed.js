@@ -90,7 +90,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
       ,{field: 'font_icon', title: '图标', width:60, templet:function(d){
         if(d.font_icon==null)
         {
-          return '<img src="static/images/default.png" width="28" height="28">';
+          return '<img src="upload/default.png" width="28" height="28">';
         }
         else
         {
@@ -733,6 +733,27 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     }
   });
 
+  upload.render({
+    elem: '#iconUpload' //绑定元素
+    ,url: 'index.php?c=api&method=uploadImages' //上传接口
+    ,accept:'file'
+    ,exts: 'ico|jpg|png|bmp'
+    ,done: function(res){
+      //console.log(res);
+      //上传完毕回调
+      if( res.code == 0 ) {
+        $("#font_icon").val(res.file_name);
+      }
+      else if( res.code < 0) {
+        layer.msg(res.err_msg, {icon: 5});
+        layer.close();
+      }
+      
+    }
+    ,error: function(){
+      //请求异常回调
+    }
+  });
 });
 
 function get_link_info() {
