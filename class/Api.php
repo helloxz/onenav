@@ -608,7 +608,7 @@ class Api {
     /**
      * name:修改链接
      */
-    public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = ''){
+    public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = '',$font_icon = ''){
         $this->auth($token);
         $fid = intval($fid);
         //检测链接是否合法
@@ -634,7 +634,8 @@ class Api {
             'description'   =>  htmlspecialchars($description,ENT_QUOTES),
             'up_time'       =>  time(),
             'weight'        =>  $weight,
-            'property'      =>  $property
+            'property'      =>  $property,
+            'font_icon'     =>  $font_icon
         ];
         //插入数据库
         $re = $this->db->update('on_links',$data,[ 'id' => $id]);

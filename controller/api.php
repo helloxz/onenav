@@ -129,8 +129,9 @@ function edit_link($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
-    
-    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby);
+    $font_icon = empty($_POST['font_icon']) ? '' : $_POST['font_icon'];
+
+    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby,$font_icon);
     
 }
 
