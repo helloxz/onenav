@@ -21,6 +21,9 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     ,page: true //开启分页
     ,cols: [[ //表头
       {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+      ,{field: 'font_icon', title: '图标', width:60, templet: function(d){
+        return '<i class="fa-lg '+d.font_icon+'"></i>';
+      }}
       ,{field: 'name', title: '分类名称', width:160}
       ,{field: 'fname', title: '父级分类', width:160}
       ,{field: 'add_time', title: '添加时间', width:160, sort: true,templet:function(d){
@@ -84,6 +87,16 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     ,cols: [[ //表头
       {type:'checkbox'} //开启复选框
       ,{field: 'id', title: 'ID', width:80, sort: true}
+      ,{field: 'font_icon', title: '图标', width:60, templet:function(d){
+        if(d.font_icon==null)
+        {
+          return '<img src="upload/default.png" width="28" height="28">';
+        }
+        else
+        {
+          return '<img src="'+d.font_icon+'" width="28" height="28">';
+        }
+      }}
       // ,{field: 'fid', title: '分类ID',sort:true, width:90}
       ,{field: 'category_name', title: '所属分类',sort:true,width:120}
       ,{field: 'url', title: 'URL',width:140,templet:function(d){
@@ -720,6 +733,27 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     }
   });
 
+  upload.render({
+    elem: '#iconUpload' //绑定元素
+    ,url: 'index.php?c=api&method=uploadImages' //上传接口
+    ,accept:'file'
+    ,exts: 'ico|jpg|png|bmp'
+    ,done: function(res){
+      //console.log(res);
+      //上传完毕回调
+      if( res.code == 0 ) {
+        $("#font_icon").val(res.file_name);
+      }
+      else if( res.code < 0) {
+        layer.msg(res.err_msg, {icon: 5});
+        layer.close();
+      }
+      
+    }
+    ,error: function(){
+      //请求异常回调
+    }
+  });
 });
 
 function get_link_info() {

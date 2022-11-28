@@ -39,6 +39,20 @@
   <!-- 备用链接END -->
 
   <div class="layui-form-item">
+    <label class="layui-form-label">图标</label>
+    <div class="layui-input-block">
+    <button type="button" id = "iconUpload" name="iconUpload" class="layui-btn"><i class="layui-icon">&#xe67c;</i>上传图标</button> 
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">图标链接</label>
+    <div class="layui-input-block">
+    <input type="url" id = "font_icon" value = "<?php echo $link['font_icon']; ?>" name="font_icon" placeholder="请输入图标链接，如果没有，请留空" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
     <label class="layui-form-label">链接名称</label>
     <div class="layui-input-block">
       <input type="text" id = "title" name="title" value = "<?php echo $link['title']; ?>" required  lay-verify="required" placeholder="请输入链接名称" autocomplete="off" class="layui-input">
