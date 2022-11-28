@@ -176,7 +176,9 @@ class Api {
         $token_yes = md5(USER.$SecretKey);
         //获取header中的X-token
         $xtoken = $_SERVER['HTTP_X_TOKEN'];
-        if( $xtoken === $token_yes ) {
+
+        //如果通过header传递token，且验证通过
+        if( !empty($xtoken) && ($xtoken === $token_yes) ) {
             return TRUE;
         }
         //如果token为空，则验证cookie
@@ -824,9 +826,9 @@ class Api {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         //通过header获取token成功
-        else if( $this->auth("") ) {
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
-        }
+        // else if( $this->auth("") ) {
+        //     $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        // }
         
         //如果token验证通过
         elseif( (!empty($token)) && ($this->auth($token)) ) {
