@@ -71,6 +71,7 @@
                     <p>
                     <div class="layui-btn-group">
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "down_theme('<?php echo $key; ?>','download')">下载</button>
+                        <a class="layui-btn layui-btn-sm" title = "查看<?php echo $key; ?>演示" target = "_blank" href="https://nav.rss.ink/index.php?theme=<?php echo $key; ?>">查看演示</a>
                         <!-- <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail_online('<?php echo $key; ?>')">详情</button> -->
                     </div>
                     </p>
