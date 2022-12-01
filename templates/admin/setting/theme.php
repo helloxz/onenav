@@ -8,7 +8,7 @@
     <div class="layui-col-lg12">
       <div class="setting-msg">
         <p>1. 主题更换及设置说明，请参考：<a href="https://dwz.ovh/yoyaf" target = "_blank" title = "主题更换及设置说明">https://dwz.ovh/yoyaf</a></p>
-        <p>2. 为了分摊服务器成本，主题下载和更新需要订阅用户才能使用，敬请谅解！订阅地址：<a href="https://dwz.ovh/69h9q" rel="nofollow" target="_blank" title="购买订阅服务">https://dwz.ovh/69h9q</a></p>
+        <p>2. 主题本身不收取费用，但为了分摊服务器存储和带宽成本，主题下载和更新需要订阅用户才能使用，敬请谅解！订阅地址：<a href="https://dwz.ovh/69h9q" rel="nofollow" target="_blank" title="购买订阅服务">https://dwz.ovh/69h9q</a></p>
         <p>3. 部分主题来自其它开源项目，OneNav仅做适配，主题版权归原作者所有</p>
         <p>4. 主题提交请联系QQ:446199062</p>
       </div>
@@ -37,6 +37,7 @@
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail('<?php echo $key; ?>')">详情</button>
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_config('<?php echo $key; ?>')">参数设置</button>
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "update_theme('<?php echo $key; ?>','<?php echo $theme['info']->version; ?>')">更新</button>
+                        <a class="layui-btn layui-btn-sm" target = "_blank" href="/index.php?theme=<?php echo $key;  ?>">预览</a>
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick = "delete_theme('<?php echo $key; ?>')">删除</button>
                         <?php if( $current_them == $key ) { ?>
                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">当前</button>
@@ -70,6 +71,7 @@
                     <p>
                     <div class="layui-btn-group">
                         <button type="button" class="layui-btn layui-btn-sm" onclick = "down_theme('<?php echo $key; ?>','download')">下载</button>
+                        <a class="layui-btn layui-btn-sm" title = "查看<?php echo $key; ?>演示" target = "_blank" href="https://nav.rss.ink/index.php?theme=<?php echo $key; ?>">查看演示</a>
                         <!-- <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail_online('<?php echo $key; ?>')">详情</button> -->
                     </div>
                     </p>

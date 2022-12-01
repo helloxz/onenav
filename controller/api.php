@@ -107,8 +107,9 @@ function add_link($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
-    
-    $api->add_link($token,$fid,$title,$url,$description,$weight,$property,$url_standby);
+    $font_icon = empty($_POST['font_icon']) ? '' : $_POST['font_icon'];
+
+    $api->add_link($token,$fid,$title,$url,$description,$weight,$property,$url_standby,$font_icon);
     
 }
 /**
@@ -128,8 +129,9 @@ function edit_link($api){
     $description = empty($_POST['description']) ? '' : $_POST['description'];
     $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
     $property = empty($_POST['property']) ? 0 : 1;
-    
-    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby);
+    $font_icon = empty($_POST['font_icon']) ? '' : $_POST['font_icon'];
+
+    $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby,$font_icon);
     
 }
 
@@ -238,6 +240,14 @@ function upload($api){
     //获取上传类型
     $type = $_GET['type'];
     $api->upload($token,$type);
+}
+// 上传图标
+function uploadImages(){
+    global $api;
+    //获取token
+    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    //获取上传类型
+    $api->uploadImages($token);
 }
 //书签导入
 function imp_link($api) {
@@ -623,4 +633,10 @@ function del_share() {
 function site_info() {
     global $api;
     $api->site_info();
+}
+
+//删除图标
+function del_link_icon() {
+    global $api;
+    $api->del_link_icon();
 }

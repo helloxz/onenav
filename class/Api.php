@@ -176,7 +176,9 @@ class Api {
         $token_yes = md5(USER.$SecretKey);
         //获取header中的X-token
         $xtoken = $_SERVER['HTTP_X_TOKEN'];
-        if( $xtoken === $token_yes ) {
+
+        //如果通过header传递token，且验证通过
+        if( !empty($xtoken) && ($xtoken === $token_yes) ) {
             return TRUE;
         }
         //如果token为空，则验证cookie
@@ -204,7 +206,7 @@ class Api {
     /**
      * name:添加链接
      */
-    public function add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = ''){
+    public function add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = '',$font_icon = ''){
         $this->auth($token);
         $fid = intval($fid);
         //检测链接是否合法
@@ -227,6 +229,11 @@ class Api {
             'weight'        =>  $weight,
             'property'      =>  $property
         ];
+
+        //如果$font_icon不为空，才一起追加写入数据库
+        if( !empty($font_icon) ) {
+            $data['font_icon'] = $font_icon;
+        }
         //插入数据库
         $re = $this->db->insert('on_links',$data);
         //返回影响行数
@@ -531,6 +538,75 @@ class Api {
             }
         }
     }
+
+    /**
+     * 图标上传
+     * type:上传类型
+     */
+    public function uploadImages($token){
+        $this->auth($token);
+        //获取icon名称
+        $icon_name = $_POST['icon_name'];
+        //获取老文件名称，然后删除
+        $old_pic = $_POST['old_pic'];
+        //如果老文件名称合法，则删除
+        $pattern = "/^data\/upload\/[0-9]+\/[0-9a-zA-Z]+\.(jpg|jpeg|png|bmp|gif|svg)$/";
+        //如果名称不合法，则终止执行
+        if( preg_match($pattern,$old_pic) ){
+            @unlink($old_pic);
+        }
+
+        //如果名称是空的
+        if( empty($icon_name) ) {
+            $this->return_json(-2000,'','获取图标名称失败！');
+        }
+
+        if ($_FILES["file"]["error"] > 0)
+        {
+            //$this->err_msg(-1015,'File upload failed!');
+            $this->return_json(-2000,'','File upload failed!');
+        }
+        else
+        {
+            //根据时间生成文件名
+            $filename = $_FILES["file"]["name"];
+            //获取文件后缀
+            $suffix = explode('.',$filename);
+            $suffix = strtolower(end($suffix));
+            
+            //临时文件位置
+            $temp = $_FILES["file"]["tmp_name"];
+            if( $suffix != 'ico' && $suffix != 'jpg' && $suffix != 'jpeg' && $suffix != 'png' && $suffix != 'bmp' && $suffix != 'gif' && $suffix != 'svg' ) {
+                //删除临时文件
+                @unlink($filename);
+                @unlink($temp);
+                $this->return_json(-2000,'','Unsupported file suffix name!');
+            }
+            
+            //上传路径，格式为data/upload/202212/1669689755.png
+            $upload_path = "data/upload/".date( "Ym", time() ).'/'.$icon_name.'.'.$suffix;
+
+            //如果目录不存在，则创建
+            $upload_dir = dirname($upload_path);
+            if( !is_dir( $upload_dir ) ) {
+                //递归创建目录
+                mkdir($upload_dir,0755,true);
+            }
+            
+            //$newfilename = 'upload/'.time().'.'.$suffix;
+            //移动临时文件到指定上传路径
+            if( move_uploaded_file($temp,$upload_path) ) {
+                $data = [
+                    'file_name' =>  $upload_path
+                ];
+                $this->return_json(200,$data,'success');
+            }
+            else{
+                $this->return_json(-2000,'','上传失败，请检查目录权限！');
+            }
+        }
+    }
+
     /**
      * 导出HTML链接进行备份
      */
@@ -568,9 +644,15 @@ class Api {
     /**
      * name:修改链接
      */
-    public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = ''){
+    public function edit_link($token,$id,$fid,$title,$url,$description = '',$weight = 0,$property = 0,$url_standby = '',$font_icon = ''){
         $this->auth($token);
         $fid = intval($fid);
+        /**
+         * name：获取更新类型
+         * description：主要是因为兼容部分之前老的接口，老的接口不用变动，只能从OneNav后台添加图标，因此增加type判断是否是OneNav后台
+         * console:指从OneNav后台进行更新
+         */
+        $type = trim($_GET['type']);
         //检测链接是否合法
         //$this->check_link($fid,$title,$url);
         $this->check_link([
@@ -596,6 +678,14 @@ class Api {
             'weight'        =>  $weight,
             'property'      =>  $property
         ];
+
+        if( !empty($font_icon) ) {
+            $data['font_icon'] = $font_icon;
+        }
+        //如果是从OneNav后台更新，则无论如何都要加上font_icon
+        if( $type === 'console' ) {
+            $data['font_icon'] = $font_icon;
+        }
         //插入数据库
         $re = $this->db->update('on_links',$data,[ 'id' => $id]);
         //返回影响行数
@@ -824,9 +914,9 @@ class Api {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         //通过header获取token成功
-        else if( $this->auth("") ) {
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
-        }
+        // else if( $this->auth("") ) {
+        //     $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name  FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        // }
         
         //如果token验证通过
         elseif( (!empty($token)) && ($this->auth($token)) ) {
@@ -2183,6 +2273,38 @@ class Api {
 
         $this->return_json(200,$site,'success');
     }
+
+    /**
+     * name：删除链接图标
+     */
+    public function del_link_icon(){
+        //验证授权
+        $this->auth($token);
+
+        //获取图标路径
+        $icon_path = trim($_POST['icon_path']);
+        //正则判断路径是否合法
+        $pattern = "/^data\/upload\/[0-9]+\/[0-9a-zA-Z]+\.(jpg|jpeg|png|bmp|gif|svg)$/";
+        //如果名称不合法，则终止执行
+        if( !preg_match($pattern,$icon_path) ){
+            $this->return_json(-2000,'','非法路径！');
+        }
+
+        //继续执行
+        //检查图标是否存在
+        if( !is_file($icon_path) ) {
+            $this->return_json(-2000,'','图标文件不存在，无需删除！');
+        }
+
+        //执行删除操作
+        if( unlink($icon_path) ) {
+            $this->return_json(200,'','success');
+        }
+        else{
+            $this->return_json(-2000,'','图标删除失败，请检查目录权限！');
+        }
+    }
     
 }
+
 

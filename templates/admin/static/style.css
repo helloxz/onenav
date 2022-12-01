@@ -148,3 +148,14 @@
     display:none;
     margin-top:1em;
 }
+
+#show_icon{
+    display:inline-block;width:38px;height:38px;border:1px solid #F6F6F6;
+    position: relative;
+    /* bottom: 9px; */
+}
+
+#show_icon img{
+    height: 38px;
+    width: 38px;
+}

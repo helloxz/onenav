@@ -149,12 +149,28 @@ else{
 $template = $db->get("on_options","value",[
     "key"   =>  "theme"
 ]);
+//获取用户传递的主题参数
+$theme = trim( @$_GET['theme'] );
+//如果用户传递了主题参数
+if( !empty($theme) ) {
+    //获取所有主题
+    $themes = get_all_themes();
+
+    //查找主题是否存在
+    if( array_search($theme,$themes) !== FALSE ) {
+        //改变默认主题
+        $template = $theme;
+    }
+    else{
+        //主题不存在，终止执行
+        exit("<h1>主题参数错误！</h1>");
+    }
+}
 //获取当前站点信息
 $site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
 $site = unserialize($site);
 
 //获取主题配置信息
-//获取主题配置
 if( file_exists("templates/".$template."/config.json") ) {
     $config_file = "templates/".$template."/config.json";
 }
@@ -189,6 +205,53 @@ else{
     $tpl_dir = 'data/templates/';
 }
 
+//定义搜索引擎
+$search_engines = [
+    "baidu"     =>  [
+        "name"  =>  "百度",
+        "url"   =>  "https://www.baidu.com/s?ie=utf-8&word="
+    ],
+    "google"    =>  [
+        "name"  =>  "Google",
+        "url"   =>  "https://www.google.com/search?q="
+    ],
+    "bing"      =>  [
+        "name"  =>  "必应",
+        "url"   =>  "https://cn.bing.com/search?FORM=BESBTB&q="
+    ],
+    "sogou"     =>  [
+        "name"  =>  "搜狗",
+        "url"   =>  "https://www.sogou.com/web?query="
+    ],
+    "360"       =>  [
+        "name"  =>  "360搜索",
+        "url"   =>  "https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&ssid=&q="
+    ],
+    "zhihu"     =>  [
+        "name"  =>  "知乎",
+        "url"   =>  "https://www.zhihu.com/search?type=content&q="
+    ],
+    "weibo"     =>  [
+        "name"  =>  "微博",
+        "url"   =>  "https://s.weibo.com/weibo?q="
+    ] 
+];
 
+//获取主题的最低版本要求
+$info_json = @file_get_contents($tpl_dir.$template."/info.json");
+
+if( $info_json ) {
+    $info = json_decode($info_json);
+    
+    $min_version = @$info->require->min;
+    //获取到了最低版本
+    if( !empty($min_version) ) {
+        //如果主程序不满足主题要求
+        if( new_get_version() <  $min_version ) {
+            $onenav_version = new_get_version();
+            exit($template."主题要求最低OneNav版本为：".$min_version."，您当前OneNav版本为：".$onenav_version."，请先<a title = 'OneNav升级说明' href = 'https://dwz.ovh/br5wt' target = '_blank'>升级OneNav版本！</a>");
+        }
+    }
+}
+//载入主题
 require($tpl_dir.$template.'/index.php');
-?>
