@@ -242,12 +242,12 @@ function upload($api){
     $api->upload($token,$type);
 }
 // 上传图标
-function uploadImages($api){
+function uploadImages(){
+    global $api;
     //获取token
     $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
     //获取上传类型
-    $type = $_GET['type'];
-    $api->uploadImages($token,$type);
+    $api->uploadImages($token);
 }
 //书签导入
 function imp_link($api) {
@@ -633,4 +633,10 @@ function del_share() {
 function site_info() {
     global $api;
     $api->site_info();
+}
+
+//删除图标
+function del_link_icon() {
+    global $api;
+    $api->del_link_icon();
 }

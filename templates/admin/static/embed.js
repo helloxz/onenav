@@ -5,6 +5,83 @@ layui.config({
 });
 
 
+
+/**
+ * 随机生成字符串
+ * 参考：https://blog.csdn.net/jiciqiang/article/details/121915750
+ * @param len 指定生成字符串长度
+ */
+ function getRandomString(len){
+  let _charStr = 'abacdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789',
+      min = 0, 
+      max = _charStr.length-1, 
+      _str = '';                    //定义随机字符串 变量
+  //判断是否指定长度，否则默认长度为15
+  len = len || 15;
+  //循环生成字符串
+  for(var i = 0, index; i < len; i++){
+      index = (function(randomIndexFunc, i){         
+                  return randomIndexFunc(min, max, i, randomIndexFunc);
+              })(function(min, max, i, _self){
+                  let indexTemp = Math.floor(Math.random()*(max-min+1)+min),
+                      numStart = _charStr.length - 10;
+                  if(i==0&&indexTemp >=numStart){
+                      indexTemp = _self(min, max, i, _self);
+                  }
+                  return indexTemp ;
+              }, i);
+      _str += _charStr[index];
+  }
+  return _str;
+}
+
+//生成6位随机数并存储到sessionStorage
+function set_icon_name(){
+  sessionStorage.icon_name = getRandomString(6);
+}
+
+//获取icon名称
+function get_icon_name(){
+  let icon_name;
+  //从表单获取
+  let tmp_name = $("#font_icon").val();
+  if( tmp_name == undefined ) {
+    return false;
+  }
+  
+  tmp_name = tmp_name.split("/");
+  tmp_name = tmp_name.pop();
+  tmp_name = tmp_name.split(".");
+  tmp_name = tmp_name[0];
+  icon_name = tmp_name;
+  //如果不存在，则从session获取
+  if( icon_name == "" || icon_name == undefined ) {
+    icon_name = sessionStorage.icon_name;
+  }
+  //如果session也不存在，则重新设置一个
+  if( icon_name == "" || icon_name == undefined ) {
+    set_icon_name();
+    icon_name = sessionStorage.icon_name;
+  }
+
+  //最后返回
+  return icon_name;
+  
+}
+
+//获取老图标的完整路径
+function get_old_pic() {
+  let old_pic = $("#font_icon").val();
+  if( old_pic != undefined ) {
+    return old_pic;
+  }
+  else{
+    return '';
+  }
+  
+}
+
+
 // 2022014
 layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     var element = layui.element;
@@ -88,13 +165,15 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
       {type:'checkbox'} //开启复选框
       ,{field: 'id', title: 'ID', width:80, sort: true}
       ,{field: 'font_icon', title: '图标', width:60, templet:function(d){
-        if(d.font_icon==null)
+        if(d.font_icon == null || d.font_icon == "")
         {
-          return '<img src="upload/default.png" width="28" height="28">';
+          return '<img src="static/images/default.png" width="28" height="28">';
         }
         else
         {
-          return '<img src="'+d.font_icon+'" width="28" height="28">';
+          let random = getRandStr(4);
+          let font_icon = d.font_icon;
+          return `<img src="${font_icon}?random=${random}" width="28" height="28">`;
         }
       }}
       // ,{field: 'fid', title: '分类ID',sort:true, width:90}
@@ -636,7 +715,14 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     $.post('/index.php?c=api&method=add_link',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
+        //重新设置图标
+        set_icon_name();
         layer.msg('已添加！', {icon: 1});
+        //禁用按钮
+        $("#add_link").addClass("layui-btn-disabled");
+        setTimeout(()=>{
+          window.location.reload();
+        },1500);
       }
       else{
         layer.msg(data.err_msg, {icon: 5});
@@ -661,7 +747,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
   });
   //更新链接
   form.on('submit(edit_link)', function(data){
-    $.post('/index.php?c=api&method=edit_link',data.field,function(data,status){
+    $.post('/index.php?c=api&method=edit_link&type=console',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {
         layer.msg('已更新！', {icon: 1});
@@ -737,21 +823,34 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     elem: '#iconUpload' //绑定元素
     ,url: 'index.php?c=api&method=uploadImages' //上传接口
     ,accept:'file'
-    ,exts: 'ico|jpg|png|bmp'
+    ,exts: 'ico|jpg|jpeg|png|bmp|svg',
+    size:100
+    ,data: {
+      //传递图片名称
+      "icon_name":get_icon_name(),
+      //传递老图片名称，接口先将老图片删除
+      "old_pic":get_old_pic()
+    },
+    choose:function(obj){
+      this.data.old_pic = get_old_pic();
+    }
     ,done: function(res){
       //console.log(res);
       //上传完毕回调
-      if( res.code == 0 ) {
-        $("#font_icon").val(res.file_name);
+      if( res.code == 200 ) {
+        $("#font_icon").val(res.data.file_name);
+        //显示图标
+        $("#show_icon img").attr("src","/" + res.data.file_name + "?random" + getRandStr(4));
       }
       else if( res.code < 0) {
-        layer.msg(res.err_msg, {icon: 5});
+        layer.msg(res.msg, {icon: 5});
         layer.close();
       }
       
     }
     ,error: function(){
-      //请求异常回调
+      layer.msg("发生预料之外的错误！", {icon: 5});
+      layer.close();
     }
   });
 });
@@ -996,4 +1095,34 @@ function getRandStr(n) {
      res += chars[id];
   }
   return res;
+}
+
+//删除图标
+function del_link_icon(){
+  let icon_path = $("#font_icon").val();
+  //如果图标为空
+  if( icon_path == "" ) {
+    layer.msg("图标为空，无需删除！",{icon:1});
+    return true;
+  }
+  console.log(icon_path.indexOf("http"));
+  //如果图标包含http开头，则是网络图片，直接清空即可
+  if( icon_path.indexOf("http") >= 0 ) {
+    //置空
+    $("#font_icon").val("");
+    $("#show_icon img").attr("src","");
+    layer.msg("图标已清空，请保存！",{icon:1});
+    return true;
+  }
+
+  $.post("/index.php?c=api&method=del_link_icon",{icon_path:icon_path},function(data,status){
+    if( data.code == 200 ) {
+      $("#font_icon").val("");
+      $("#show_icon img").attr("src","");
+      layer.msg("图标已删除，请保存！",{icon:1});
+    }
+    else{
+      layer.msg(data.msg,{icon:5});
+    }
+  });
 }

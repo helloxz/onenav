@@ -23,8 +23,11 @@
 
   <div class="layui-form-item">
       <label for="" class="layui-form-label">字体图标：</label>
-      <div class="layui-input-block">
+      <div class="layui-input-inline" style = "width:240px;">
           <input name="font_icon" type="text" id="iconHhys2" value="" lay-filter="iconHhys2" class="layui-input">
+      </div>
+      <div class="layui-form-mid layui-word-aux">
+        图标对照表可参考：<a rel = "nofollow" target = "_blank" href="https://fontawesome.dashgame.com/">FontAwesome4</a>
       </div>
   </div>
 
@@ -52,13 +55,14 @@
   
   <div class="layui-form-item">
     <label class="layui-form-label">是否私有</label>
-    <div class="layui-input-block">
+    <div class="layui-input-inline" style = "width:240px;">
       <input type="checkbox" name="property" value = "1" lay-skin="switch" lay-text="是|否">
     </div>
+    <div class="layui-form-mid layui-word-aux">私有分类下的链接需要登录后才能查看。</div>
   </div>
   
   <div class="layui-form-item layui-form-text">
-    <label class="layui-form-label">描述</label>
+    <label class="layui-form-label">描述（选填）</label>
     <div class="layui-input-block">
       <textarea name="description" placeholder="请输入内容" class="layui-textarea"></textarea>
     </div>

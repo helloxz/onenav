@@ -24,9 +24,10 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label">网站logo</label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <input type="text" name="logo" value = "<?php echo $site['logo']; ?>" autocomplete="off" placeholder="网站logo地址，部分主题可能不支持" class="layui-input">
             </div>
+            <div class="layui-form-mid layui-word-aux">输入相对路径或者将logo<a target = "_blank" href="https://www.imgurl.org/">上传到图床</a>，然后粘贴URL，仅部分主题支持logo</div>
         </div>
 
         <div class="layui-form-item">
@@ -46,7 +47,7 @@
 
         <div class="layui-form-item">
             <label class="layui-form-label">直链模式</label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <?php if( $site['link_model'] === 'direct' ) { ?>
                     <input type="radio" name="link_model" value="jump" title="关闭">
                     <input type="radio" name="link_model" value="direct" title="开启" checked>
@@ -55,6 +56,7 @@
                     <input type="radio" name="link_model" value="direct" title="开启">
                 <?php } ?>
             </div>
+            <div class="layui-form-mid layui-word-aux">开启直链模式后将直接打开目标地址，不二次跳转，仅部分主题支持！</div>
         </div>
 
         <div class="layui-form-item layui-form-text">
@@ -65,7 +67,7 @@
         </div>
 
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">自定义header</label>
+            <label class="layui-form-label">自定义header（可放统计代码或者自定义CSS样式）</label>
             <div class="layui-input-block">
                 <textarea name = "custom_header" placeholder="您可以自定义<header>...</header>之间的内容，如果您不清楚，请勿填写！" rows = "8" class="layui-textarea"><?php echo $site['custom_header']; ?></textarea>
             </div>

@@ -9,6 +9,7 @@
         <ol>
           <li>仅支持 <em>.html</em> 格式导入，导入时会自动创建不存在的分类，使用前请参考<a href="https://dwz.ovh/ij3mq" target="_blank" rel = "nofollow">帮助文档</a> 。</li>
           <li>导入前，建议先<a href="/index.php?c=admin&page=setting/backup">备份数据库</a></li>
+          <li>导入会自动去除重复的链接！</li>
         </ol>
       </div>
     <!-- 上传 -->

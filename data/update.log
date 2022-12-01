@@ -174,3 +174,10 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 
 20221117
 1. 修复获取分类目录失败的BUG
+
+20221129
+1. 新增链接自定义图标支持
+2. 修复书签分享私有链接无法查看的BUG
+3. 带上?theme=参数可以指定主题
+4. 新增heimdall主题
+5. 新增OneNav主程序是否满足主题要求的检测

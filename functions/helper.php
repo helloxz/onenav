@@ -109,3 +109,69 @@ function jump_mobile() {
         exit;
     }
 }
+
+//获取所有主题
+function get_all_themes() {
+    //主题目录
+    $tpl_dir1 = dirname(__DIR__).'/templates/';
+    //备用主题目录
+    $tpl_dir2 = dirname(__DIR__).'/data/templates/';
+    
+    //声明两个空数组用来存放模板目录列表
+    $tpl_one = [];
+    $tpl_two = [];
+    //遍历第一个目录
+    foreach ( scandir($tpl_dir1) as $value) {
+        //完整的路径
+        $path = $tpl_dir1.$value;
+        //如果是目录，则push到目录列表1
+        if( is_dir($path) ) {
+            switch ($value) {
+                case '.':
+                case '..':
+                case 'admin':
+                case 'mobile':
+                case 'universal':
+                    continue;
+                    break;
+                default:
+                    array_push($tpl_one,$value);
+                    break;
+            }
+            
+        }
+        else{
+            continue;
+        }
+    }
+    //如果第二个目录存在，则遍历
+    if( is_dir($tpl_dir2) ) {
+        foreach ( scandir($tpl_dir2) as $value) {
+            //完整的路径
+            $path = $tpl_dir2.$value;
+            //如果是目录，则push到目录列表1
+            if( is_dir($path) ) {
+                switch ($value) {
+                    case '.':
+                    case '..':
+                    case 'admin':
+                        continue;
+                        break;
+                    default:
+                        array_push($tpl_two,$value);
+                        break;
+                }
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    
+    //合并目录
+    //现在$tpl_one是合并后的完整主题列表
+    $tpls = array_merge($tpl_one,$tpl_two);
+    
+    $tpls = array_unique($tpls);
+    return $tpls;
+}
