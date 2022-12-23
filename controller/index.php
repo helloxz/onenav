@@ -223,7 +223,7 @@ $search_engines = [
         "name"  =>  "搜狗",
         "url"   =>  "https://www.sogou.com/web?query="
     ],
-    "360"       =>  [
+    "so360"       =>  [
         "name"  =>  "360搜索",
         "url"   =>  "https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&ssid=&q="
     ],

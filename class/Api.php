@@ -851,7 +851,7 @@ class Api {
         $count = $this->db->count('on_links','*');
         
         //如果成功登录，但token为空，获取所有
-        if( ($this->is_login()) && (empty($token)) ){
+        if( $this->is_login() || ( !empty($token) && $this->auth($token) ) ){
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         
@@ -859,11 +859,10 @@ class Api {
         elseif( (!empty($token)) && ($this->auth($token)) ) {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
-
         //如果通过header传递的token验证成功，则获取所有
-        else if( $this->auth("") === TRUE ) {
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
-        }
+        // else if( $this->auth("") === TRUE ) {
+        //     $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+        // }
         //如果即没有登录成功，又没有token，则默认为游客,游客查询链接属性为公有，分类为公有，不查询私有
         else{
             $c_sql = "SELECT COUNT(*) AS num FROM on_links WHERE property = 0 AND fid IN (SELECT id FROM on_categorys WHERE property = 0)";

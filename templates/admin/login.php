@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./templates/admin/static/css/new.css?v=<?php echo $version; ?>'">
+  <link rel="stylesheet" href="./templates/admin/static/css/new.css?v=<?php echo $version; ?>">
   <link rel='stylesheet' href='static/layui/css/layui.css'>
   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
   <title>OneNav管理员登录</title>
