@@ -181,3 +181,10 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 3. 带上?theme=参数可以指定主题
 4. 新增heimdall主题
 5. 新增OneNav主程序是否满足主题要求的检测
+
+20221223
+1. 修复登录页面引入CSS多出一个单引号的问题
+2. 修复360搜索引擎出现的BUG
+3. 修复通过分类筛选链接自定义图标不显示问题
+4. 修复未登录情况下，API不显示链接列表的BUG
+5. heimdall主题新增页脚部分

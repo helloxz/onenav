@@ -482,6 +482,18 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
       ,cols: [[ //表头
         {type:'checkbox'} //开启复选框
         ,{field: 'id', title: 'ID', width:80, sort: true}
+        ,{field: 'font_icon', title: '图标', width:60, templet:function(d){
+          if(d.font_icon == null || d.font_icon == "")
+          {
+            return '<img src="static/images/default.png" width="28" height="28">';
+          }
+          else
+          {
+            let random = getRandStr(4);
+            let font_icon = d.font_icon;
+            return `<img src="${font_icon}?random=${random}" width="28" height="28">`;
+          }
+        }}
         // ,{field: 'fid', title: '分类ID',sort:true, width:90}
         ,{field: 'category_name', title: '所属分类',sort:true,width:120}
         ,{field: 'url', title: 'URL',width:140,templet:function(d){

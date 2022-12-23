@@ -1,0 +1,15 @@
+#安全设置
+location ~* ^/(class|controller|db|data|functions|templates)/.*.(db3|php|php5|sql)$ {
+    return 403;
+}
+location ~* ^/(data)/.*.(html)$ {
+        deny all;
+}
+location /db {
+        deny all;
+}
+
+#伪静态
+rewrite ^/click/(.*) /index.php?c=click&id=$1 break;
+rewrite ^/api/(.*)?(.*) /index.php?c=api&method=$1&$2 break;
+rewrite /login /index.php?c=login break;
