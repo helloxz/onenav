@@ -204,3 +204,4 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 20230507
 1. 修复平板电脑登录时循环重定向的BUG
 2. 优化了后台页面，去除了顶部重复按钮，添加了加群按钮
+3. 后台左侧导航栏，点击后高亮显示
