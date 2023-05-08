@@ -168,3 +168,8 @@ footer a{
 #qrcode img{
     max-width: 200px;
 }
+
+.more-link a{
+    color:#31bdec;
+    text-decoration: none;
+}

@@ -105,7 +105,7 @@ function jump_mobile() {
     $ua = $_SERVER['HTTP_USER_AGENT'];
 
     if( stristr($ua,'iphone') || stristr($ua,'android') ) {
-        header("Location: /index.php?c=admin");
+        header("Location: /index.php?c=mobile#/");
         exit;
     }
 }
@@ -174,4 +174,15 @@ function get_all_themes() {
     
     $tpls = array_unique($tpls);
     return $tpls;
+}
+
+// 获取HOST，需要去除端口号
+function get_host(){
+    $host = $_SERVER['HTTP_HOST'];
+    $parsed_host = parse_url($host);
+    //var_dump($parsed_host);
+    if (isset($parsed_host['port']) && $parsed_host['port'] != 80 && $parsed_host['port'] != 443) {
+        $host = $parsed_host['host'];
+    }
+    return $host;
 }

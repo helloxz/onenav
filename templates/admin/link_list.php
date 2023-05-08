@@ -47,10 +47,60 @@
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" onclick = "">删除</a>
     </script>
     <!-- 表单下面的按钮 -->
-    <button class="layui-btn layui-btn-sm" lay-submit onclick = "export_link()">导出所有链接</button>
+    <button style="margin-top:16px;" class="layui-btn layui-btn-sm" lay-submit onclick = "export_link()">导出所有链接</button>
     <!-- 表单下面的按钮END -->
 </div>
 <!-- 内容主题区域END -->
 </div>
-  
+
+<script>
+layui.use(['table'], function(){
+    var table = layui.table;
+
+    // 编辑单行
+    table.on('edit(mylink)',function(obj){
+        var field = obj.field; // 得到字段
+        var value = obj.value; // 得到修改后的值
+        var data = obj.data; // 得到所在行所有键值
+
+        // 获取到权重并判断是否合法
+        let weight = data.weight;
+        if( /^[-+]?\d*\.?\d+$/.test(weight) == false ) {
+            layer.msg("权重必须为数字！",{icon:5});
+            return obj.reedit();
+        }
+        // 获取到标题并判断是否合法
+        let title = data.title.trim();
+        if( title.length == 0 ) {
+            layer.msg("标题不能为空！",{icon:5});
+            return obj.reedit();
+        }
+
+        // 请求后端API
+        $.ajax({
+            url: '/index.php?c=api&method=edit_link_row',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                // 请求成功后执行的代码
+                if( response.code == 0 ) {
+                    layer.msg("已修改！",{icon:1});
+                }
+                else{
+                    layer.msg(response.msg,{icon:5});
+                }
+            },
+            error: function(xhr, status, error) {
+                // 请求出错时执行的代码
+                console.log(error);
+                layer.msg("修改失败！",{icon:5});
+            }
+        });
+    })
+});
+    
+    
+</script>
 <?php include_once('footer.php'); ?>

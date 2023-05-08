@@ -59,6 +59,14 @@
             <div class="layui-form-mid layui-word-aux">开启直链模式后将直接打开目标地址，不二次跳转，仅部分主题支持！</div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接数量</label>
+            <div class="layui-input-inline">
+                <input type="number" name="link_num" value = "<?php echo $site['link_num']; ?>" autocomplete="off" placeholder="分类需要展示的链接数量" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">指的是首页单个分类下需要展示的链接数量，默认20，值越低，性能越好</div>
+        </div>
+
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">网站描述</label>
             <div class="layui-input-block">

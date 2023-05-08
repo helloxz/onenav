@@ -179,7 +179,7 @@
 			<!-- 遍历分类目录 -->
             <?php foreach ( $categorys as $category ) {
                 $fid = $category['id'];
-                $links = get_links($fid);
+                $links = $get_links($fid);
 				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
                 //如果分类是私有的
                 if( $category['property'] == 1 ) {
@@ -192,7 +192,11 @@
 			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title">
 				<?php echo $font_icon; ?>
 				<?php echo htmlspecialchars_decode($category['name']); ?> <?php echo $property; ?>
-				<span class = "mdui-typo-caption"><?php echo $category['description']; ?></span>
+				<?php if(empty($cid)) { ?>
+				<span class="more-link">
+					<a href="/index.php?cid=<?php echo $category['id']; ?>" title = "点此查看此分类下的全部链接">>></a>
+				</span>
+				<?php } ?>
 			</div>
 			<!-- 遍历链接 -->
 			<?php
@@ -227,7 +231,7 @@
 									<div class="mdui-card-primary-title link-title">
 										<!-- 网站图标显示方式 -->
 										<?php if( $theme_config->favicon == "online") { ?>
-											<img src="https://favicon.rss.ink/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
+											<img src="https://favicon.png.pub/v1/<?php echo base64($link['url']); ?>" alt="HUAN" width="16" height="16">
 										<?php }else{ ?>
 											<img src="/index.php?c=ico&text=<?php echo $link['title']; ?>" alt="" width="16" height="16" />
 										<?php } ?>
@@ -248,7 +252,7 @@
 
 		
 	</div>
-	<div class="mdui-divider"></div>
+	<div class="mdui-divider" style = "margin-top:2em;"></div>
 	<!--正文内容部分END-->
 	<!-- footer部分 -->
 	<!-- 未经作者授权，请勿去掉版权，否则可能影响作者更新代码的积极性或直接放弃维护此项目。 -->

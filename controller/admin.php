@@ -30,7 +30,7 @@ if( $page == 'index' ) {
 }
 
 //如果页面是修改edit_category
-if ( $page == 'edit_category' ) {
+if ( ($page == 'edit_category') || ($page == 'edit_category_new') ) {
     //获取id
     $id = intval($_GET['id']);
     //查询单条分类信息

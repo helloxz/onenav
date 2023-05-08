@@ -49,11 +49,11 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav:0.9.25
+    helloz/onenav:0.9.30
 ```
 * 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
-* `0.9.25`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
+* `0.9.30`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
@@ -71,12 +71,9 @@ ___
 * 纽及书签：[http://www.1006788.com/](http://www.1006788.com/)
 * DiscoveryNav：[https://nav.miooku.com/](https://nav.miooku.com/)
 
-## 联系我
+## OneNav交流群
 
-* Blog:https://www.xiaoz.me/
-* QQ:446199062
-* QQ群：932795364
-* 社区支持：[https://dwz.ovh/vd0bw](https://dwz.ovh/vd0bw)
+* [https://dwz.ovh/qxsul](https://dwz.ovh/qxsul)
 
 ## 鸣谢
 

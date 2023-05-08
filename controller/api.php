@@ -314,6 +314,8 @@ function set_site($api) {
     $data['custom_footer'] = $_POST['custom_footer'];
     //获取链接模式
     $data['link_model'] = $_POST['link_model'];
+    // 获取链接数量
+    $data['link_num'] = $_POST['link_num'];
     //序列化存储
     $value = serialize($data);
 
@@ -639,4 +641,10 @@ function site_info() {
 function del_link_icon() {
     global $api;
     $api->del_link_icon();
+}
+
+// 修改单行链接
+function edit_link_row(){
+    global $api;
+    $api->edit_link_row();
 }

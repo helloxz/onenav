@@ -61,6 +61,7 @@
     <!-- 创建分享END -->
 
     <div class="layui-col-lg12">
+      <div style="margin-top:18px;"></div>
       <!-- 数据表格 -->
       <table class="layui-hide" id="mytable" lay-filter="mytable"></table>
       <!-- 数据表格END -->
@@ -77,6 +78,8 @@
         </div>
       </script>
       <!-- 头部工具栏END -->
+
+      <div style="margin-bottom:18px;"></div>
     </div>
 </div>
 </div>

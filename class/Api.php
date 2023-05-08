@@ -704,6 +704,54 @@ class Api {
             $this->err_msg(-1011,'The URL already exists!');
         }
     }
+
+    /**
+     * name:单行链接修改
+     */
+    public function edit_link_row(){
+        //验证授权
+        $this->auth($token);
+        
+        // 获取POST请求中的JSON数据
+        $json_data = file_get_contents('php://input');
+
+        // 解析JSON数据为PHP对象
+        $obj = json_decode($json_data);
+
+        $id = intval($obj->id);
+        $fid = intval($obj->fid);
+        
+        //查询ID是否存在
+        $count = $this->db->count('on_links',[ 'id' => $id]);
+        //如果id不存在
+        if( (empty($id)) || ($count == false) ) {
+            $this->err_msg(-1012,'link id not exists!');
+        }
+
+        // 拼接需要更新的数据
+        $data = [
+            'title'     =>  trim($obj->title),
+            'weight'    =>  intval($obj->weight)
+        ];
+        
+        //插入数据库
+        $re = $this->db->update('on_links',$data,[ 'id' => $id]);
+        //返回影响行数
+        $row = $re->rowCount();
+        //如果为真
+        if( $row ){
+            $id = $this->db->id();
+            $data = [
+                'code'      =>  0,
+                'msg'        =>  'successful'
+            ];
+            exit(json_encode($data));
+        }
+        //如果插入失败
+        else{
+            $this->err_msg(-1011,'The URL already exists!');
+        }
+    }
     
     /**
      * 删除链接
