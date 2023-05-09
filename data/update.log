@@ -188,3 +188,20 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 3. 修复通过分类筛选链接自定义图标不显示问题
 4. 修复未登录情况下，API不显示链接列表的BUG
 5. heimdall主题新增页脚部分
+
+20230425
+1. 链接ico图标由favicon.rss.ink 替换为 favicon.png.pub
+2. 新增baisuNew主题
+3. 升级LayUI到 2.8.x（BUG待进一步测试）
+
+20230506
+1. 链接列表可以快速修改标题和权重
+2. 订阅成功后刷新当前订阅页面
+3. 编辑分类改为当前页iframe方式
+4. default/baisuNew/baisuTwo/5iux/webstack主题完成 0.9.30 适配改造，优化了链接显示数量
+5. 订阅页面检测域名方式优化，去除了带端口号的情况
+
+20230507
+1. 修复平板电脑登录时循环重定向的BUG
+2. 优化了后台页面，去除了顶部重复按钮，添加了加群按钮
+3. 后台左侧导航栏，点击后高亮显示

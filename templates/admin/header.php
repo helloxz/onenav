@@ -22,10 +22,11 @@
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-left">
       <li class="layui-nav-item"><a href="/"><i class="layui-icon layui-icon-home"></i> 前台首页</a></li>
-      <li class="layui-nav-item"><a href="/index.php?c=admin&page=category_list"><i class="layui-icon layui-icon-list"></i> 分类列表</a></li>
+      <!-- <li class="layui-nav-item"><a href="/index.php?c=admin&page=category_list"><i class="layui-icon layui-icon-list"></i> 分类列表</a></li>
       <li class="layui-nav-item"><a href="/index.php?c=admin&page=add_category"><i class="layui-icon layui-icon-add-circle-fine"></i> 添加分类</a></li>
       <li class="layui-nav-item"><a href="/index.php?c=admin&page=link_list"><i class="layui-icon layui-icon-link"></i> 我的链接</a></li>
-      <li class="layui-nav-item"><a href="/index.php?c=admin&page=add_link"><i class="layui-icon layui-icon-add-circle-fine"></i> 添加链接</a></li>
+      <li class="layui-nav-item"><a href="/index.php?c=admin&page=add_link"><i class="layui-icon layui-icon-add-circle-fine"></i> 添加链接</a></li> -->
+      <li class="layui-nav-item"><a title = "加入OneNav交流群" target = "_blank" href="https://dwz.ovh/qxsul"><i class="layui-icon layui-icon-group"></i> 交流群</a></li>
       
     </ul>
     <ul class="layui-nav layui-layout-right">

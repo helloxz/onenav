@@ -19,10 +19,7 @@
                 </div>
             </div>
           <div class="layui-col-lg4">
-            <div class = "admin-msg">QQ群1：147687134</div>
-          </div>
-          <div class="layui-col-lg4">
-            <div class = "admin-msg">QQ群2：932795364</div>
+            <div class = "admin-msg">交流群：<a target = "_blank" rel = "nofollow" href="https://dwz.ovh/qxsul" title = "点此加入OneNav交流群">https://dwz.ovh/qxsul</a></div>
           </div>
           <div class="layui-col-lg4">
             <div class = "admin-msg">社区支持：<a href="https://dwz.ovh/vd0bw" rel = "nofollow" target="_blank" title="访问下问社区">https://dwz.ovh/vd0bw</a></div>
@@ -34,10 +31,7 @@
             <div class = "admin-msg">帮助文档：<a href="https://dwz.ovh/onenav" rel = "nofollow" target="_blank">https://dwz.ovh/onenav</a></div>
           </div>
           <div class="layui-col-lg4">
-            <div class = "admin-msg">QQ:446199062</div>
-          </div>
-          <div class="layui-col-lg4">
-            <div class = "admin-msg">Blog: <a href="https://www.xiaoz.me/" rel = "nofollow" target="_blank">https://www.xiaoz.me/</a></div>
+            <div class = "admin-msg">作者博客: <a href="https://www.xiaoz.me/" rel = "nofollow" target="_blank">https://www.xiaoz.me/</a></div>
           </div>
           <div class="layui-col-lg4">
             <div class = "admin-msg">捐赠地址: <a href="https://dwz.ovh/donation" rel = "nofollow" target="_blank">https://dwz.ovh/donation</a></div>

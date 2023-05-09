@@ -150,13 +150,23 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
         layer.close(index);
       });
     } else if(obj.event === 'edit'){
-      window.location.href = '/index.php?c=admin&page=edit_category&id=' + obj.data.id;
+      // 这是原来老的逻辑，跳转到新的页面进行编辑，不太友好
+      // window.location.href = '/index.php?c=admin&page=edit_category&id=' + obj.data.id;
+      // 新的逻辑改为当前页面iframe编辑
+      layer.open({
+        type: 2,
+        title: '编辑分类',
+        shadeClose: true,
+        maxmin: true, //开启最大化最小化按钮
+        area: ['900px', '660px'],
+        content: '/index.php?c=admin&page=edit_category_new&id=' + obj.data.id
+      });
     }
   });
   //渲染链接列表
   table.render({
     elem: '#link_list'
-    ,height: 520
+    ,height: 530
     ,url: 'index.php?c=api&method=link_list' //数据接口
     ,method: 'post'
     ,page: true //开启分页
@@ -182,7 +192,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
         var url = '<a target = "_blank" href = "' + d.url + '" title = "' + d.url + '">' + d.url + '</a>';
         return url;
       }}
-      ,{field: 'title', title: '链接标题', width:140}
+      ,{field: 'title', title: '链接标题', width:140,edit: 'text'}
       ,{field: 'add_time', title: '添加时间', width:148, sort: true,templet:function(d){
         var add_time = timestampToTime(d.add_time);
         return add_time;
@@ -197,7 +207,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
           }
           
       }} 
-      ,{field: 'weight', title: '权重', width: 75,sort:true}
+      ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
       ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
             if(d.property == 1) {
                 return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
@@ -500,7 +510,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
           var url = '<a target = "_blank" href = "' + d.url + '" title = "' + d.url + '">' + d.url + '</a>';
           return url;
         }}
-        ,{field: 'title', title: '链接标题', width:140}
+        ,{field: 'title', title: '链接标题', width:140,edit: 'text'}
         ,{field: 'add_time', title: '添加时间', width:148, sort: true,templet:function(d){
           var add_time = timestampToTime(d.add_time);
           return add_time;
@@ -515,7 +525,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
             }
             
         }} 
-        ,{field: 'weight', title: '权重', width: 75,sort:true}
+        ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
         ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
               if(d.property == 1) {
                   return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
@@ -565,6 +575,9 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
           if(data.code == 0) {
             layer.closeAll('loading');
             layer.msg(data.data, {icon: 1});
+            setTimeout(() => {
+              location.reload();
+            }, 2000);
           }
           else{
             layer.closeAll('loading');
@@ -1138,3 +1151,26 @@ function del_link_icon(){
     }
   });
 }
+
+$(document).ready(function() {
+  // 获取当前页面的 URL
+  var currentUrl = window.location.href;
+
+  // 遍历导航栏菜单的子菜单项
+  $('.layui-nav-child dd a').each(function() {
+    var $this = $(this);
+    var linkUrl = $this.attr('href');
+
+    // 如果子菜单项的链接与当前页面的 URL 匹配，则为该子菜单项添加 'layui-this' 类
+    if (currentUrl.indexOf(linkUrl) !== -1) {
+      // 移除其他菜单项的 'layui-this' 类
+      $('.layui-nav-child dd').removeClass('layui-this');
+
+      // 为匹配的子菜单项添加 'layui-this' 类
+      $this.parent().addClass('layui-this');
+
+      // 结束遍历
+      return false;
+    }
+  });
+});

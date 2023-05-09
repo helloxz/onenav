@@ -2,6 +2,13 @@
 /**
  * 首页模板入口
  */
+
+//获取当前站点信息
+$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
+$site = unserialize($site);
+// 获取链接数量
+$link_num = empty( $site['link_num'] ) ? 20 : intval($site['link_num']);
+
 //如果已经登录，获取所有分类和链接
 // 载入辅助函数
 require('functions/helper.php');
@@ -50,6 +57,20 @@ if( is_login() ){
             ]);
         return $links;
     }
+    //根据category id查询有限链接
+    function get_limit_links($fid) {
+        global $db;
+        global $link_num;
+        $fid = intval($fid);
+        $links = $db->select('on_links','*',[ 
+                'fid'   =>  $fid,
+                'ORDER' =>  ["weight" => "DESC"],
+                'LIMIT' =>  $link_num
+            ]);
+        
+        return $links;
+    }
+    
     //右键菜单标识
     $onenav['right_menu'] = 'admin_menu();';
 }
@@ -94,6 +115,7 @@ else{
     //根据category id查询链接
     function get_links($fid) {
         global $db;
+        global $link_num;
         $fid = intval($fid);
         $links = $db->select('on_links','*',[ 
             'fid' =>  $fid,
@@ -102,8 +124,38 @@ else{
         ]);
         return $links;
     }
+    //根据category id查询有限链接
+    function get_limit_links($fid) {
+        global $db;
+        $fid = intval($fid);
+        $links = $db->select('on_links','*',[ 
+                'fid'   =>  $fid,
+                'property'  =>  0,
+                'ORDER' =>  ["weight" => "DESC"],
+                'LIMIT' =>  $link_num
+            ]);
+        return $links;
+    }
     //右键菜单标识
     $onenav['right_menu'] = 'user_menu();';
+}
+
+// 新增一个可变函数，来根据不同的情况使用不同的方法查询分类下的链接
+$get_links = 'get_limit_links';
+//获取分类ID
+$cid = @$_GET['cid'];
+
+// 如果存在分类ID，则只查询这个分类
+if ( !empty($cid) ) {
+    foreach ($categorys as $key => $tmp) {
+        if( $tmp['id'] == $cid ) {
+            $empty_cat[0] = $tmp;
+            break;
+        }
+    }
+    $get_links = 'get_links';
+    unset($categorys);
+    $categorys[0] = $empty_cat[0];
 }
 
 //获取版本号
@@ -166,9 +218,7 @@ if( !empty($theme) ) {
         exit("<h1>主题参数错误！</h1>");
     }
 }
-//获取当前站点信息
-$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
-$site = unserialize($site);
+
 
 //获取主题配置信息
 if( file_exists("templates/".$template."/config.json") ) {
