@@ -2,6 +2,8 @@
 
 [中文](./README.md) | English
 
+___
+
 OneNav is an open-source, free bookmark (navigation) management program developed using PHP + SQLite 3. It features a simple interface, easy installation, and convenient usage. OneNav helps you manage your browser bookmarks centrally, solving the problems of syncing and accessing across devices, platforms, and browsers. Deploy it in one place and access it from anywhere.
 
 ![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
@@ -51,7 +53,7 @@ OneNav is an open-source, free bookmark (navigation) management program develope
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav:0.9.30
+    helloz/onenav:0.9.31
 ```
 * The first `80` is the customized access port, which can be modified, and the second `80` is the container port, please do not modify
 * `/data/onenav`: Local mount directory for persistent storage of Onenav data
@@ -68,9 +70,7 @@ ___
 
 The following are some user demo sites of OneNav, in no particular order.
 
-* OneNav: [https
-
-://nav.rss.ink/](https://nav.rss.ink/)
+* OneNav: [https://nav.rss.ink/](https://nav.rss.ink/)
 * Thousand-line Bookmark: [http://www.52qx.club/](http://www.52qx.club/)
 * Nyuji Bookmark: [http://www.1006788.com/](http://www.1006788.com/)
 * DiscoveryNav: [https://nav.miooku.com/](https://nav.miooku.com/)
