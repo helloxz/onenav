@@ -41,6 +41,7 @@
               <input type="submit" lay-submit lay-filter="new_login" class="submit" value="登录">
             </div>
           </form>
+          <div class = "forgot_pass"> <a href="https://dwz.ovh/isbyv" target = "_blank" rel = "nofollow">忘记密码？</a> </div>
         </div>
       </div>
     </section>
@@ -61,8 +62,9 @@
         <input type="submit" lay-submit lay-filter="new_mobile_login" class="submit" value="登录">
       </div>
     </form>
+    <div style = "padding-left:30px;"> <a style="color:#FFFFFF;" href="https://dwz.ovh/isbyv" target = "_blank" rel = "nofollow">忘记密码？</a> </div>
   </div>
-  <footer>© 2022 Powered by <a style = "color:#FFFFFF;padding-left:6px;" href = "https://www.onenav.top/" target = "_blank" title = "开源免费书签管理系统"> OneNav</a></footer>
+  <footer>© 2023 Powered by <a style = "color:#FFFFFF;padding-left:6px;" href = "https://www.onenav.top/" target = "_blank" title = "开源免费书签管理系统"> OneNav</a></footer>
 </body>
 <script>
   //自己封装的弹出框

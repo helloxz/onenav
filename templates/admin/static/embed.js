@@ -92,17 +92,20 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
 
     //第一个实例
   table.render({
-    elem: '#category_list'
-    ,height: 500
+    elem: '#category_list',
+    toolbar: '#catToolbar',
+    height: 525
     ,url: 'index.php?c=api&method=category_list' //数据接口
     ,page: true //开启分页
     ,cols: [[ //表头
+      {type: 'checkbox', fixed: 'left'},
       {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
       ,{field: 'font_icon', title: '图标', width:60, templet: function(d){
         return '<i class="fa-lg '+d.font_icon+'"></i>';
       }}
       ,{field: 'name', title: '分类名称', width:160}
       ,{field: 'fname', title: '父级分类', width:160}
+      ,{field: 'link_num', title: '链接数量', width:110,sort:true}
       ,{field: 'add_time', title: '添加时间', width:160, sort: true,templet:function(d){
         var add_time = timestampToTime(d.add_time);
         return add_time;
@@ -327,6 +330,9 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
       case 'isAll':
         layer.msg(checkStatus.isAll ? '全选': '未全选');
       break;
+      case "reset_query":
+        reset_query();
+        break;
       
       //自定义头工具栏右侧图标 - 提示
       case 'LAYTABLE_TIPS':
@@ -352,7 +358,23 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
         layer.close(index);
       });
     } else if(obj.event === 'edit'){
-      window.location.href = '/index.php?c=admin&page=edit_link&id=' + obj.data.id;
+      // window.location.href = '/index.php?c=admin&page=edit_link&id=' + obj.data.id;
+      let height = window.innerHeight;
+      if( height >= 800 ) {
+        height = 800;
+      }
+      else{
+        height = 700;
+      }
+      // 改成iframe编辑
+      layer.open({
+        type: 2,
+        title: '编辑链接',
+        shadeClose: true,
+        maxmin: true, //开启最大化最小化按钮
+        area: ['1000px', height + 'px'],
+        content: '/index.php?c=admin&page=edit_link_new&id=' + obj.data.id
+      });
     }
   });
 
@@ -903,14 +925,21 @@ function get_link_info() {
 }
 
 function  timestampToTime(timestamp) {
-    var  date =  new  Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
-    Y = date.getFullYear() +  '-' ;
-    M = (date.getMonth()+1 < 10 ?  '0' +(date.getMonth()+1) : date.getMonth()+1) +  '-' ;
-    D = date.getDate() +  ' ' ;
-    h = date.getHours() +  ':' ;
-    m = date.getMinutes();
-    s = date.getSeconds();
-    return  Y+M+D+h+m;
+    // 将时间戳转换为毫秒
+    let timestampInMilliseconds = timestamp * 1000;
+
+    // 创建新的Date对象
+    let date = new Date(timestampInMilliseconds);
+
+    // 获取年、月、日、小时、分钟，月份需要+1，因为Date对象中月份从0开始计数
+    let year = date.getFullYear();
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let day = ("0" + date.getDate()).slice(-2);
+    let hours = ("0" + date.getHours()).slice(-2);
+    let minutes = ("0" + date.getMinutes()).slice(-2);
+
+    // 生成并返回格式化的日期字符串
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
 function del_category(id){

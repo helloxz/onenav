@@ -303,6 +303,28 @@ class Api {
             $this->return_json(-2000,"failed");
         }
     }
+    /**
+     * name:分类批量设置为私有或公有
+     * 
+     */
+    public function set_cat_batch($data) {
+        $this->auth($token);
+        //获取链接ID，是一个数组
+        $ids = implode(',',$data['ids']);
+        $property = intval($data['property']);
+        //拼接SQL文件
+        $sql = "UPDATE on_categorys SET property = $property WHERE id IN ($ids)";
+        // echo $sql;
+        $re = $this->db->query($sql);
+        //返回影响行数
+        $row = $re->rowCount();
+        if ( $row > 0 ){
+            $this->return_json(200,"success");
+        }
+        else{
+            $this->return_json(-2000,"failed");
+        }
+    }
     
     /**
      * 批量导入链接
@@ -836,7 +858,7 @@ class Api {
 
         //如果使用cookie登录成功，或者token不为空，则使用token进行验证
         if( $this->is_login() || ( !empty($token) && $this->auth($token) ) ){
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
             //统计总数
             $count = $this->db->count('on_categorys','*');
         }
@@ -844,12 +866,12 @@ class Api {
         else if( !empty($token) ) {
             $this->auth($token);
             //查询所有分类
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
             //统计总数
             $count = $this->db->count('on_categorys','*');
         }
         else{
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys as a WHERE property = 0 ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a WHERE property = 0 ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
             //统计总数
             $count = $this->db->count('on_categorys','*',[
                 "property"      =>  0
@@ -2350,6 +2372,79 @@ class Api {
         else{
             $this->return_json(-2000,'','图标删除失败，请检查目录权限！');
         }
+    }
+
+    /**
+     * name:优先使用POST获取数据，其次GET获取数据
+     */
+    protected function getData($param) {
+        if(isset($_POST[$param])) {
+            return $_POST[$param];
+        } elseif(isset($_GET[$param])) {
+            return $_GET[$param];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * name: 全局搜索
+     */
+    public function global_search() {
+        //验证授权
+        $this->auth($token);
+        // 获取关键词
+        $keyword = htmlspecialchars( $this->getData("keyword") );
+
+        // 判断关键词长度
+        if( strlen($keyword) < 2 ) {
+            $this->return_json(-2000,'','The length of the keyword is too short.');
+        }
+        else if( strlen($keyword) > 32 ) {
+            $this->return_json(-2000,'','The keyword length is too long');
+        }
+
+        $keyword = '%'.$keyword.'%';
+
+        // 通过标题、链接、备用链接、描述进行模糊匹配
+        $data = $this->db->select('on_links', '*', [
+            "OR" => [
+                "title[~]" => $keyword,
+                "url[~]" => $keyword,
+                "url_standby[~]" => $keyword,
+                "description[~]" => $keyword,
+            ],
+            "ORDER" => [
+                "weight" => "DESC"
+            ]
+        ]);
+
+        
+        // 查询出分类名称
+        $categorys = $this->db->select("on_categorys",[
+            'id',
+            'name'
+        ]);
+        // 遍历分类，以id作为键名
+        foreach ($categorys as $category) {
+            
+            $newCategorys[$category['id']] = $category['name'];
+        }
+
+        // 遍历查询的数据，然后添加父级分类名称
+        foreach ($data as $key => $value) {
+            $data[$key]['category_name'] = $newCategorys[$value['fid']];
+        }
+
+        // 返回数据
+        $datas = [
+            'code'      =>  0,
+            'msg'       =>  '',
+            'count'     =>  count($data),
+            'data'      =>  $data
+        ];
+
+        exit( json_encode($datas) );
     }
     
 }

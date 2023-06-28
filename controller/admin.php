@@ -101,7 +101,7 @@ if( $page == 'setting/backup' ) {
 }
 
 //如果页面是修改link
-if ($page == 'edit_link') {
+if ( ( $page == 'edit_link' ) || ( $page === 'edit_link_new' ) ) {
     //查询所有分类信息，用于分类框选择
     $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weigth'    =>  'DESC'] ]);
     //获取id

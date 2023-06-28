@@ -648,3 +648,17 @@ function edit_link_row(){
     global $api;
     $api->edit_link_row();
 }
+
+// 批量修改分类属性
+function set_cat_batch() {
+    $data['ids'] = $_POST['ids'];
+    $data['property'] = $_POST['property'];
+    global $api;
+    $api->set_cat_batch($data);
+}
+
+// 全局搜索
+function global_search() {
+    global $api;
+    $api->global_search();
+}

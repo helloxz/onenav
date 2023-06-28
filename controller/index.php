@@ -6,8 +6,8 @@
 //获取当前站点信息
 $site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
 $site = unserialize($site);
-// 获取链接数量
-$link_num = empty( $site['link_num'] ) ? 20 : intval($site['link_num']);
+// 获取链接数量,默认为30
+$link_num = empty( $site['link_num'] ) ? 30 : intval($site['link_num']);
 
 //如果已经登录，获取所有分类和链接
 // 载入辅助函数
@@ -57,6 +57,7 @@ if( is_login() ){
             ]);
         return $links;
     }
+    
     //根据category id查询有限链接
     function get_limit_links($fid) {
         global $db;
@@ -247,6 +248,8 @@ else{
 }
 
 
+
+
 //判断文件夹是否存在
 if( is_dir('templates/'.$template) ){
     $tpl_dir = 'templates/';
@@ -303,5 +306,12 @@ if( $info_json ) {
         }
     }
 }
+
+// 该分类下可见的链接数量
+function get_links_number($fid){
+    $number = count(get_links($fid));
+    return $number;
+}
+
 //载入主题
 require($tpl_dir.$template.'/index.php');
