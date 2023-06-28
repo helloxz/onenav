@@ -142,8 +142,8 @@ footer a{
     background-color: #FF2377;
 }
 .cat-title{
-    margin-top: -50px;
-    padding-top:68px;
+    margin-top: -40px;
+    padding-top:79px;
     /* margin-bottom: 0; */
 }
 
@@ -172,4 +172,33 @@ footer a{
 .more-link a{
     color:#31bdec;
     text-decoration: none;
+}
+
+#backButton {
+    background-color: #f2f2f2; /* 淡灰色 */
+    color: #333; /* 按钮文本颜色为深灰色 */
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    z-index:9999;
+    display: block;
+    position: relative;
+}
+
+#backButton:hover {
+    background-color: #e0e0e0; /* 悬停时的颜色稍暗 */
+    color: #000; /* 悬停时文本颜色为黑色 */
+}
+
+.search{
+    z-index:9999;
+    position: relative;
 }

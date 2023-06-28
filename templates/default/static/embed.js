@@ -284,3 +284,28 @@ function change_theme() {
     window.location.href = "/";
 }
 
+
+$(document).ready(function(){
+  let $ = mdui.$;
+  var inst = new mdui.Drawer('#drawer');
+  var cid = getURLParam('cid');
+  console.log(cid);
+  if( cid !== null ) {
+    // 关闭左侧抽屉栏
+    inst.close();
+  }
+});
+
+// 获取参数值
+function getURLParam(paramName) {
+  // 获取URL的查询参数部分
+  var queryString = window.location.search;
+
+  // 创建一个新的URLSearchParams实例
+  var urlParams = new URLSearchParams(queryString);
+
+  // 使用get()方法来获取指定参数的值
+  var paramValue = urlParams.get(paramName);
+
+  return paramValue;
+}

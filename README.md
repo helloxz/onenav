@@ -1,6 +1,10 @@
 # OneNav
 
-OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP + SQLite 3开发，界面简洁，安装简单，使用方便。OneNav可帮助你你将浏览器书签集中式管理，解决跨设备、跨平台、跨浏览器之间同步和访问困难问题，做到一处部署，随处访问。
+中文 | [English](./README_EN.md)
+
+___
+
+OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP + SQLite 3开发，界面简洁，安装简单，使用方便。OneNav可帮助你将浏览器书签集中式管理，解决跨设备、跨平台、跨浏览器之间同步和访问困难问题，做到一处部署，随处访问。
 
 ![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
 
@@ -53,7 +57,7 @@ docker run -itd --name="onenav" -p 80:80 \
 ```
 * 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
-* `0.9.30`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
+* `0.9.31`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
@@ -77,7 +81,7 @@ ___
 
 ## 鸣谢
 
-感谢`@落幕`/`@百素`/`@itushan`的代码贡献及主题开发，以及其它OneNav贡献者和使用者，名字太多无法一一列举，还请谅解。
+感谢`@百素`/`@itushan`的代码贡献及主题开发，以及其它OneNav贡献者和使用者，名字太多无法一一列举，还请谅解。
 
 OneNav诞生离不开以下项目，在此表示感谢（排名不分先后）。
 

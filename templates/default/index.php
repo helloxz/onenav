@@ -45,23 +45,9 @@
 		  <a href="/" class = "mdui-typo-headline" title = "<?php echo $site['description'] ?>"><span class="mdui-typo-title default-title"><h1><?php echo $site['title']; ?></h1></span></a>
 		  <div class="mdui-toolbar-spacer"></div>
 		  <!-- 新版搜索框 -->
-		  	<div class="mdui-col-md-3 mdui-col-xs-6">
-				<div class="mdui-textfield mdui-textfield-floating-label">
-					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
-					<input class="mdui-textfield-input search" style = "color:#FFFFFF;" placeholder="输入书签关键词进行搜索" type="text" />
-					<i class="mdui-icon material-icons" style = "position:absolute;right:2px;">search</i>
-				</div>
-			</div>
+		  	
 			<!-- 新版搜索框END -->
-		  <a class = "mdui-hidden-xs" href="https://github.com/helloxz/onenav" rel = "nofollow" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: '查看 Github'}">
-      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">
-        <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffffff" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
-	c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
-	c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
-	c-0.2-0.4-0.7-2.1,0.2-4.3c0,0,1.4-0.4,4.5,1.7c1.3-0.4,2.7-0.5,4.1-0.5c1.4,0,2.8,0.2,4.1,0.5c3.1-2.1,4.5-1.7,4.5-1.7
-	c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
-	c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z"></path>
-	  </svg>
+		  
 	  <?php
 		if( is_login() ) {
 	  ?>	
@@ -166,16 +152,22 @@
 	<!--正文内容部分-->
 	<div class="<?php echo ( $theme_config->full_width_mode == "off") ? "mdui-container" : "mdui-container-fluid"; ?>">
 		<!-- 搜索框 -->
-		<!-- <div class="mdui-row">
-			<div class="mdui-col-xs-12" style = "z-index:99999;">
+		<div class="mdui-row">
+			<div class="mdui-col-md-12 mdui-col-xs-12 mdui-col-xl-6 mdui-col-offset-xl-3">
 				<div class="mdui-textfield mdui-textfield-floating-label">
-					<label class="mdui-textfield-label">输入书签关键词进行搜索</label>
-					<input class="mdui-textfield-input search"  type="text" />
+					<!-- <label class="mdui-textfield-label">输入书签关键词进行搜索</label> -->
+					<input class="mdui-textfield-input search" placeholder="输入书签关键词进行搜索" type="text" />
+					<i class="mdui-icon material-icons" style = "position:absolute;right:2px;">search</i>
 				</div>
 			</div>
-		</div> -->
+		</div>
 		<!-- 搜索框END -->
 		<div class="mdui-row">
+			<?php
+				if( isset($_GET['cid']) ) {
+					echo '<a href="/" id = "backButton"> << 返回</a>';
+				}
+			?>
 			<!-- 遍历分类目录 -->
             <?php foreach ( $categorys as $category ) {
                 $fid = $category['id'];
@@ -192,11 +184,6 @@
 			<div id = "category-<?php echo $category['id']; ?>" class = "mdui-col-xs-12 mdui-typo-title cat-title">
 				<?php echo $font_icon; ?>
 				<?php echo htmlspecialchars_decode($category['name']); ?> <?php echo $property; ?>
-				<?php if(empty($cid)) { ?>
-				<span class="more-link">
-					<a href="/index.php?cid=<?php echo $category['id']; ?>" title = "点此查看此分类下的全部链接">>></a>
-				</span>
-				<?php } ?>
 			</div>
 			<!-- 遍历链接 -->
 			<?php
@@ -246,6 +233,34 @@
 			</a>
 			<?php } ?>
 			<!-- 遍历链接END -->
+
+			<!-- 更多 -->
+			<?php
+				if( !isset($_GET['cid']) && get_links_number($fid) > $link_num  ) {
+			?>
+			<a href="/index.php?cid=<?php echo $category['id']; ?>" title = "点此可查看该分类下的所有链接">
+				<div class="mdui-col-lg-2 mdui-col-md-3 mdui-col-sm-4 mdui-col-xs-6 link-space">
+					<!--定义一个卡片-->
+					<div class="mdui-card link-line mdui-hoverable">
+						<div class="mdui-card-primary" style = "padding-top:16px;">
+								<div class="mdui-card-primary-title link-title">
+									<!-- 网站图标显示方式 -->
+									<img src="/index.php?c=ico&text=更" alt="" width="16" height="16" />
+									<span class="link_title">查看更多>></span> 
+								</div>
+						</div>
+						<!-- 卡片的内容end -->
+						<div class="mdui-card-content mdui-text-color-black-disabled" style="padding-top:0px;">
+							<span class="link-content">
+								点此可查看该分类下的所有链接！
+							</span>
+						</div>
+					</div>
+					<!--卡片END-->
+				</div>
+			</a>
+			<!-- 更多END -->
+			<?php } ?>
 			<?php } ?>
 		</div>
 		<!-- row end -->
