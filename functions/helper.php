@@ -186,3 +186,20 @@ function get_host(){
     }
     return $host;
 }
+
+// 获取当前域名，比如https://nav.rss.ink
+function getCurrentUrlDomain() {
+
+    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    
+    $url_parts = parse_url($url);
+    
+    $domain = $url_parts['scheme'] . '://' . $url_parts['host'];
+  
+    if(!empty($url_parts['port'])) {
+      $domain .= ':' . $url_parts['port']; 
+    }
+  
+    return $domain;
+  
+}

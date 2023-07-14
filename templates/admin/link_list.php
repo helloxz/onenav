@@ -28,7 +28,7 @@
         <!-- 顶部搜索 -->
         <div class="layui-inline">
             <div class="layui-input-inline">
-                <input type="text" name="keyword" id="keyword" lay-verify="required" placeholder="请输入关键词" autocomplete="off" class="layui-input">
+                <input type="text" name="keyword" id="keyword" placeholder="请输入关键词" autocomplete="off" class="layui-input">
             </div>
             <div class="layui-input-inline" style="width: 100px;">
                 <button class="layui-btn" lay-submit lay-filter="search_keyword">搜索</button>
@@ -119,6 +119,11 @@ layui.use(['table','form'], function(){
     form.on('submit(search_keyword)', function(data){
         console.log(data.field);
         let keyword = data.field.keyword;
+
+        if( keyword.length < 2 ) {
+            layer.msg("关键词过短！",{icon:5});
+            return false;
+        }
 
         //渲染链接列表
         table.render({

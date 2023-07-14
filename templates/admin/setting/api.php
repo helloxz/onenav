@@ -8,7 +8,7 @@
     <!-- 说明提示框 -->
     <div class="layui-col-lg12">
       <div class="setting-msg">
-      API使用说明，请参考：<a href="https://dwz.ovh/viot5" target = "_blank" title = "OneNav API使用说明">https://dwz.ovh/viot5</a>
+        API使用说明，请参考：<a href="https://dwz.ovh/viot5" target = "_blank" title = "OneNav API使用说明">https://dwz.ovh/viot5</a>
       </div>
     </div>
     <!-- 说明提示框END -->
@@ -19,6 +19,13 @@
             <label class="layui-form-label" style = "width:130px;">用户名</label>
             <div class="layui-input-inline">
                 <input style = "width:400px;" type="text" readonly="readonly" name="username" value = "<?php echo USER; ?>" autocomplete="off" placeholder="OneNav用户名" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style = "width:130px;">API域名</label>
+            <div class="layui-input-inline">
+                <input style = "width:400px;" type="text" readonly="readonly" name="api_domain" value = "<?php echo getCurrentUrlDomain(); ?>" autocomplete="off" placeholder="OneNav API域名" class="layui-input">
             </div>
         </div>
 
