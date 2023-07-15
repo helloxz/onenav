@@ -11,6 +11,8 @@ define("API_URL","https://onenav.xiaoz.top");
 class Api {
     protected $db;
     public function __construct($db){
+        // 修改默认获取模式为关联数组
+        $db->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $this->db = $db;
         //返回json类型
         header('Content-Type:application/json; charset=utf-8');
@@ -171,6 +173,10 @@ class Api {
      * name:验证方法
      */
     protected function auth($token){
+        // 当方法没有传递token的时候，则先尝试通过POST/GET获取token
+        if( empty($token) ) {
+            $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+        }
         //计算正确的token：用户名 + TOKEN
         $SecretKey = @$this->db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
         $token_yes = md5(USER.$SecretKey);

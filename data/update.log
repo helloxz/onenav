@@ -242,3 +242,10 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
  c. 进入更多链接，显示返回按钮
 4. 优化5iux主题
 5. 优化webstack主题
+
+20230714
+1. API认证函数增加了尝试自动获取token，避免部分函数忘记获取token，导致token认证失败
+2. 修复查询分类链接要求输入关键词的BUG
+3. 修改Medoo默认获取模式为关联数组，避免过多冗余数据
+4. 重构OneNav Chrome扩展
+5. 后台获取API页面，新增API域名显示

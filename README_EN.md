@@ -53,11 +53,11 @@ OneNav is an open-source, free bookmark (navigation) management program develope
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav:0.9.31
+    helloz/onenav:0.9.32
 ```
 * The first `80` is the customized access port, which can be modified, and the second `80` is the container port, please do not modify
 * `/data/onenav`: Local mount directory for persistent storage of Onenav data
-* `0.9.31`: Replace with the latest version number of OneNav, which can be found through [releases](https://github.com/helloxz/onenav/releases)
+* `0.9.32`: Replace with the latest version number of OneNav, which can be found through [releases](https://github.com/helloxz/onenav/releases)
 
 > For more instructions, please refer to the help document: https://dwz.ovh/onenav
 
