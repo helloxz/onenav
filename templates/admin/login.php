@@ -100,5 +100,5 @@
 </script>
 <script src = 'static/js/jquery.min.js'></script>
 <script src = 'static/layui/layui.js'></script>
-<script src="templates/admin/static/embed.js?v=<?php echo $version; ?>'"></script>
+<script src="templates/admin/static/embed.js?v=<?php echo $version; ?>"></script>
 </html>
