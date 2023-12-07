@@ -12,6 +12,7 @@
           <li>订阅用户可以对数据库进行本地备份和回滚</li>
           <li>备份数据库仅保存最近10份数据</li>
           <li>该功能仅辅助备份使用，无法确保100%数据安全，因此定期对整个站点打包备份仍然是必要的</li>
+          <li>如果您需要迁移数据，步骤为：立即备份 > 下载备份到本地 > 新安装OneNav > 上传备份 > 回滚</li>
         </ol>
       </div>
     </div>
@@ -27,14 +28,28 @@
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
       </script>  
       <!-- 操作选项END -->
+
       <!-- 头部工具栏 -->
       <script type="text/html" id="toolbarheader">
         <div class="layui-btn-container">
           <button class="layui-btn layui-btn-sm" lay-event="backup">立即备份</button>
+          
         </div>
       </script>
       <!-- 头部工具栏END -->
+
+      <!-- 上传按钮 -->
+      <div class="upload-backup">
+        <button type="button" class="layui-btn layui-btn-sm upload-bakcup" lay-options="{accept: 'file'}">
+          <i class="layui-icon layui-icon-upload"></i> 
+          上传备份
+        </button>
+      </div>
+      <!-- 上传按钮END -->
+
     </div>
+
+    
 </div>
 </div>
 
@@ -42,8 +57,49 @@
 <?php include_once(dirname(__DIR__).'/footer.php'); ?>
 
 <script>
-  layui.use(['table'],function(){
+  layui.use(['table','upload'],function(){
     var table = layui.table;
+    var upload = layui.upload;
+    // 渲染上传
+    // 渲染
+    upload.render({
+      elem: '.upload-bakcup', // 绑定多个元素
+      url: '/index.php?c=api&method=upload_backup', // 设置上传接口
+      accept: 'file', // 普通文件
+      exts:'db3', // 允许的后缀
+      before: function(obj){ // 选择文件后
+        layer.load();
+        var files = obj.pushFile();
+        let file = Object.values(files)[0];
+        
+        // 得到文件名
+        let name = file.name;
+          // 正则判断文件名是否符合规范，文件名格式如：onenav_202312071528_0.9.32.db3
+          let reg = /^onenav_[0-9]{12}_[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}\.db3$/;
+          if( !reg.test(name) ) {
+            layer.msg('文件格式不正确！',{icon:5});
+            // 关闭loading
+            layer.closeAll('loading');
+            return false;
+          }
+
+      },
+      done: function(res){
+        layer.msg('上传成功！',{icon:1});
+        table.reload('tableid', {
+          where: { //设定异步数据接口的额外参数，任意设
+            aaaaaa: 'xxx'
+          }
+        }); 
+
+        layer.closeAll('loading');
+      },
+      error: function(index, upload){
+        layer.msg('上传出错！',{icon:5});
+        layer.closeAll('loading');
+      }
+    });
+
     // 渲染表格
     table.render({
     elem: '#mytable'

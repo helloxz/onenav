@@ -62,14 +62,27 @@
     display: none;
 }
 .admin-msg{
-    background-color: #f2f2f2;
-    line-height: 14px;
-    padding:1em;
+    padding: 16px;
+    background-color: #F8F8F8;
     border-radius: 5px;
-    color:#888888;
+    color: #999;
+    height:56px;
+}
+.admin-msg:hover{
+    background-color: #eeeeee;
+    /*榧犳爣鍙樻垚灏忔墜*/
+    cursor: pointer;
+
 }
 .admin-msg a{
     color:#01AAED;
+}
+.admin-msg h2{
+    font-size:18px;
+    color:#16b777;
+}
+.admin-msg .text{
+    padding:14px 0 2px 0;
 }
 /* 上传按钮 */
 #up_html{
@@ -135,13 +148,17 @@
 .place-holder{
     padding-bottom: 3em;
 }
-.screenshot {
+/* .screenshot {
     height:220px;
-}
+} */
 .screenshot img{
-    max-width: auto;
-    max-height: 200px;
-    max-width:96%;
+    width: 100%;
+    height:240px;
+    /*自动裁剪图片*/
+    object-fit: cover;
+    border-radius: 3px;
+    /*鼠标移动到上面变成小手*/
+    cursor: pointer;
 }
 
 #progress{
@@ -158,4 +175,36 @@
 #show_icon img{
     height: 38px;
     width: 38px;
+}
+
+.custom-card {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.06); /* 更细微的阴影 */
+    transition: 0.3s;
+    border-radius: 10px; /* 圆角边框 */
+    background-color: #f9f9f9; /* 非常淡的灰色背景 */
+  }
+
+  .custom-card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+    transform: scale(1.03); /* 稍微缩放的悬停效果 */
+  }
+
+  .layui-card-header {
+    font-weight: bold; /* 自定义标题样式 */
+    color: #333; /* 字体颜色 */
+    font-size: 16px;
+  }
+
+  .layui-card-body {
+    color: #333; /* 内容字体颜色 */
+    font-size: 14px; /* 字体大小 */
+  }
+
+.thme-btns {
+    text-align: center;
+    padding:6px 0 6px 0;
+}
+
+.upload-backup{
+    margin-top: 16px;
 }

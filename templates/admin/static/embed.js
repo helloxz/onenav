@@ -976,17 +976,17 @@ function check_weak_password(){
 }
 //检测数据库是否可能被下载
 function check_db_down(){
-  $("#console_log").append("检查数据库是否可被下载...\n");
+  $("#console_log").append("检查数据库是否可被下载...<br />");
   $.ajax({
     type:"HEAD",
     async:false,
     url:"/data/onenav.db3",
     statusCode: {
       200: function() {
-        $("#console_log").append("危险！！！危险！！！危险！！！数据库可被下载，请尽快参考帮助文档：https://dwz.ovh/jvr2t 加固安全设置！\n\n");
+        $("#console_log").append("危险！！！危险！！！危险！！！数据库可被下载，请尽快参考帮助文档：https://dwz.ovh/jvr2t 加固安全设置！<br /><br />");
       },
       403:function() {
-        $("#console_log").append("您的数据库看起来是安全的！\n\n");
+        $("#console_log").append("您的数据库看起来是安全的！<br />");
       }
     }
   });
@@ -995,18 +995,19 @@ function check_db_down(){
 
 //获取待更新数据库列表,http://onenav.com/index.php?c=api&method=exe_sql&name=on_db_logs.sql
 function get_sql_update_list() {
-  $("#console_log").append("正在检查数据库更新...\n");
+  $("#console_log").append("----------------------------------------------------------------------<br />");
+  $("#console_log").append("正在检查数据库更新...<br />");
   $.get("index.php?c=api&method=get_sql_update_list",function(data,status){
 
     if ( data.code == 0 ) {
       //如果没有可用更新，直接结束
       if ( data.data.length == 0 ) {
-        $("#console_log").append("当前无可用更新！\n");
+        $("#console_log").append("当前无可用更新！<br />");
         return false;
       }
       else{
-        $("#console_log").append("检查到可更新SQL列表：\n");
-        $("#console_log").append("正在准备更新...\n");
+        $("#console_log").append("检查到可更新SQL列表：<br />");
+        $("#console_log").append("正在准备更新...<br />");
         for(i in data.data) {
           sqlname = data.data[i];
           //$("#console_log").append(data.data[i] + "\n");
@@ -1045,11 +1046,19 @@ function getQueryVariable(variable)
 function get_latest_version(){
     $.post("/index.php?c=api&method=get_latest_version",function(data,status){
         //console.log(data.data);
-        $("#getting").hide();
+        
         
         //获取最新版本
         let latest_version = data.data;
         $("#latest_version").text(latest_version);
+
+        // 改变显示内容
+        let new_version = `
+<a href="https://github.com/helloxz/onenav/releases" title="下载最新版OneNav" target="_blank" id="latest_version">${latest_version}</a> 
+[<a href="/index.php?c=admin&page=setting/subscribe" title="订阅后可一键更新">一键更新</a>]
+`;
+        $("#new_version").html(new_version);
+        $("#new_version").show();
 
         //获取当前版本
         let current_version = $("#current_version").text();
@@ -1203,3 +1212,36 @@ $(document).ready(function() {
     }
   });
 });
+
+// 获取当前域名
+function getCurrentDomain() {
+  // 获取协议（包括末尾的冒号和斜杠）
+  var protocol = window.location.protocol;
+
+  // 获取域名
+  var hostname = window.location.hostname;
+
+  // 获取端口号
+  var port = window.location.port;
+
+  // 检查端口号是否为80或443，并相应地调整URL
+  if (port === "80" || port === "443" || port === "") {
+      return protocol + "//" + hostname;
+  } else {
+      return protocol + "//" + hostname + ":" + port;
+  }
+}
+// 技术支持函数
+function support() {
+  let domain = getCurrentDomain();
+  let description = "域名：" + domain; 
+  let support_url = "https://support.xiuping.net/service/index?lang=zh_CN&product_id=1&description=" + description;
+  layer.open({
+    type: 2,
+    title: false,
+    shadeClose: true,
+    shade: 0.8,
+    area: ['700px', '780px'],
+    content: support_url // iframe 的 url
+  });
+}

@@ -16,39 +16,42 @@
     <!-- 说明提示框END -->
     <div class="layui-col-lg12">
         <div class="layui-row layui-col-space24">
+            
+
+            <!-- 主题列表new -->
             <?php foreach ($themes as $key => $theme) {
                 //var_dump($theme['info']->name);
             ?>
-            <!-- 主题列表 -->
-            <div class="layui-col-lg3 layui-col-md6 layui-col-sm12">
-                <fieldset style = "padding:1em;border:0px;height:280px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
-                    <legend style = "font-size:24px;" id="<?php echo $key; ?>">
+            <div class="layui-col-md3">
+                <div class="layui-card custom-card">
+                    <div class="layui-card-header">
                         <?php echo $key; ?> - <?php echo $theme['info']->version ?>
-                        <span class="renewable" style="color:#FF5722;font-size:14px;"></span>
-                    </legend>
-                    
-                    <!-- 主题图片 -->
-                    <div class = "screenshot"><p><img layer-src="<?php echo $theme['info']->screenshot; ?>" src="<?php echo $theme['info']->screenshot; ?>" alt=""></p></div>
-                    <!-- 主题图片END -->
-                    
-                    <p>
-                    <div class="layui-btn-group">
-                        <button type="button" class="layui-btn layui-btn-sm" onclick = "set_theme('<?php echo $key; ?>')">使用</button>
-                        <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail('<?php echo $key; ?>')">详情</button>
-                        <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_config('<?php echo $key; ?>')">参数设置</button>
-                        <button type="button" class="layui-btn layui-btn-sm" onclick = "update_theme('<?php echo $key; ?>','<?php echo $theme['info']->version; ?>')">更新</button>
-                        <a class="layui-btn layui-btn-sm" target = "_blank" href="/index.php?theme=<?php echo $key;  ?>">预览</a>
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick = "delete_theme('<?php echo $key; ?>')">删除</button>
                         <?php if( $current_them == $key ) { ?>
-                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">当前</button>
+                            <span style = "color:#ff5722;">（使用中）</span>
                         <?php } ?>
+                    </div>
+                    <div class="layui-card-body">
+                        <!-- 主题图片 -->
+                        <div class = "screenshot"><p><img layer-src="<?php echo $theme['info']->screenshot; ?>" src="<?php echo $theme['info']->screenshot; ?>" alt=""></p></div>
+                        <!-- 主题图片END -->
+                        <hr>
+                        <div class = "thme-btns">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-sm" onclick = "set_theme('<?php echo $key; ?>')">使用</button>
+                                <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail('<?php echo $key; ?>')">详情</button>
+                                <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_config('<?php echo $key; ?>')">参数设置</button>
+                                <button type="button" class="layui-btn layui-btn-sm" onclick = "update_theme('<?php echo $key; ?>','<?php echo $theme['info']->version; ?>')">更新</button>
+                                <a class="layui-btn layui-btn-sm" target = "_blank" href="/index.php?theme=<?php echo $key;  ?>">预览</a>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick = "delete_theme('<?php echo $key; ?>')">删除</button>
+                            </div>
+                        </div>
 
                     </div>
-                    </p>
-                </fieldset>
+                </div>
             </div>
-            <!-- 主题列表END -->
             <?php } ?>
+            <!-- 主题列表new END -->
+
         </div>
     </div>
     <hr>
@@ -60,22 +63,28 @@
                 //var_dump($theme['info']->name);
             ?>
             <!-- 在线主题列表 -->
-            <div class="layui-col-lg3 layui-col-md6 layui-col-sm12">
-                <fieldset style = "padding:1em;border:0px;height:280px;border:1px dashed #1E9FFF;box-shadow: 2px 2px 3px #888888;color:#666666">
-                    <legend style = "font-size:24px;"><?php echo $key; ?> - <?php echo $theme->version ?></legend>
-                    
-                    <!-- 主题图片 -->
-                    <div class = "screenshot"><p><img layer-src="<?php echo $theme->screenshot; ?>" src="<?php echo $theme->screenshot; ?>" alt=""></p></div>
-                    <!-- 主题图片END -->
-                    
-                    <p>
-                    <div class="layui-btn-group">
-                        <button type="button" class="layui-btn layui-btn-sm" onclick = "down_theme('<?php echo $key; ?>','download')">下载</button>
-                        <a class="layui-btn layui-btn-sm" title = "查看<?php echo $key; ?>演示" target = "_blank" href="https://nav.rss.ink/index.php?theme=<?php echo $key; ?>">查看演示</a>
-                        <!-- <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail_online('<?php echo $key; ?>')">详情</button> -->
+            
+            <div class="layui-col-md3">
+                <div class="layui-card custom-card">
+                    <div class="layui-card-header">
+                        <?php echo $key; ?> - <?php echo $theme->version ?>
                     </div>
-                    </p>
-                </fieldset>
+                    <div class="layui-card-body">
+                        <!-- 主题图片 -->
+                        <div class = "screenshot">
+                            <p><img layer-src="<?php echo $theme->screenshot; ?>" src="<?php echo $theme->screenshot; ?>" alt=""></p>
+                        </div>
+                        <!-- 主题图片END -->
+                        <hr>
+                        <div class = "thme-btns">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-sm" onclick = "down_theme('<?php echo $key; ?>','download')">下载</button>
+                                <a class="layui-btn layui-btn-sm" title = "查看<?php echo $key; ?>演示" target = "_blank" href="https://nav.rss.ink/index.php?theme=<?php echo $key; ?>">查看演示</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <!-- 主题列表END -->
             <?php } ?>
