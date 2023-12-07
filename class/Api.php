@@ -566,6 +566,58 @@ class Api {
             }
         }
     }
+    /**
+     * name:通用上传接口
+     * @param1:指定上传路径
+     * @param2:指定允许的后缀名称，是一个数组
+     */
+    public function general_upload($path,$suffixs){
+        // 验证权限
+        $this->auth($token);
+        // 存在错误，上传失败
+        if ($_FILES["file"]["error"] > 0)
+        {
+            $this->err_msg(-1015,'File upload failed!');
+        }
+        else
+        {
+            $filename = $_FILES["file"]["name"];
+            //获取文件后缀
+            $suffix = explode('.',$filename);
+            $suffix = strtolower(end($suffix));
+            
+            //临时文件位置
+            $temp = $_FILES["file"]["tmp_name"];
+
+            // 遍历$suffixs后缀文件，判断是否允许
+            foreach ($suffixs as $key => $value) {
+                if( $suffix == $value ) {
+                    $allow = true;
+                    break;
+                }
+            }
+
+            // 如果是不允许的文件，则删除
+            if( $allow !== TRUE ) {
+                //删除临时文件
+                unlink($filename);
+                $this->err_msg(-1014,'Unsupported file suffix name!');
+            }
+            
+            // 如果是允许的文件，则移动到指定目录,path格式为data/
+            if( copy($temp,$path.$filename) ) {
+                $data = [
+                    'code'      =>  0,
+                    'file_name' =>  $path.$filename
+                ];
+                exit(json_encode($data));
+            }
+            else{
+                // 复制文件失败了
+                $this->err_msg(-2000,'上传失败，请检查' + $path + '目录权限！');
+            }
+        }
+    }
 
     /**
      * 图标上传
