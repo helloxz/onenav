@@ -9,6 +9,7 @@
       <div class="setting-msg">
         <p>1. 权重越大，排序越靠前</p>
         <p>2. 识别功能可以自动获取链接标题和描述信息，但不确保一定成功</p>
+        <p>3. 仅 5iux/heimdall/tushan2/webstack 支持自定义图标，其余主题均自动获取链接图标。</p>
       </div>
     </div>
     <!-- 说明提示框END -->

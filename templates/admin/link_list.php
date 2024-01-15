@@ -4,6 +4,19 @@
 <div class="layui-body">
 <!-- 内容主体区域 -->
 <div class="layui-row content-body place-holder">
+
+    <!-- 说明提示框 -->
+    <div class="layui-col-lg12">
+      <div class="page-msg">
+        <ol>
+          <li>仅 5iux/heimdall/tushan2/webstack 支持自定义图标，其余主题均自动获取链接图标。</li>
+          <li>分类的私有属性优先级高于链接的私有属性</li>
+          <li>权重数字越大，排序越靠前</li>
+        </ol>
+      </div>
+    </div>
+    <!-- 说明提示框END -->
+
     <!-- 表单上面的按钮 -->
     <div class="lay-col-lg12">
     <form class="layui-form layui-form-pane" action="">
