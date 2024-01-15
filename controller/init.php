@@ -66,6 +66,16 @@ function init($data){
     if( empty($data['username']) || empty($data['password']) ) {
         err_msg(-2000,'用户名或密码不能为空！');
     }
+    // 正则验证用户名
+    $u_patt = '/^[0-9a-z]{3,32}$/';
+    if( !preg_match($u_patt,$data['username']) ) {
+        err_msg(-2000,'用户名格式不正确！');
+    }
+    // 正则验证密码
+    $p_patt = '/^[0-9a-zA-Z!@#%^*.()]{6,16}$/';
+    if( !preg_match($p_patt,$data['password']) ) {
+        err_msg(-2000,'密码格式不正确！');
+    }
     $config_file = "data/config.php";
     //检查配置文件是否存在，存在则不允许设置
     if( file_exists($config_file) ) {

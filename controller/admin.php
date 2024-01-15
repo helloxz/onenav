@@ -23,6 +23,12 @@ check_auth($site_setting['user'],$site_setting['password']);
 $version = new_get_version();
 
 $page = empty($_GET['page']) ? 'index' : $_GET['page'];
+// 正则判断page，只能允许字符+数字和下划线组合
+$pattern = "/^[a-zA-Z0-9_\/]+$/";
+if ( !preg_match($pattern,$page) ) {
+    exit('非法请求!');
+}
+
 
 //如果是后台首页，则判断是否是手机访问，并决定是否跳转到手机版页面
 if( $page == 'index' ) {
@@ -323,6 +329,11 @@ function check_auth($user,$password){
     }
 }
 
+// 判断$page文件是否存在，不存在，则终止执行
+$full_page_path = 'templates/admin/'.$page;
+if( !file_exists($full_page_path) ) {
+    exit("file does not exist!");
+}
 
 // 载入前台首页模板
 require('templates/admin/'.$page);
