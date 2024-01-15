@@ -17,13 +17,40 @@
                 <span id = "update_msg" style = "display:none;">（<a style = "color: #FF5722;" href = "https://github.com/helloxz/onenav/releases" title = "下载最新版OneNav" target = "_blank" id="current_version">有可用更新</a>）</span>
               </p>
             </div>
-          </div>
+            </div>
 
             <div class="layui-col-lg3">
                 <div class = "admin-msg">
                   <h2>最新版本</h2>
                   <p class="text" id = "new_version">
                     <i class="layui-icon layui-icon-loading-1 layui-anim layui-anim-rotate layui-anim-loop"></i> 
+                  </p>
+                </div>
+            </div>
+
+            <div class="layui-col-lg3">
+                <div class = "admin-msg">
+                  <h2>分类数量</h2>
+                  <p class="text">
+                    <a href="/index.php?c=admin&page=category_list"><span id="cat_num"></span></a>
+                  </p>
+                </div>
+            </div>
+
+            <div class="layui-col-lg3">
+                <div class = "admin-msg">
+                  <h2>链接数量</h2>
+                  <p class="text">
+                    <a href="/index.php?c=admin&page=link_list"><span id="link_num"></span></a>
+                  </p>
+                </div>
+            </div>
+
+            <div class="layui-col-lg3">
+                <div class = "admin-msg">
+                  <h2>PHP版本</h2>
+                  <p class="text">
+                    <span id="php_version"></span>
                   </p>
                 </div>
             </div>
@@ -108,4 +135,18 @@
   check_weak_password();
   get_sql_update_list();
   get_latest_version();
+  app_info();
+  // 获取app_info
+  function app_info(){
+    //alert("dsdfd");
+    let api_url = "/index.php?c=api&method=app_info";
+    console.log(api_url);
+    $.get(api_url,function(data,status){
+      data = data.data;
+      $("#php_version").html(data.php_version);
+      $("#cat_num").html(data.cat_num);
+      $("#link_num").html(data.link_num);
+    });
+  }
+  
 </script>

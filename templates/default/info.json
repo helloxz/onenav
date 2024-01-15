@@ -14,7 +14,7 @@
     },
     "config": {
         "full_width_mode":"off",
-        "link_description":"show",
+        "link_description":"hide",
         "favicon": "online"
     }
 }

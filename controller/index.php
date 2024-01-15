@@ -9,6 +9,8 @@ $site = unserialize($site);
 // 获取链接数量,默认为30
 $link_num = empty( $site['link_num'] ) ? 30 : intval($site['link_num']);
 
+
+
 //如果已经登录，获取所有分类和链接
 // 载入辅助函数
 require('functions/helper.php');
@@ -77,6 +79,8 @@ if( is_login() ){
 }
 //如果没有登录，只获取公有链接
 else{
+    // 检查分类是否全私有，如果是，则跳转到登录界面
+    check_all_cat();
     //查询分类目录
     $categorys = [];
     //查询一级分类目录，分类fid为0的都是一级分类

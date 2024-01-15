@@ -208,3 +208,17 @@
 .upload-backup{
     margin-top: 16px;
 }
+
+.them-header{
+
+}
+.them-header .left{
+    width: 50%;
+    float:left;
+    text-align: left;
+}
+.them-header .right{
+    width: 50%;
+    text-align: right;
+    float:right;
+}

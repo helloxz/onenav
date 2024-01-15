@@ -24,11 +24,20 @@
             ?>
             <div class="layui-col-md3">
                 <div class="layui-card custom-card">
-                    <div class="layui-card-header">
-                        <?php echo $key; ?> - <?php echo $theme['info']->version ?>
-                        <?php if( $current_them == $key ) { ?>
-                            <span style = "color:#ff5722;">（使用中）</span>
-                        <?php } ?>
+                    <div class="layui-card-header" id="<?php echo $key; ?>">
+                        <div class="them-header">
+                            <div class="left">
+                                <span class = "name"><?php echo $key; ?> - <?php echo $theme['info']->version ?></span>
+                                <?php if( $current_them == $key ) { ?>
+                                    <span style = "color:#ff5722;">（使用中）</span>
+                                <?php } ?>
+                            </div>
+                            <div class="right">
+                                <span class="renewable" style="color:#FF5722;font-size:14px;"></span>
+                            </div>
+                        </div>
+                        
+
                     </div>
                     <div class="layui-card-body">
                         <!-- 主题图片 -->
@@ -214,25 +223,29 @@ function update_theme(name,version){
 
 //遍历所有主题，检查是否有更新
 function check_update(){
+    console.log('fdsfsdf');
     //请求远程主题列表
     $.get("https://onenav.xiaoz.top/v1/theme_list.php",function(data,status){
         let result = data.data;
+        console.log(result);
         //console.log(result.5iux);
         for (const obj in result) {
             //获取主题名称
-            let value = $("#" + obj).text();
+            let select = `#${obj} .name`;
+            let value = $(select).text();
+            
             //如果获取到的数据为空
             if( value == '' ) {
                 continue;
             }
-            //console.log(obj);
+            
             //获取最新版本
             let latest_version = result[obj].version;
             //获取当前版本
             let current_version = value.split(' - ')[1];
             //如果存在最新版本
             if( latest_version > current_version ) {
-                console.log("#" + obj + ".renewable");
+                console.log("#" + obj + " .renewable");
                 $("#" + obj + " .renewable").append(`(可更新至${latest_version})`);
             }
         }

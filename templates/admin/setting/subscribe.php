@@ -12,7 +12,7 @@
             <li>您可以前往：<a href="https://dwz.ovh/69h9q" rel = "nofollow" target = "_blank" title = "购买订阅服务">https://dwz.ovh/69h9q</a> 购买订阅服务，订阅后可以：</li>
             <li>1. 享受一键更新OneNav</li>
             <li>2. 可在线下载和更新主题</li>
-            <li>3. 可享受一对一售后服务（仅限高级版和商业版）</li>
+            <li>3. 可享受一对一售后服务</li>
             <li>4. 可帮助OneNav持续发展，让OneNav变得更加美好</li>
             <li>5. 更多高级功能（自定义版权、广告管理等）</li>
             <li>6. 数据库备份</li>
@@ -20,7 +20,7 @@
       </div>
       <div class="setting-msg">
         <p>1. 系统检测到您的域名为<strong style="color:#31BDEC;"><code><?php echo get_host(); ?></code></strong>，购买订阅时请填写此域名！</p>
-        <p>2. 若域名填写错误或更换域名，请前往<a title = "修改OneNav订阅域名" href="https://www.onenav.top/msub.html" target="_blank">https://www.onenav.top/msub.html</a>修改订阅！</p>
+        <p>2. 若域名填写错误或更换域名，请前往 <a title = "修改OneNav订阅域名" href="https://dwz.ovh/p6u2w" target="_blank">https://dwz.ovh/p6u2w</a> 修改订阅！</p>
         <!-- <p>3. Docker用户或IP访问的用户，请参考<a href="https://dwz.ovh/cve3d" target="_blank">没有域名购买订阅</a></p> -->
       </div>
     </div>
