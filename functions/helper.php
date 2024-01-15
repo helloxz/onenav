@@ -203,3 +203,26 @@ function getCurrentUrlDomain() {
     return $domain;
   
 }
+
+
+/**
+ * name：检查分类是否全私有，如果是，则跳转到登录界面
+ */
+function check_all_cat(){
+    global $db;
+    // 统计所有分类的数量
+    $count = $db->count("on_categorys","*");
+    // 统计私有分类的数量
+    $count_private = $db->count("on_categorys","*",[
+        "property"  =>  1
+    ]);
+    // 判断数量是否一致，一致则说明全部是私有
+    if( $count == $count_private ) {
+        // 判断用户是否登录，未登录则跳转
+        if( !is_login() ) {
+            header("Location:/index.php?c=login");
+            exit;
+        }
+        
+    }
+}
