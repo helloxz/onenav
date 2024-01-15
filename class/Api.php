@@ -1,7 +1,7 @@
 <?php
 /**
  * name:API核心类
- * update:2020/12
+ * update:2024/01
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
@@ -339,6 +339,18 @@ class Api {
         //过滤$filename
         $filename = str_replace('../','',$filename);
         $filename = str_replace('./','',$filename);
+        // 获取文件名称的后缀
+        $suffix = explode('.',$filename);
+        // 如果没有后缀，则不合法,通过数组长度判断后缀
+        if( count($suffix) < 2 ) {
+            $this->err_msg(-2000,'文件不合法!');
+        }
+        // 获取文件后缀
+        $suffix = strtolower(end($suffix));
+        if( ( $suffix != 'html' ) && ( $suffix != 'htm' ) ) {
+            $this->err_msg(-2000,'文件不合法!');
+        }
+
         $this->auth($token);
         //检查文件是否存在
         if ( !file_exists($filename) ) {
