@@ -757,6 +757,32 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
 
+  // 一键复制
+  form.on('submit(one_copy)', function(data){
+    if( (data.field.SecretKey != '') && (data.field.username != '' ) ) {
+      let username = data.field.username;
+      let sk = data.field.SecretKey;
+      let token = md5(username + sk);
+      let api_domain = $("#api_domain").val();
+      let result = `${api_domain}|${token}`;
+      lay.clipboard.writeText({
+        text: result,
+        done: function() {
+          layer.msg("已复制！",{icon:1});
+        },
+        error: function() {
+          layer.msg("复制失败！",{icon:5});
+        }
+      });
+    }
+    else{
+      layer.msg('SecretKey为空，请先生成！', {icon: 5});
+    }
+    
+    //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+  });
+
   //添加链接
   form.on('submit(add_link)', function(data){
     $.post('/index.php?c=api&method=add_link',data.field,function(data,status){

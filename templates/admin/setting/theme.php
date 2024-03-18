@@ -29,7 +29,7 @@
                             <div class="left">
                                 <span class = "name"><?php echo $key; ?> - <?php echo $theme['info']->version ?></span>
                                 <?php if( $current_them == $key ) { ?>
-                                    <span style = "color:#ff5722;">（使用中）</span>
+                                    <!-- <span style = "color:#ff5722;">（使用中）</span> -->
                                 <?php } ?>
                             </div>
                             <div class="right">
@@ -41,7 +41,13 @@
                     </div>
                     <div class="layui-card-body">
                         <!-- 主题图片 -->
-                        <div class = "screenshot"><p><img layer-src="<?php echo $theme['info']->screenshot; ?>" src="<?php echo $theme['info']->screenshot; ?>" alt=""></p></div>
+                        <div class = "screenshot">
+                            <p><img layer-src="<?php echo $theme['info']->screenshot; ?>" src="<?php echo $theme['info']->screenshot; ?>" alt=""></p>
+                            <?php if( $current_them == $key ) { ?>
+                                <div class="in-use">使用中</div>
+                            <?php } ?>
+                        </div>
+                        
                         <!-- 主题图片END -->
                         <hr>
                         <div class = "thme-btns">

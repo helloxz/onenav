@@ -1689,6 +1689,11 @@ class Api {
         $subscribe = unserialize($subscribe);
         //api请求地址
         $api_url = API_URL."/v1/check_subscribe.php?order_id=".$subscribe['order_id']."&email=".$subscribe['email']."&domain=".$domain;
+
+        // 如果邮箱或者订单号为空，则返回提示
+        if( empty($subscribe['order_id']) || empty($subscribe['email']) ) {
+            $this->return_json(-2000,'','此功能需要订阅！');
+        }
         
         try {
             #GET HTTPS
