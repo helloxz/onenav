@@ -25,7 +25,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label" style = "width:130px;">API域名</label>
             <div class="layui-input-inline">
-                <input style = "width:400px;" type="text" readonly="readonly" name="api_domain" value = "<?php echo getCurrentUrlDomain(); ?>" autocomplete="off" placeholder="OneNav API域名" class="layui-input">
+                <input style = "width:400px;" type="text" readonly="readonly" id="api_domain" name="api_domain" value = "<?php echo getCurrentUrlDomain(); ?>" autocomplete="off" placeholder="OneNav API域名" class="layui-input">
             </div>
         </div>
 
@@ -49,11 +49,12 @@
             <button class="layui-btn" lay-submit="" lay-filter="create_sk">生成SecretKey</button>
             <button class="layui-btn" lay-submit="" lay-filter="change_sk">更换SecretKey</button>
             <button class="layui-btn" lay-submit="" lay-filter="cal_token">计算Token</button>
+            <button class="layui-btn" lay-submit="" lay-filter="one_copy" title="一键复制API域名和Token">一键复制</button>
         </div>
 
     </form>
     </div>
 </div>
 </div>
-
+    
 <?php include_once(dirname(__DIR__).'/footer.php'); ?>

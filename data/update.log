@@ -273,3 +273,8 @@ CREATE INDEX on_options_key_IDX ON on_options ("key");
 
 20240115
 1. PC后台新增：分类数量/链接数量/PHP版本显示
+
+20240318
+1. 获取API页面新增一键复制按钮
+2. 优化主题“使用中”的显示状态
+3. 修改后台底部年份展示
