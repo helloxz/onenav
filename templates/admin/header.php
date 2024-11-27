@@ -33,7 +33,7 @@
     <ul class="layui-nav layui-layout-right">
       <li class="layui-nav-item">
         <a href="javascript:;">
-          <img src="https://gravatar.loli.net/avatar/<?php echo md5(EMAIL); ?>" class="layui-nav-img">
+          <img loading="lazy" src="https://gravatar.loli.net/avatar/<?php echo md5(EMAIL); ?>" class="layui-nav-img">
           <?php echo USER; ?>
         </a>
         <dl class="layui-nav-child">
