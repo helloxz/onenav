@@ -921,42 +921,63 @@ class Api {
     public function category_list($page,$limit){
         $token = @$_POST['token'];
         $offset = ($page - 1) * $limit;
-        /**
-         * name:如果成功登录，则查询所有
-         * 
-         */
 
-        //如果使用cookie登录成功，或者token不为空，则使用token进行验证
-        if( $this->is_login() || ( !empty($token) && $this->auth($token) ) ){
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
-            //统计总数
-            $count = $this->db->count('on_categorys','*');
-        }
-        //如果存在token，则验证
-        else if( !empty($token) ) {
+        // 验证登录或 token
+        if ($this->is_login() || (!empty($token) && $this->auth($token))) {
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY fid ASC, weight DESC, id ASC";
+            $count = $this->db->count('on_categorys', '*');
+        } elseif (!empty($token)) {
             $this->auth($token);
-            //查询所有分类
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
-            //统计总数
-            $count = $this->db->count('on_categorys','*');
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY fid ASC, weight DESC, id ASC";
+            $count = $this->db->count('on_categorys', '*');
+        } else {
+            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a WHERE property = 0 ORDER BY fid ASC, weight DESC, id ASC";
+            $count = $this->db->count('on_categorys', '*', ['property' => 0]);
         }
-        else{
-            $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a WHERE property = 0 ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
-            //统计总数
-            $count = $this->db->count('on_categorys','*',[
-                "property"      =>  0
-            ]);
+
+        $all_categories = $this->db->query($sql)->fetchAll();
+
+        // 构建排序规则
+        $sorted_categories = [];
+        $categories_by_fid = [];
+
+        foreach ($all_categories as $category) {
+            if ($category['fid'] == 0) {
+                // 父级分类
+                $sorted_categories[] = $category;
+            } else {
+                // 子分类，按 fid 分组
+                $categories_by_fid[$category['fid']][] = $category;
+            }
         }
-        
-        //原生查询
-        $datas = $this->db->query($sql)->fetchAll();
-        $datas = [
-            'code'      =>  0,
-            'msg'       =>  '',
-            'count'     =>  $count,
-            'data'      =>  $datas
+
+        // 对每个子分类组按 weight 排序
+        foreach ($categories_by_fid as &$sub_categories) {
+            usort($sub_categories, function ($a, $b) {
+                return $b['weight'] <=> $a['weight'];
+            });
+        }
+
+        // 将子分类插入到对应父级分类后
+        $final_sorted_categories = [];
+        foreach ($sorted_categories as $parent_category) {
+            $final_sorted_categories[] = $parent_category;
+            if (isset($categories_by_fid[$parent_category['id']])) {
+                $final_sorted_categories = array_merge($final_sorted_categories, $categories_by_fid[$parent_category['id']]);
+            }
+        }
+
+        // 截取分页数据
+        $paged_data = array_slice($final_sorted_categories, $offset, $limit);
+
+        $result = [
+            'code' => 0,
+            'msg' => '',
+            'count' => $count,
+            'data' => $paged_data,
         ];
-        exit(json_encode($datas));
+
+        exit(json_encode($result));
     }
     /**
      * 生成
@@ -1469,7 +1490,7 @@ class Api {
             $this->return_json(-2000,'',"主题名称不合法！");
         }
         //如果是默认主题，则不允许删除
-        if( ($name === 'default') || ($name === 'admin') ) {
+        if( ($name === 'default') || ($name === 'admin') || ($name === 'default2') ) {
             $this->return_json(-2000,'',"默认主题不允许删除！");
         }
         //查询当前使用中的主题
@@ -1815,6 +1836,7 @@ class Api {
             $subscribe = unserialize($subscribe);
             //api请求地址
             $api_url = API_URL."/v1/check_subscribe.php?order_id=".$subscribe['order_id']."&email=".$subscribe['email']."&domain=".$domain;
+            // echo $api_url;
             try {
                 #GET HTTPS
                 $curl = curl_init($api_url);
@@ -2520,6 +2542,70 @@ class Api {
         ];
 
         exit( json_encode($datas) );
+    }
+
+    /**
+     * 批量更新链接排序
+     * 
+     */
+    public function update_link_order(){
+        //验证授权
+        $this->auth($token);
+        // 获取分类ID
+        $cid = intval($this->getData("category_id"));
+        // 获取json对象数据
+        // 获取前端传递的原始 JSON 数据
+        $rawData = file_get_contents('php://input');
+        // 将 JSON 数据转换为 PHP 关联数组
+        $jsonData = json_decode($rawData, true);
+        // 检查解析是否成功
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->return_json(-2000,'','JSON解析失败！');
+        }
+
+        // 批量更新on_links表的weight字段
+        foreach ($jsonData as $key => $value) {
+            $this->db->update('on_links', [
+                'weight' => $value['weight']
+            ], [
+                'fid' => $cid,
+                'id' => intval($value['id'])
+            ]);
+        }
+
+        // 返回成功
+        $this->return_json(200,'','success');
+    }
+
+    /**
+     * name:获取订阅信息
+     */
+    public function get_subscribe() {
+        //验证授权
+        $this->auth($token);
+        //获取当前站点信息
+        $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
+        $subscribe = unserialize($subscribe);
+
+        $this->return_json(200,$subscribe,'success');
+    }
+
+    /**
+     * 验证订阅是否有效
+     */
+    public function get_subscribe_status(){
+        // var_dump($_SERVER['HTTP_HOST']);
+        //验证授权
+        $this->auth($token);
+        // 获取订阅结果
+        $result = $this->is_subscribe();
+
+        if( $result === TRUE ) {
+            $this->return_json(200,'Active','success');
+        }
+        else{
+            $this->return_json(-2000,'','failure');
+        }
     }
     
 }

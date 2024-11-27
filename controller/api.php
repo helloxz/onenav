@@ -668,3 +668,21 @@ function upload_backup(){
     global $api;
     $api->general_upload('data/backup/',['db3']);
 }
+
+// 批量更新排序
+function update_link_order(){
+    global $api;
+    $api->update_link_order();
+}
+
+// 获取订阅信息
+function get_subscribe(){
+    global $api;
+    $api->get_subscribe();
+}
+
+// 获取订阅状态
+function get_subscribe_status(){
+    global $api;
+    $api->get_subscribe_status();
+}

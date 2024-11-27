@@ -1,0 +1,23 @@
+{
+    "name": "OneNav",
+    "short_name": "OneNav",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "lang": "zh-CN",
+    "scope": "/",
+    "description": "OneNav是一款开源书签管理器，界面简约，功能强大！",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "/templates/default2/icons/onenav-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/templates/default2/icons/onenav-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
