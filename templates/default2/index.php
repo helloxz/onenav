@@ -8,11 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>
       <?php echo $site[ 'title']; ?> - <?php echo $site[ 'subtitle']; ?></title>
-      <script type="module" crossorigin src="/templates/default2/assets/index.js?v=<?php echo $info->version; ?>""></script>
+      <script type="module" crossorigin src="/templates/<?php echo $template; ?>/assets/index.js?v=<?php echo $info->version; ?>""></script>
     </script>
-    <link href="/templates/default2/assets/index.css?v=<?php echo $info->version; ?>"" rel="stylesheet">
+    <link href="/templates/<?php echo $template; ?>/assets/index.css?v=<?php echo $info->version; ?>"" rel="stylesheet">
     <?php echo $site['custom_header']; ?>
-    <link rel="manifest" href="/templates/default2/manifest.json" />
+    <link rel="manifest" href="/templates/<?php echo $template; ?>/manifest.json" />
   </head>
   
   <body>
