@@ -4,23 +4,69 @@
 
 ___
 
-OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP + SQLite 3开发，界面简洁，安装简单，使用方便。OneNav可帮助你将浏览器书签集中式管理，解决跨设备、跨平台、跨浏览器之间同步和访问困难问题，做到一处部署，随处访问。
+OneNav 是一款功能强大且简洁高效的浏览器书签管理器，支持集中式管理书签，完美解决跨设备、跨平台、跨浏览器的同步与访问难题，实现一处部署、随处访问。它不仅安装简单、界面简洁、操作方便，还可与浏览器扩展（插件）配合使用，为你带来更加高效便捷的书签管理体验。
 
-![](https://i.bmp.ovh/imgs/2020/12/40f222b7da7a89c9.png)
+![73a785f1df68a69f.png](https://img.rss.ink/imgs/2024/11/28/73a785f1df68a69f.png)
 
-![](https://i.bmp.ovh/imgs/2021/04/5c46f84f158d8d3a.png)
+**强大的链接拖拽排序**
 
-![](https://img.rss.ink/imgs/2022/03/cba9f1946776a8f0.png)
+在之前的版本中，只能通过修改链接权重来进行排序，不太方便，现在你可以在default2主题中自由的拖动链接快速排序。
 
-![](https://img.rss.ink/imgs/2022/03/4b1d6c95484e69bc.png)
+![](https://sv.png.pub/imgs/2024/11/28/1ec844b98e9b84f0.gif)
 
-![](https://img.rss.ink/imgs/2022/06/08/401b42279dd971f0.png)
+> 注意：需要登录后，点击链接图标才能触发拖拽，点击其他区域无法拖拽！！！
 
-![](https://img.rss.ink/imgs/2022/06/07/1a2f6c3f81b64f6a.png)
+**书签搜索**
 
-![](https://img.rss.ink/imgs/2022/06/06/172432e9d3564113.png)
+通过顶部的搜索框，可以通过关键词模糊搜索匹配的链接，然后快速打开。
 
-![](https://i.bmp.ovh/imgs/2020/12/abba0af566f3c16a.png)
+![61bac5d46d30be1c.png](https://img.rss.ink/imgs/2024/11/28/61bac5d46d30be1c.png)
+
+**右键菜单**
+
+当您将鼠标移动到链接后，可以点击鼠标右键调出**右键菜单**，右键菜单支持：打开链接、打开备用链接、复制链接、显示二维码、编辑链接、删除链接等快捷操作。
+
+![532eb46f4da3c4ae.png](https://img.rss.ink/imgs/2024/11/28/532eb46f4da3c4ae.png)
+
+需要特别说明的是**打开备用链接**，OneNav在很早的版本中就支持了这个功能，该功能适用于以下情况：
+
+1. 您在NAS中部署了一个服务，现在想内网访问内网IP，外网访问外网域名
+2. 那么你可以将外网域名添加到主链接中，将内网IP添加到备用链接中
+3. 通过default2主题的右键菜单，根据您的情况访问主链接或备用链接
+
+> 注意：如果没有添加备用链接，则右键菜单不会出现【打开备用链接】按钮。
+
+**底部工具栏**
+
+底部工具栏默认对访客隐藏，只有党管理员登录后才会显示，支持5个操作按钮，分别是：添加链接、返回顶部、订阅管理、系统状态、后台管理。
+
+![12efff04c347d853.png](https://img.rss.ink/imgs/2024/11/28/12efff04c347d853.png)
+
+**支持PWA应用**
+
+PWA（Progressive Web App）是一种结合网页和原生应用优势的技术，default2主题已经支持PWA，现在可以像APP一样在手机上使用OneNav，下面以Edge手机浏览器举例说明。
+
+需要先对Edge手机浏览器进行权限设置 - 其他权限 - 打开桌面快捷方式这个权限。
+
+![d4dbef380fe34185.jpg](https://img.rss.ink/imgs/2024/11/28/d4dbef380fe34185.jpg)
+
+打开Edge底部的工具菜单栏 - 找到『添加至手机』
+
+![2a3c1702412cbfa5.jpg](https://img.rss.ink/imgs/2024/11/28/2a3c1702412cbfa5.jpg)
+
+然后确认安装。
+
+![29e6224fffdf8999.jpg](https://img.rss.ink/imgs/2024/11/28/29e6224fffdf8999.jpg)
+
+安装完毕后手机桌面上会出现一个【OneNav】图标，点击图标就能像APP一样使用OneNav啦。
+
+![76e2ce0e8390eb4e.jpg](https://img.rss.ink/imgs/2024/11/28/76e2ce0e8390eb4e.jpg)
+
+**前台编辑**
+
+default2 主题使书签分类和链接管理更加高效，所有的添加、编辑、修改和删除操作都可以在前台通过弹窗完成，无需进入后台，从而大大提升了管理效率。
+
+![81976354a0b749e7.png](https://img.rss.ink/imgs/2024/11/28/81976354a0b749e7.png)
 
 > **特别声明：未经作者允许，请勿将OneNav进行获利行为或进行商业行为，亦不得用于非法用途，否则自行承担相应法律责任！！！**
 
@@ -33,10 +79,11 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 * 支持链接信息自动识别
 * 支持API
 * 支持Docker部署
-* 支持uTools插件
 * 支持二级分类
-* 支持Chromium内核的[浏览器扩展](https://dwz.ovh/4kxn2)（插件）
-* 支持在线更新
+* 支持[浏览器扩展](https://dwz.ovh/4kxn2)（插件）
+* 支持后台一键在线升级
+* 支持链接拖拽排序
+* 支持PWA应用
 * 手机版后台
 
 ## 安装
@@ -53,11 +100,10 @@ OneNav是一款开源免费的书签（导航）管理程序，使用使用PHP +
 ```bash
 docker run -itd --name="onenav" -p 80:80 \
     -v /data/onenav:/data/wwwroot/default/data \
-    helloz/onenav:0.9.34
+    helloz/onenav
 ```
 * 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
-* `0.9.34`：改成OneNav最新版本号，可以通过[releases](https://github.com/helloxz/onenav/releases)查看最新版本号
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
@@ -66,14 +112,6 @@ docker run -itd --name="onenav" -p 80:80 \
 * **官方演示站点：**[http://demo.onenav.top/](http://demo.onenav.top/index.php?c=login)
 * 账号/密码：`xiaoz`/`xiaoz.me`
 
-___
-
-以下是OneNav部分用户演示站，排名不分先后。
-
-* OneNav：[https://nav.rss.ink/](https://nav.rss.ink/)
-* 千行书签：[http://www.52qx.club/](http://www.52qx.club/)
-* 纽及书签：[http://www.1006788.com/](http://www.1006788.com/)
-* DiscoveryNav：[https://nav.miooku.com/](https://nav.miooku.com/)
 
 ## OneNav交流群
 
