@@ -1780,7 +1780,13 @@ class Api {
         //判断主题目录是否存在,如果curl_host是alpine，则视为容器，容器则将主题目录设置为data/templates
         $curl_host = curl_version()['host'];
         if( strstr($curl_host,'alpine') ) {
-            $theme_dir = "data/templates";
+            // 默认主题一律保存到templates目录
+            if( $name == "default2" ) {
+                $theme_dir = "templates";
+            }
+            else{
+                $theme_dir = "data/templates";
+            }
         }
         else{
             $theme_dir = "templates";
