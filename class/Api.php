@@ -1200,7 +1200,7 @@ class Api {
      * 验证是否登录
      */
     protected function is_login(){
-        $key = md5(USER.PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
+        $key = md5(USER.ENCRYPTED_PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
         //获取session
         $session = $_COOKIE['key'];
         //如果已经成功登录
