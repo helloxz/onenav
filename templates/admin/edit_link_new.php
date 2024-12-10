@@ -22,7 +22,7 @@
     <div class="layui-form-item">
     <label class="layui-form-label">URL</label>
     <div class="layui-input-block">
-      <input type="url" id = "url" name="url" value = "<?php echo $link['url']; ?>" required  lay-verify="required|url" placeholder="请输入有效链接" autocomplete="off" class="layui-input">
+      <input type="url" id = "url" name="url" value = "<?php echo $link['url']; ?>" required  lay-verify="required" placeholder="请输入有效链接" autocomplete="off" class="layui-input">
     </div>
   </div>
 
