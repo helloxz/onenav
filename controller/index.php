@@ -10,10 +10,12 @@ $site = unserialize($site);
 $link_num = empty( $site['link_num'] ) ? 30 : intval($site['link_num']);
 
 
-
 //如果已经登录，获取所有分类和链接
 // 载入辅助函数
 require('functions/helper.php');
+// 明文密码检查
+unSafe();
+
 if( is_login() ){
     //查询所有分类目录
     $categorys = [];

@@ -10,18 +10,33 @@
 function check_env() {
     //获取组件信息
     $ext = get_loaded_extensions();
-    //检查PHP版本，需要大于5.6小于8.0
+    //检查PHP版本，需要大于7.0小于8.0
     $php_version = floatval(PHP_VERSION);
     $uri = $_SERVER["REQUEST_URI"];
     
-    if( ( $php_version < 5.6 ) || ( $php_version > 8 ) ) {
-        exit("当前PHP版本{$php_version}不满足要求，需要5.6 <= PHP <= 7.4");
+    if( ( $php_version < 7 ) || ( $php_version > 8 ) ) {
+        exit("当前PHP版本{$php_version}不满足要求，需要7.0 <= PHP <= 7.4");
     }
     
     //检查是否支持pdo_sqlite
     if ( !array_search('pdo_sqlite',$ext) ) {
         exit("不支持PDO_SQLITE组件，请先开启!");
     }
+
+    if ( !array_search('openssl', $ext) ) {
+        exit("不支持OPENSSL组件，请先开启!");
+    }
+    
+    //检查是否支持zlib
+    if ( !array_search('zlib', $ext) ) {
+        exit("不支持ZLIB组件，请先开启!");
+    }
+    
+    //检查是否支持curl
+    if ( !array_search('curl', $ext) ) {
+        exit("不支持CURL组件，请先开启!");
+    }
+
     //如果配置文件存在
     if( file_exists("data/config.php") ) {
         exit("配置文件已存在，无需再次初始化!");
@@ -88,7 +103,9 @@ function init($data){
     //替换内容
     $content = str_replace('{email}',$data['email'],$content);
     $content = str_replace('{username}',$data['username'],$content);
-    $content = str_replace('{password}',$data['password'],$content);
+    // $content = str_replace('{password}',$data['password'],$content);
+    // 存入加密后的密码，用户名 + 密码，再进行MD5加密
+    $content = str_replace('{encrypted_password}',md5($data['username'].$data['password']),$content);
 
     //写入配置文件
     if( !file_put_contents($config_file,$content) ) {

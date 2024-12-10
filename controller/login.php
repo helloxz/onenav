@@ -7,7 +7,8 @@
 require('functions/helper.php');
 
 $username = $site_setting['user'];
-$password = $site_setting['password'];
+// 加密后的密码
+$password = ENCRYPTED_PASSWORD;
 $ip = getIP();
 //如果认证通过，直接跳转到后台管理
 $key = md5($username.$password.'onenav'.$_SERVER['HTTP_USER_AGENT']);
@@ -25,8 +26,10 @@ if( is_login() ){
 
 //登录检查
 if( $_GET['check'] == 'login' ) {
-    $user = $_POST['user'];
-    $pass = $_POST['password'];
+    $user = trim($_POST['user']);
+    $pass = trim($_POST['password']);
+    // 用户密码进行加密处理，加密算法为用户名 + 密码，再进行MD5加密
+    $pass = md5($user.$pass);
     header('Content-Type:application/json; charset=utf-8');
     if( ($user === $username) && ($pass === $password) ) {
         $key = md5($username.$password.'onenav'.$_SERVER['HTTP_USER_AGENT']);
