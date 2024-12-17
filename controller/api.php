@@ -17,12 +17,46 @@ $api = new Api($db);
 $method = $_GET['method'];
 //可变函数变量
 $var_func = htmlspecialchars(trim($method),ENT_QUOTES);
+// 屏蔽的方法，让其不调用class/Api.php 中的方法
+$deny_func = [
+    '__construct',
+    'auth',
+    'batch_create_category',
+    'check_is_subscribe',
+    'check_link',
+    'curl_get',
+    'deldir',
+    'down_updater',
+    'err_msg',
+    'general_upload',
+    'getData',
+    'getIP',
+    'is_login',
+    'is_subscribe',
+    'return_json',
+    'set_option',
+    'set_option_bool',
+    'update_link_status',
+    'send_to_ai'
+];
+// 判断是否在屏蔽列表中
+if( in_array($var_func,$deny_func) ) {
+    exit('method not found!');
+}
 //判断函数是否存在，存在则条用可变函数，否则抛出错误
 if ( function_exists($var_func) ) {
-    //调用可变函数
+    //调用可变函数，优先调用本文件内声明的函数
     $var_func($api);
 }else{
-    exit('method not found!');
+    // 其次调用class中的函数
+    if( method_exists($api,$var_func) ) {
+        // 存在则调用
+        $api->$var_func();
+    }
+    else{
+        // 如果本文件和class/Api.php 中都不存在则抛出错误
+        exit('method not found!');
+    }
 }
 
 

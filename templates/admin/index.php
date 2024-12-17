@@ -107,7 +107,7 @@
 
           <div class="layui-col-lg3">
               <div class = "admin-msg">
-                <h2>Chrome浏览器扩展</h2>
+                <h2>浏览器扩展</h2>
                 <p class="text">
                   <a href="https://dwz.ovh/4kxn2" title = "适用于Chromium内核的浏览器扩展" rel = "nofollow" target="_blank">https://dwz.ovh/4kxn2</a>
                 </p>

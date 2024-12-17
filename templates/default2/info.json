@@ -3,13 +3,13 @@
     "description": "OneNav目前功能最强大的默认主题，推荐使用。",
     "homepage": "https:\/\/blog.xiaoz.org",
     "help_url":"https://dwz.ovh/gnae4",
-    "version": "1.0.2",
-    "update": "2024\/11\/28",
+    "version": "1.1.0",
+    "update": "2024\/12\/17",
     "author": "xiaoz<xiaoz93@outlook.com>",
     "screenshot": "https://v.png.pub/imgs/2024/11/27/c01894e5d9e0d850.png",
     "demo":"https://nav.rss.ink",
     "require":{
-        "min":"0.9.36",
+        "min":"1.0.0",
         "max":""
     },
     "config": {

@@ -323,6 +323,7 @@ $page = $page.'.php';
 
 function check_auth($user,$password){
     if ( !is_login() ) {
+        // exit("dsdfd");
         $msg = "<h3>认证失败，请<a href = 'index.php?c=login'>重新登录</a>！</h3>";
         require('templates/admin/403.php');
         exit;

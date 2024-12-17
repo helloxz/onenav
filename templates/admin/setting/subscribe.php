@@ -61,7 +61,7 @@
         <div class="layui-form-item">
             <button class="layui-btn" lay-submit="" lay-filter="set_subscribe">保存设置</button>
             <button class="layui-btn" lay-submit="" lay-filter="reset_subscribe">删除订阅</button>
-            <a class="layui-btn layui-btn-danger" rel = "nofollow" target = "_blank" title = "点此购买订阅" href="https://dwz.ovh/69h9q"><i class="fa fa-shopping-cart"></i> 购买订阅</a>
+            <a class="layui-btn layui-btn-danger" onclick="buySubscribe('<?php echo get_host(); ?>')" rel = "nofollow" title = "点此购买订阅" href="javascript:;"><i class="fa fa-shopping-cart"></i> 购买订阅</a>
         </div>
 
     </form>
@@ -120,6 +120,12 @@
 <?php include_once(dirname(__DIR__).'/footer.php'); ?>
 
 <script>
+
+    // 购买订阅
+    function buySubscribe(url) {
+        // 新窗口打开购买订阅页面
+        window.open("https://shop.xiuping.net/onenav/index?domain=" + url);
+    }
     
     //获取可更新版本
     function available_version() {

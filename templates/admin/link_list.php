@@ -9,9 +9,9 @@
     <div class="layui-col-lg12">
       <div class="page-msg">
         <ol>
-          <li>仅 5iux/heimdall/tushan2/webstack 支持自定义图标，其余主题均自动获取链接图标。</li>
+          <li>仅 default2/5iux/heimdall/tushan2/webstack 支持自定义图标，其余主题均自动获取链接图标。</li>
           <li>分类的私有属性优先级高于链接的私有属性</li>
-          <li>权重数字越大，排序越靠前</li>
+          <li>权重数字越大，链接排序越靠前</li>
         </ol>
       </div>
     </div>
@@ -39,15 +39,23 @@
         <div style="width:50px;display: inline-block;"></div>
 
         <!-- 顶部搜索 -->
-        <div class="layui-inline">
+        <div class="layui-inline" style="border-right:1px solid #ccc;">
             <div class="layui-input-inline">
                 <input type="text" name="keyword" id="keyword" placeholder="请输入关键词" autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-input-inline" style="width: 100px;">
+            <div class="layui-input-inline" style="width: 70px;">
                 <button class="layui-btn" lay-submit lay-filter="search_keyword">搜索</button>
             </div>
         </div>
         <!-- 顶部搜索END -->
+
+        <!-- 批量检测 -->
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="batch_check">批量检测</button>
+            </div>
+        </div>
+        <!-- 批量检测END -->
 
     </div>
     </form>
@@ -128,6 +136,59 @@ layui.use(['table','form'], function(){
         });
     });
 
+    // 提交批量检测
+    form.on('submit(batch_check)', function(data){
+        let content = `
+<ul>
+<li>1. 此功能仅订阅用户可用！</li>
+<li>2. 检测较为耗时，检测期间请勿关闭和刷新此页面！</li>
+<li>3. 检测结果仅供参考，无法确保100%准确，具体以实际访问为准！</li>
+</ul>
+        `;
+        // 弹出确认提示
+        layer.confirm(content, {
+            btn: ['开始检测','取消'],
+            title: '即将对链接进行批量检测！',
+            area: ['400px', 'auto']
+
+        }, function(){
+            // 关闭确认提示
+            layer.closeAll('dialog');
+            // 显示全局加载
+            var index = layer.load(1);
+            $.ajax({
+                url: '/index.php?c=api&method=batch_check_links',
+                type: 'GET',
+                success: function(response) {
+                    // 请求成功后执行的代码
+                    if( response.code == 200 ) {
+                        // 关闭全局加载
+                        layer.close(index);
+                        layer.msg("批量检测成功！",{icon:1});
+                        // 2s后重新载入页面
+                        setTimeout(function(){
+                            location.reload();
+                        },2000);
+                    }
+                    else{
+                        layer.msg(response.msg,{icon:5});
+                        // 关闭全局加载
+                        layer.close(index);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    layer.close(index);
+                    // 请求出错时执行的代码
+                    console.log(error);
+                    layer.msg("批量检测失败！",{icon:5});
+                }
+            });
+        }, function(){
+            // 取消后执行的代码
+        });
+        return false;
+    });
+
     // 提交搜索
     form.on('submit(search_keyword)', function(data){
         console.log(data.field);
@@ -180,8 +241,22 @@ layui.use(['table','form'], function(){
                     return up_time;
                 }
                 
-            }} 
-            ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
+            }}
+            ,{field: 'check_status', title: '状态', width: 80,sort:true,templet:function(d){
+                let title = `检测时间：${d.last_checked_time}`; 
+                if(d.check_status == 1) {
+                    return `<span title="${title}" class="link-status-text layui-badge layui-bg-green">正常</span>`;
+                }
+                else if(d.check_status == 2) {
+                    return `<span title="${title}" class="link-status-text layui-badge">异常</span>`;
+                }
+                else if(d.check_status == 3) {
+                    return `<span title="${title}" class="link-status-text layui-badge layui-bg-cyan">未知</span>`;
+                }
+                else {
+                    return `<span title="${title}" class="link-status-text layui-badge layui-bg-gray">未检测</span>`;
+                }
+            }}
             ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
                     if(d.property == 1) {
                         return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
@@ -190,6 +265,7 @@ layui.use(['table','form'], function(){
                         return '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger">否</button>';
                     }
             }}
+            ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
             ,{field: 'click', title: '点击数',width:90,sort:true}
             ,{fixed: 'right', title:'操作', toolbar: '#link_operate'}
             ]]
@@ -252,7 +328,21 @@ function reset_query(){
                 }
                 
             }} 
-            ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
+            ,{field: 'check_status', title: '状态', width: 80,sort:true,templet:function(d){
+                let title = `检测时间：${d.last_checked_time}`; 
+                if(d.check_status == 1) {
+                    return `<span title="${title}" class="link-status-text layui-badge layui-bg-green">正常</span>`;
+                }
+                else if(d.check_status == 2) {
+                    return `<span title="${title}" class="link-status-text layui-badge">异常</span>`;
+                }
+                else if(d.check_status == 3) {
+                    return `<span title="${title}" class="link-status-text layui-badge layui-bg-cyan">未知</span>`;
+                }
+                else {
+                    return `<span title="${title}" class="link-status-text layui-badge layui-bg-gray">未检测</span>`;
+                }
+            }}
             ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
                     if(d.property == 1) {
                         return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
@@ -261,6 +351,7 @@ function reset_query(){
                         return '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger">否</button>';
                     }
             }}
+            ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
             ,{field: 'click', title: '点击数',width:90,sort:true}
             ,{fixed: 'right', title:'操作', toolbar: '#link_operate'}
             ]]
@@ -268,7 +359,8 @@ function reset_query(){
         // 渲染链接列表END
     })
 }
-    
+
+
     
 </script>
 <?php include_once('footer.php'); ?>

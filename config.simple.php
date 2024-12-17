@@ -9,12 +9,10 @@ $db = new medoo([
 
 //用户名
 define('USER','{username}');
-//密码
-define('PASSWORD','{password}');
+// 加密后的密码
+define('ENCRYPTED_PASSWORD','{encrypted_password}');
 //邮箱，用于后台Gravatar头像显示
 define('EMAIL','{email}');
-//token参数，API需要使用，0.9.19版本这个废弃了，请通过后台设置
-define('TOKEN','xiaoz.me');
 //主题风格,0.9.18废弃了，请通过后台设置
 define('TEMPLATE','default');
 
@@ -31,4 +29,4 @@ $site_setting['description']    =   'OneNav是一款使用PHP + SQLite3开发的
 
 //这两项不要修改
 $site_setting['user']           =   USER;
-$site_setting['password']       =   PASSWORD;
+$site_setting['password']       =   ENCRYPTED_PASSWORD;
