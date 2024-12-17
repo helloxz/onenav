@@ -2613,7 +2613,239 @@ class Api {
             $this->return_json(-2000,'','failure');
         }
     }
+
+    /**
+     * name: 批量检测链接
+     * description:check_status，0：未检测，1：正常，2：异常，3：未知（比如启用了cf）
+     */
+    public function batch_check_links(){
+        set_time_limit(1200); // 设置执行最大时间为20分钟
+        // 验证授权
+        $this->auth($token);
+        // 验证订阅
+        $this->check_is_subscribe();
+
+        // 记录开始时间
+        $start_time = microtime(true);
+
+        // 获取所有链接
+        $links = $this->db->select('on_links', '*');
+
+        // 设置并发限制（最大30个并发）
+        $max_concurrent_requests = 30;
+        $multi_curl = curl_multi_init();  // 初始化curl_multi
+        $curl_handles = [];  // 存储curl句柄
+        $link_count = count($links);  // 获取链接数量
+        $completed_links = 0;  // 已完成检测的链接数
+
+        // 设置curl超时时间为20分钟（1200秒）
+        $timeout = 10;
+
+        // 错误链接
+        $error_num = 0;
+
+        // 并发处理每个链接
+        foreach ($links as $link) {
+            // 创建一个curl句柄
+            $ch = curl_init();
+
+            // 设置curl选项
+            curl_setopt($ch, CURLOPT_URL, $link['url']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  // 返回内容而不是输出
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);  // 设置请求超时时间
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);  // 设置连接超时时间
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);  // 跟随重定向
+            // 设置UA
+            curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36");
+            curl_setopt($ch, CURLOPT_HTTPGET, true);  // 确保使用GET请求
+            curl_setopt($ch, CURLOPT_HEADER, true);  // 获取响应头
+
+            // 将curl句柄加入到multi句柄中
+            curl_multi_add_handle($multi_curl, $ch);
+
+            // 存储每个链接的ID，方便回调时更新状态
+            $curl_handles[$link['id']] = $ch;
+        }
+
+        // 执行curl请求并监听
+        do {
+            $status = curl_multi_exec($multi_curl, $active);  // 执行请求
+            if ($status > 0) {
+                // 如果发生错误，输出错误信息
+                // echo "Curl error: " . curl_multi_strerror($status);
+            }
+
+            // 等待活动的请求完成
+            if ($active) {
+                curl_multi_select($multi_curl, 1);  // 阻塞直到有活动的请求
+            }
+        } while ($active);
+
+        // 处理每个请求的返回结果
+        foreach ($curl_handles as $id => $ch) {
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);  // 获取HTTP状态码
+            $error = curl_error($ch);  // 获取cURL错误信息
+            
+            $header = curl_multi_getcontent($ch);  // 获取完整的响应内容，包括头部
+            // 获取Server头
+            preg_match('/^Server:\s*(.*)$/mi', $header, $matches);
+            $server_header = isset($matches[1]) ? $matches[1] : '';  // 获取Server头的值
+            // 获取当前时间戳
+            $last_checked_time = date('Y-m-d H:i:s');
+
+            // 判断链接是否有效，HTTP状态码大于400视为异常，超时或其他错误也视为异常
+            if ($error || $http_code >= 400) {
+                // 判断Server头中是否包含cloudflare和waf，不区分大小写
+                if (stripos($server_header, 'cloudflare') !== false || stripos($server_header, 'waf') !== false) {
+                    $check_status = 3;  // 未知
+                } else {
+                    $check_status = 2;  // 异常
+                    // 错误数量+1
+                    $error_num++;
+                }
+            } else {
+                $check_status = 1;  // 正常
+            }
+
+            // 更新数据库字段
+            $this->db->update('on_links', [
+                'check_status' => $check_status,
+                'last_checked_time' => $last_checked_time
+            ], ['id' => $id]);
+
+            // 删除curl句柄，释放资源
+            curl_multi_remove_handle($multi_curl, $ch);
+            curl_close($ch);  // 关闭curl句柄
+
+            // 完成一个链接的检测
+            $completed_links++;
+        }
+
+        // 关闭multi句柄
+        curl_multi_close($multi_curl);
+
+        // 记录结束时间
+        $end_time = microtime(true);
+
+        // 计算总共花费的时间
+        $elapsed_time = $end_time - $start_time;
+        // 精确到s就行
+        $elapsed_time = round($elapsed_time, 2);
+
+        // 返回成功
+        $this->return_json(200, [
+            'completed_links' => $completed_links,
+            'elapsed_time' => $elapsed_time,
+            'error_num' => $error_num
+        ], 'success');
+    }
+
+    // 获取过渡页API
+    public function transition_page(){
+        //获取当前站点信息
+        $transition_page = $this->db->get('on_options','value',[ 'key'  =>  "s_transition_page" ]);
+        $transition_page = unserialize($transition_page);
+        // 返回数据
+        $this->return_json(200,$transition_page,'success');
+    }
+    
+    /**
+     * AI检索
+     */
+    public function ai_search() {
+        set_time_limit(1200); // 设置执行最大时间为20分钟
+    
+        // 验证授权
+        $this->auth($token);
+    
+        // 验证订阅
+        $this->check_is_subscribe();
+
+        // 获取用户输入
+        $content = $_GET['content'];
+    
+        // 查询出所有链接，只需要url, title, description, url_standby字段
+        $links = $this->db->select('on_links', ['url', 'title', 'description', 'url_standby']);
+    
+        // 将链接数据转换为AI需要的JSON格式
+        $bookmarks = [];
+        foreach ($links as $link) {
+            $bookmarks[] = [
+                'title' => $link['title'],
+                'url' => $link['url'],
+                'url_standby' => $link['url_standby'],
+                'description' => $link['description']
+            ];
+        }
+        // 将数据转换为JSON格式
+        $bookmarks = json_encode($bookmarks);
+    
+        // 创建AI请求的消息内容
+        $messages = [
+            [
+                "role" => "system",
+                "content" => "我会给你一段JSON格式的书签数据，其中包含每个链接的标题、URL、标签和描述等信息。你需要根据用户提供的指令或关键词，结合你所学的知识判断，并智能匹配与之相关的链接。请根据关键词的相关性来排序匹配结果，并返回匹配的链接列表以及对应的名称。
+
+在返回匹配的链接时，确保：
+1. 返回的链接与用户提供的关键词高度相关，优先匹配精确相关的内容。
+2. 根据相关性将结果按从高到低排序，以确保最相关的链接出现在列表的前面。
+3. 对于匹配结果，再根据你所学的知识推荐额外的5个相关链接，确保这些推荐的链接也与用户的需求相关。
+
+例如，用户输入“AI技术”，如果书签数据中有相关的AI资源，你需要返回相关的链接列表，并根据关键词“AI”排序结果。同时，你还应该推荐额外的5个相关链接，帮助用户发现更多有价值的资源。
+"
+            ],
+            [
+                "role" => "user",
+                "content" => $bookmarks  // 你可以根据实际需求修改用户输入
+            ],
+            [
+                "role" => "user",
+                "content" => $content  // 你可以根据实际需求修改用户输入
+            ]
+        ];
+
+        // var_dump($messages);
+    
+        // 发送请求到AI接口
+        $response = $this->send_to_ai($bookmarks, $messages);
+    
+        echo $response;
+    }
+    
+    private function send_to_ai($bookmarks, $messages) {
+        // 准备请求数据
+        $data = [
+            'model' => 'qwen-plus',
+            'messages' => $messages,
+            'stream' => false
+        ];
+    
+        // 设置请求头和授权信息
+        $headers = [
+            'Content-Type: application/json',
+            'Authorization: Bearer sk-xxx'  // 用你的实际API密钥替换
+        ];
+    
+        // 使用cURL发送请求
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    
+        // 获取响应并关闭cURL
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        // var_dump($response);
+        // exit;
+    
+        // 解析响应
+        return $response;
+    }
     
 }
+
 
 
