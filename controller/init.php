@@ -91,6 +91,10 @@ function init($data){
     if( !preg_match($p_patt,$data['password']) ) {
         err_msg(-2000,'密码格式不正确！');
     }
+    // 验证邮箱是否合法
+    if( !filter_var($data['email'],FILTER_VALIDATE_EMAIL) ) {
+        err_msg(-2000,'邮箱格式不正确！');
+    }
     $config_file = "data/config.php";
     //检查配置文件是否存在，存在则不允许设置
     if( file_exists($config_file) ) {
