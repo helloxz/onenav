@@ -5,6 +5,9 @@
 // 载入辅助函数
 require('functions/helper.php');
 
+// 检查明文密码
+unSafe();
+
 //检查认证
 check_auth($site_setting['user'],$site_setting['password']);
 

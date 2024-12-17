@@ -234,6 +234,6 @@ function unSafe() {
     $password = PASSWORD;
     
     if( isset($password) && $password !== 'PASSWORD' ) {
-        exit("由于安全升级，请删除站点目录下的 data/config.php 文件后，重新完成初始化！");
+        exit("由于安全升级，请删除站点目录下的 data/config.php 文件后，重新完成初始化，此操作不会影响数据！");
     }
 }
