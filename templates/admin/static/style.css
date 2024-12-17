@@ -240,3 +240,6 @@
     text-align: right;
     float:right;
 }
+.link-status-text{
+    cursor: pointer;
+}

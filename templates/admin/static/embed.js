@@ -42,31 +42,8 @@ function set_icon_name(){
 
 //获取icon名称
 function get_icon_name(){
-  let icon_name;
-  //从表单获取
-  let tmp_name = $("#font_icon").val();
-  if( tmp_name == undefined ) {
-    return false;
-  }
-  
-  tmp_name = tmp_name.split("/");
-  tmp_name = tmp_name.pop();
-  tmp_name = tmp_name.split(".");
-  tmp_name = tmp_name[0];
-  icon_name = tmp_name;
-  //如果不存在，则从session获取
-  if( icon_name == "" || icon_name == undefined ) {
-    icon_name = sessionStorage.icon_name;
-  }
-  //如果session也不存在，则重新设置一个
-  if( icon_name == "" || icon_name == undefined ) {
-    set_icon_name();
-    icon_name = sessionStorage.icon_name;
-  }
-
-  //最后返回
-  return icon_name;
-  
+  // console.log('this?');
+  return getRandomString(6);
 }
 
 //获取老图标的完整路径
@@ -210,7 +187,21 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
           }
           
       }} 
-      ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
+      ,{field: 'check_status', title: '状态', width: 80,sort:true,templet:function(d){
+        let title = `检测时间：${d.last_checked_time}`; 
+        if(d.check_status == 1) {
+            return `<span title="${title}" class="link-status-text layui-badge layui-bg-green">正常</span>`;
+          }
+          else if(d.check_status == 2) {
+            return `<span title="${title}" class="link-status-text layui-badge">异常</span>`;
+          }
+          else if(d.check_status == 3) {
+            return `<span title="${title}" class="link-status-text layui-badge layui-bg-cyan">未知</span>`;
+          }
+          else {
+            return `<span title="${title}" class="link-status-text layui-badge layui-bg-gray">未检测</span>`;
+          }
+      }}
       ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
             if(d.property == 1) {
                 return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
@@ -219,6 +210,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
                 return '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger">否</button>';
             }
       }}
+      ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
       ,{field: 'click', title: '点击数',width:90,sort:true}
       ,{fixed: 'right', title:'操作', toolbar: '#link_operate'}
     ]]
@@ -547,7 +539,21 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
             }
             
         }} 
-        ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
+        ,{field: 'check_status', title: '状态', width: 80,sort:true,templet:function(d){
+          let title = `检测时间：${d.last_checked_time}`; 
+          if(d.check_status == 1) {
+              return `<span title="${title}" class="link-status-text layui-badge layui-bg-green">正常</span>`;
+            }
+            else if(d.check_status == 2) {
+              return `<span title="${title}" class="link-status-text layui-badge">异常</span>`;
+            }
+            else if(d.check_status == 3) {
+              return `<span title="${title}" class="link-status-text layui-badge layui-bg-cyan">未知</span>`;
+            }
+            else {
+              return `<span title="${title}" class="link-status-text layui-badge layui-bg-gray">未检测</span>`;
+            }
+        }}
         ,{field: 'property', title: '私有', width: 80, sort: true,templet: function(d){
               if(d.property == 1) {
                   return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
@@ -556,6 +562,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
                   return '<button type="button" class="layui-btn layui-btn-xs layui-btn-danger">否</button>';
               }
         }}
+        ,{field: 'weight', title: '权重', width: 75,sort:true,edit: 'text'}
         ,{field: 'click', title: '点击数',width:90,sort:true}
         ,{fixed: 'right', title:'操作', toolbar: '#link_operate'}
       ]]
@@ -829,7 +836,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
         layer.msg(data.err_msg, {icon: 5});
       }
     });
-    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
   //识别链接信息
@@ -1009,7 +1016,8 @@ function check_db_down(){
     url:"/data/onenav.db3",
     statusCode: {
       200: function() {
-        $("#console_log").append("危险！！！危险！！！危险！！！数据库可被下载，请尽快参考帮助文档：https://dwz.ovh/jvr2t 加固安全设置！<br /><br />");
+        let msg = `危险！！！危险！！！危险！！！数据库可被下载，请尽快参考帮助文档：<a target = "_blank" href = "https://dwz.ovh/jvr2t">https://dwz.ovh/jvr2t</a> 加固安全设置！<br /><br />`;
+        $("#console_log").append(msg);
       },
       403:function() {
         $("#console_log").append("您的数据库看起来是安全的！<br />");

@@ -7,8 +7,7 @@
     <!-- 说明提示框 -->
     <div class="layui-col-lg12">
       <div class="setting-msg">
-       <p>1. 关于字体图标的说明请参考帮助文档：<a href="https://dwz.ovh/7nr1f" target = "_blank" title = "字体图标使用说明">https://dwz.ovh/7nr1f</a></p>
-       <p>2. 权重越大，排序越靠前</p>
+       <p>注意：权重越大，分类排序越靠前</p>
       </div>
     </div>
     <!-- 说明提示框END -->

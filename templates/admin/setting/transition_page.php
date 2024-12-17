@@ -39,12 +39,12 @@
             <div class="layui-form-mid layui-word-aux">管理员停留时间，单位秒</div>
         </div>
 
-        <div class="layui-form-item layui-form-text">
+        <!-- <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">过渡页菜单(订阅可用)</label>
             <div class="layui-input-block">
                 <textarea name = "menu" placeholder="请参考帮助文档进行设置！" rows = "4" class="layui-textarea"><?php echo $transition_page['menu']; ?></textarea>
             </div>
-        </div>
+        </div> -->
 
         <!-- <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">自定义footer，支持HTML(订阅可用)</label>
