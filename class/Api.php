@@ -2693,17 +2693,43 @@ class Api {
             // 获取当前时间戳
             $last_checked_time = date('Y-m-d H:i:s');
 
-            // 判断链接是否有效，HTTP状态码大于400视为异常，超时或其他错误也视为异常
+            // 定义 Web 服务器列表
+            $web_servers = [
+                'cloudflare',
+                'waf',
+                // 可以根据需要添加更多的 Web 服务器类型
+                'AkamaiGHost',
+                'JDCloudStarshield'
+            ];
+
+            // 假设 $error 和 $http_code 已经定义
+            // 假设 $server_header 已经从响应头中获取
+
             if ($error || $http_code >= 400) {
-                // 判断Server头中是否包含cloudflare和waf，不区分大小写
-                if (stripos($server_header, 'cloudflare') !== false || stripos($server_header, 'waf') !== false) {
-                    $check_status = 3;  // 未知
-                } else {
-                    $check_status = 2;  // 异常
+                // 默认状态为异常
+                $check_status = 2;  // 异常
+                // 遍历 Web 服务器列表，检查是否包含任何已知的 Web 服务器标识
+                foreach ($web_servers as $server) {
+                    if (stripos($server_header, $server) !== false) {
+                        // 如果找到匹配的服务器，设置为未知状态
+                        $check_status = 3;  // 未知
+                        break;  // 一旦找到匹配的服务器，跳出循环
+                    }
+                }
+                // 如果没有匹配到任何已知的 Web 服务器，则认为是异常
+                if ($check_status == 2) {
                     // 错误数量+1
                     $error_num++;
                 }
-            } else {
+            }
+            else if( $http_code === 0 ) {
+                // HTTP 状态码为 0，表示链接超时，或者SSL证书过期
+                $check_status = 2;  // 异常
+                // 错误数量+1
+                $error_num++;
+            }
+            else {
+                // HTTP 状态码小于 400，表示正常
                 $check_status = 1;  // 正常
             }
 

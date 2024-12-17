@@ -64,7 +64,7 @@
     </form>
     <div style = "padding-left:30px;"> <a style="color:#FFFFFF;" href="https://dwz.ovh/isbyv" target = "_blank" rel = "nofollow">忘记密码？</a> </div>
   </div>
-  <footer>© 2023 Powered by <a style = "color:#FFFFFF;padding-left:6px;" href = "https://www.onenav.top/" target = "_blank" title = "开源免费书签管理系统"> OneNav</a></footer>
+  <footer>© 2025 Powered by <a style = "color:#FFFFFF;padding-left:6px;" href = "https://www.onenav.top/" target = "_blank" title = "开源免费书签管理系统"> OneNav</a></footer>
 </body>
 <script>
   //自己封装的弹出框

@@ -5,6 +5,8 @@
 
 // 载入辅助函数
 require('functions/helper.php');
+// 检查明文密码
+unSafe();
 
 $username = $site_setting['user'];
 // 加密后的密码
