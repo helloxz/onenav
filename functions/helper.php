@@ -24,7 +24,7 @@ function getIP() {
 
 
 function is_login(){
-    $key = md5(USER.PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
+    $key = md5(USER.ENCRYPTED_PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
     //获取session
     $session = $_COOKIE['key'];
     //如果已经成功登录
@@ -224,5 +224,16 @@ function check_all_cat(){
             exit;
         }
         
+    }
+}
+
+/**
+ * name：检查是否存在明文密码参数，如果存在，则提示重新初始化
+ */
+function unSafe() {
+    $password = PASSWORD;
+    
+    if( isset($password) && $password !== 'PASSWORD' ) {
+        exit("由于安全升级，请删除站点目录下的 data/config.php 文件后，重新完成初始化！");
     }
 }
