@@ -62,6 +62,7 @@
             <button class="layui-btn" lay-submit="" lay-filter="set_subscribe">保存设置</button>
             <button class="layui-btn" lay-submit="" lay-filter="reset_subscribe">删除订阅</button>
             <a class="layui-btn layui-btn-danger" onclick="buySubscribe('<?php echo get_host(); ?>')" rel = "nofollow" title = "点此购买订阅" href="javascript:;"><i class="fa fa-shopping-cart"></i> 购买订阅</a>
+            <a class="layui-btn layui-btn-danger" onclick="openRedeem()" rel = "nofollow" title = "点此使用兑换码" href="javascript:;"><i class="layui-icon layui-icon-gift"></i> 使用兑换码</a>
         </div>
 
     </form>
@@ -120,7 +121,19 @@
 <?php include_once(dirname(__DIR__).'/footer.php'); ?>
 
 <script>
-
+    // 打开兑换码的iframe窗口
+    function openRedeem() {
+        layer.open({
+            type: 2,
+            title: '使用兑换码',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['350px', '450px'],
+            content: '/index.php?theme=default2#/redeem' //iframe的url
+            // content:'http://localhost:4000/#/redeem'
+        }); 
+        return false;
+    }
     // 购买订阅
     function buySubscribe(url) {
         // 新窗口打开购买订阅页面

@@ -51,11 +51,19 @@
 
         <!-- 批量检测 -->
         <div class="layui-inline">
-            <div class="layui-input-inline">
+            <div style="width: 90px;" class="layui-input-inline">
                 <button class="layui-btn" lay-submit lay-filter="batch_check">批量检测</button>
             </div>
         </div>
         <!-- 批量检测END -->
+
+        <!-- AI按钮 -->
+        <div class="layui-inline" >
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="ai_search"><i style="color:#ff5722;font-weight:800;" class="layui-icon layui-icon-fire"></i> AI检索</button>
+            </div>
+        </div>
+        <!-- AI按钮END -->
 
     </div>
     </form>
@@ -186,6 +194,29 @@ layui.use(['table','form'], function(){
         }, function(){
             // 取消后执行的代码
         });
+        return false;
+    });
+
+    // 点击AI
+    form.on('submit(ai_search)', function(data){
+        // alert("dsdsd");
+        var index = layer.open({
+            type: 2,
+            title: false,
+            shadeClose: true,
+            maxmin: false, //开启最大化最小化按钮
+            area: ['860px', '675px'],
+            moveOut:true,
+            content: '/index.php?theme=default2#/ai'
+        });
+        // 重新给对应层设定 width、top 等
+        // layer.style(index, {
+        //     'border-radius':'18px',
+        // });
+        // layer.style(index, {
+        //     width: '1000px',
+        //     top: '10px'
+        // });
         return false;
     });
 
