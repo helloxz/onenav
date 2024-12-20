@@ -1588,15 +1588,14 @@ class Api {
      * 更新option
      */
     public function set_option($key,$value = '') {
+        // 验证授权
+        $this->auth($token);
         $key = htmlspecialchars(trim($key));
         //如果key是空的
         if( empty($key) ) {
             $this->err_msg(-2000,'键不能为空！');
         }
-        //鉴权
-        if( !$this->is_login() ) {
-            $this->err_msg(-1002,'Authorization failure!');
-        }
+        
 
         $count = $this->db->count("on_options", [
             "key" => $key
@@ -1636,6 +1635,54 @@ class Api {
             }
         }
 
+    }
+    /**
+     * 新的设置接口
+     */
+    public function new_set_option(){
+        // 验证授权
+        $this->auth($token);
+        // 获取key
+        $key = trim(@$_POST['key']);
+        // 获取value
+        $value = trim(@$_POST['value']);
+        $key = htmlspecialchars(trim($key));
+        //如果key是空的
+        if( empty($key) ) {
+            $this->return_json(-2000,'','key不能为空！');
+        }
+        
+
+        $count = $this->db->count("on_options", [
+            "key" => $key
+        ]);
+        
+        //如果数量是0，则插入，否则就是更新
+        if( $count === 0 ) {
+            try {
+                $this->db->insert("on_options",[
+                    "key"   =>  $key,
+                    "value" =>  $value
+                ]);
+                $this->return_json(200,'','设置成功！');
+            } catch (\Throwable $th) {
+                $this->return_json(-2000,'','设置失败！');
+            }
+        }
+        //更新数据
+        else if( $count === 1 ) {
+            try {
+                $this->db->update("on_options",[
+                    "value"     =>  $value
+                ],[
+                    "key"       =>  $key
+                ]);
+                
+                $this->return_json(200,'','设置已更新！');
+            } catch (\Throwable $th) {
+                $this->return_json(-2000,'','设置失败！');
+            }
+        }
     }
     /**
      * 更新option，返回BOOL值
@@ -2206,6 +2253,8 @@ class Api {
         $data['link_num'] = $this->db->count("on_links");
         //获取用户名
         $data['username'] = USER;
+        // 获取用户邮箱
+        $data['email'] = EMAIL;
 
         //返回JSON数据
         $this->return_json(200,$data,"success");
@@ -2776,99 +2825,216 @@ class Api {
     }
     
     /**
-     * AI检索
+     * AI检索 (流式输出)
      */
     public function ai_search() {
-        set_time_limit(1200); // 设置执行最大时间为20分钟
-    
+        // 设置超时时间为120s
+        set_time_limit(120);
         // 验证授权
         $this->auth($token);
-    
+
         // 验证订阅
         $this->check_is_subscribe();
 
+        // 从数据库获取API信息
+        $api = $this->get_options("ai_setting");
+        // 如果查询失败
+        if( !$api ) {
+            $this->return_json(-2000,'','获取参数失败！');
+        }
+        // 如果没有启用
+        if( $api->status === 'off' ) {
+            $this->return_json(-2000,'','AI功能未启用！');
+        }
+        // 查询到了结果
+        $url = $api->url;
+        $key = $api->sk;
+        $model = $api->model;
+
+        while (ob_get_level()) {
+            ob_end_flush();
+        }
+        ob_implicit_flush(true);
+        ini_set('zlib.output_compression', 'Off');
+        header('X-Accel-Buffering: no');
+
+        // 设置适当的响应头部
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        
+
         // 获取用户输入
-        $content = $_GET['content'];
-    
+        $content = $_POST['content'];
+        $feature = empty($_POST['feature']) ? 'search' : $_POST['feature'];
+
         // 查询出所有链接，只需要url, title, description, url_standby字段
-        $links = $this->db->select('on_links', ['url', 'title', 'description', 'url_standby']);
-    
-        // 将链接数据转换为AI需要的JSON格式
-        $bookmarks = [];
-        foreach ($links as $link) {
-            $bookmarks[] = [
-                'title' => $link['title'],
-                'url' => $link['url'],
-                'url_standby' => $link['url_standby'],
-                'description' => $link['description']
+        $links = $this->db->select('on_links', ['url', 'title', 'description']);
+
+        if($feature == "search") {
+            // 设置温度
+            $temperature = 0.1;
+            $top_p = 0.7;
+            // 将链接数据转换为AI需要的JSON格式
+            $bookmarks = [];
+            foreach ($links as $link) {
+                $bookmarks[] = [
+                    'title' => $link['title'],
+                    'url' => $link['url'],
+                    'description' => $link['description']
+                ];
+            }
+
+            // 将数据转换为JSON格式
+            $bookmarks = json_encode($bookmarks);
+
+            // 创建AI请求的消息内容
+            $messages = [
+                [
+                    "role" => "system",
+                    "content" => "
+                    用户会给你一段JSON格式的书签数据，其中包含每个链接的标题、URL和描述（描述可能为空）等信息。你需要根据用户提供的关键词，智能匹配与之相关的链接，并推荐3个额外的相关链接。请严格遵循以下规则：
+
+### 规则：
+
+1. **匹配链接**：
+    - **仅使用提供的书签数据进行匹配**，不得引用或使用任何其他外部信息。
+    - **对于没有描述或描述不充分的URL**，请基于你的知识推断该URL的含义，以便进行准确匹配。
+    - 返回的匹配链接必须与用户提供的关键词高度相关，优先匹配精确相关的内容。
+    - 根据相关性将匹配结果按从高到低排序，确保最相关的链接出现在列表前面。
+    - 匹配的结果不超过5个链接，如果无法匹配任何链接，请提醒用户。
+
+2. **推荐额外链接**：
+    - **推荐的额外3个链接不来自用户提供的JSON数据**，应基于你所学的知识进行推荐。
+    - 确保这些推荐的链接与用户的需求相关，补充和扩展匹配结果。
+    - 不要推荐用户提供的JSON内容中的任何链接。
+
+3. **输出格式**：
+    - **匹配结果**：以列表形式返回，应包含链接标题、URL和简短的链接描述，优先使用用户JSON中的标题和描述，如果没有或不完善你可以补充。
+    - **推荐结果**：以列表形式返回，应包含链接标题、URL和简短的链接描述。
+                    "
+                ],
+                [
+                    "role" => "user",
+                    "content" => "JSON书签列表为：" . $bookmarks  // 你可以根据实际需求修改用户输入
+                ],
+                [
+                    "role" => "user",
+                    "content" => $content  // 你可以根据实际需求修改用户输入
+                ]
+            ];
+        }else{
+            // 设置温度
+            $temperature = 0.2;
+            $top_p = 1;
+            $messages = [
+                [
+                    "role" => "system",
+                    "content" => "请自动检测用户输入的语言。当输入内容是中文时，翻译成英文；当输入内容不是中文时，翻译成中文。只需返回翻译后的内容，不需要额外解释或描述。"
+                ],
+                [
+                    "role" => "user",
+                    "content" => $content
+                ]
             ];
         }
-        // 将数据转换为JSON格式
-        $bookmarks = json_encode($bookmarks);
-    
-        // 创建AI请求的消息内容
-        $messages = [
-            [
-                "role" => "system",
-                "content" => "我会给你一段JSON格式的书签数据，其中包含每个链接的标题、URL、标签和描述等信息。你需要根据用户提供的指令或关键词，结合你所学的知识判断，并智能匹配与之相关的链接。请根据关键词的相关性来排序匹配结果，并返回匹配的链接列表以及对应的名称。
 
-在返回匹配的链接时，确保：
-1. 返回的链接与用户提供的关键词高度相关，优先匹配精确相关的内容。
-2. 根据相关性将结果按从高到低排序，以确保最相关的链接出现在列表的前面。
-3. 对于匹配结果，再根据你所学的知识推荐额外的5个相关链接，确保这些推荐的链接也与用户的需求相关。
 
-例如，用户输入“AI技术”，如果书签数据中有相关的AI资源，你需要返回相关的链接列表，并根据关键词“AI”排序结果。同时，你还应该推荐额外的5个相关链接，帮助用户发现更多有价值的资源。
-"
-            ],
-            [
-                "role" => "user",
-                "content" => $bookmarks  // 你可以根据实际需求修改用户输入
-            ],
-            [
-                "role" => "user",
-                "content" => $content  // 你可以根据实际需求修改用户输入
-            ]
-        ];
-
-        // var_dump($messages);
-    
-        // 发送请求到AI接口
-        $response = $this->send_to_ai($bookmarks, $messages);
-    
-        echo $response;
-    }
-    
-    private function send_to_ai($bookmarks, $messages) {
-        // 准备请求数据
-        $data = [
-            'model' => 'qwen-plus',
-            'messages' => $messages,
-            'stream' => false
-        ];
-    
-        // 设置请求头和授权信息
-        $headers = [
-            'Content-Type: application/json',
-            'Authorization: Bearer sk-xxx'  // 用你的实际API密钥替换
-        ];
-    
-        // 使用cURL发送请求
+        // cURL 请求设置
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    
-        // 获取响应并关闭cURL
-        $response = curl_exec($ch);
-        curl_close($ch);
 
-        // var_dump($response);
-        // exit;
-    
-        // 解析响应
-        return $response;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);  // 不返回结果，进行流式输出
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer " . $key,
+            "Content-Type: application/json"
+        ]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_BUFFERSIZE, 128); // 例如，128字节
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            "model" => $model,
+            "temperature" => $temperature,
+            "top_p" => $top_p,
+            "messages" => $messages,
+            "stream" => true
+        ]));
+        
+        // 设置输出流方式
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) {
+            // 实时输出流数据
+            echo $data;
+            flush(); // 强制刷新缓冲区，确保数据实时输出
+            return strlen($data); // 返回已写入的数据长度
+
+            
+            // 查找数据中的 content 部分
+            // $pos = strpos($data, '"content":');
+            
+            // // 如果 content 存在，提取其内容
+            // if ($pos !== false) {
+            //     // 截取 content 字段内容
+            //     $content_start = strpos($data, '"content":', $pos) + 10;
+            //     $content_end = strpos($data, '"', $content_start + 1);
+                
+            //     // 提取 content 内容
+            //     $content = substr($data, $content_start, $content_end - $content_start);
+                
+            //     // 去除 content 前后的双引号（如果存在）
+            //     $content = trim($content, '"');
+
+            //     // 输出符合 SSE 格式的数据：以 'data:' 开头
+            //     echo "data: " . $content . "\n\n";
+            //     flush(); // 强制刷新缓冲区，确保数据实时输出
+            // }
+
+            // // 返回原始数据的字节长度
+            // return strlen($data);
+        });
+
+        // 执行 cURL 请求
+        curl_exec($ch);
+
+        // 关闭 cURL 会话
+        curl_close($ch);
+    }
+
+    /**
+     * name:内部获取设置选项
+     */
+    private function get_options($key) {
+        //验证授权
+        $this->auth($token);
+        //获取当前站点信息
+        $options = $this->db->get('on_options','value',[ 'key'  =>  $key ]);
+        // 判断查询结果是否为空
+        if( empty($options) ) {
+            return false;
+        }
+
+        // 把选项转为对象
+        $options = json_decode($options);
+        return $options;
+    }
+
+    /**
+     * name：外部通用获取设置选项
+     */
+    public function get_option_base(){
+        //验证授权
+        $this->auth($token);
+        // 获取key 
+        $key = htmlspecialchars( trim( $_GET['key'] ));
+        $options = $this->db->get('on_options','value',[ 'key'  =>  $key ]);
+        // 判断查询结果是否为空
+        if( empty($options) ) {
+            $this->return_json(-2000,'','获取参数失败！');
+        }
+        $result = json_decode($options);
+        // 获取成功
+        $this->return_json(200,$result,'success');
     }
     
 }
