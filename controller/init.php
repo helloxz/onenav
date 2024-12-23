@@ -13,6 +13,8 @@ function check_env() {
     //检查PHP版本，需要大于7.0小于8.0
     $php_version = floatval(PHP_VERSION);
     $uri = $_SERVER["REQUEST_URI"];
+
+    // var_dump($uri);
     
     if( ( $php_version < 7 ) || ( $php_version > 8 ) ) {
         exit("当前PHP版本{$php_version}不满足要求，需要7.0 <= PHP <= 7.4");
@@ -41,11 +43,15 @@ function check_env() {
     if( file_exists("data/config.php") ) {
         exit("配置文件已存在，无需再次初始化!");
     }
-    //检查是否是二级目录
-    $pattern = '/\/[a-z0-9\/]+$/';
-    if( preg_match_all($pattern,$uri) ) {
+    // 路径必须以/或者/index.php开头
+    if( !preg_match('/^\/|\/index.php/',$uri) ) {
         exit("暂不支持二级目录安装!");
     }
+    //检查是否是二级目录
+    // $pattern = '/\/[a-z0-9\/]+$/';
+    // if( preg_match_all($pattern,$uri) ) {
+    //     exit("暂不支持二级目录安装!");
+    // }
     return TRUE;
 }
 
