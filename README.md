@@ -22,6 +22,18 @@ OneNav 是一款功能强大且简洁高效的浏览器书签管理器，支持�
 
 ![61bac5d46d30be1c.png](https://img.rss.ink/imgs/2024/11/28/61bac5d46d30be1c.png)
 
+**AI检索**
+
+将关键词或描述告知AI，AI会智能匹配您OneNav中存在的相关链接。
+
+![](https://img.rss.ink/imgs/2024/12/20/f03f278fe1e02be7.png)
+
+**链接检测**
+
+在【OneNav 后台 - 链接管理 - 我的链接】，点击批量检测按钮，对所有链接进行状态检测，助你快速找出死链。
+
+![](https://img.rss.ink/imgs/2024/12/17/935fb2e7799ffed9.png)
+
 **右键菜单**
 
 当您将鼠标移动到链接后，可以点击鼠标右键调出**右键菜单**，右键菜单支持：打开链接、打开备用链接、复制链接、显示二维码、编辑链接、删除链接等快捷操作。
@@ -41,26 +53,6 @@ OneNav 是一款功能强大且简洁高效的浏览器书签管理器，支持�
 底部工具栏默认对访客隐藏，只有党管理员登录后才会显示，支持5个操作按钮，分别是：添加链接、返回顶部、订阅管理、系统状态、后台管理。
 
 ![12efff04c347d853.png](https://img.rss.ink/imgs/2024/11/28/12efff04c347d853.png)
-
-**支持PWA应用**
-
-PWA（Progressive Web App）是一种结合网页和原生应用优势的技术，default2主题已经支持PWA，现在可以像APP一样在手机上使用OneNav，下面以Edge手机浏览器举例说明。
-
-需要先对Edge手机浏览器进行权限设置 - 其他权限 - 打开桌面快捷方式这个权限。
-
-![d4dbef380fe34185.jpg](https://img.rss.ink/imgs/2024/11/28/d4dbef380fe34185.jpg)
-
-打开Edge底部的工具菜单栏 - 找到『添加至手机』
-
-![2a3c1702412cbfa5.jpg](https://img.rss.ink/imgs/2024/11/28/2a3c1702412cbfa5.jpg)
-
-然后确认安装。
-
-![29e6224fffdf8999.jpg](https://img.rss.ink/imgs/2024/11/28/29e6224fffdf8999.jpg)
-
-安装完毕后手机桌面上会出现一个【OneNav】图标，点击图标就能像APP一样使用OneNav啦。
-
-![76e2ce0e8390eb4e.jpg](https://img.rss.ink/imgs/2024/11/28/76e2ce0e8390eb4e.jpg)
 
 **前台编辑**
 
@@ -102,6 +94,7 @@ default2 主题使书签分类和链接管理更加高效，所有的添加、�
 ```bash
 docker run -itd --name="onenav" -p 3080:80 \
     -v /data/onenav:/data/wwwroot/default/data \
+    --restart always \
     helloz/onenav
 ```
 * 第一个`3080`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
