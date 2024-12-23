@@ -72,6 +72,8 @@ default2 主题使书签分类和链接管理更加高效，所有的添加、�
 
 ## 功能特色
 
+* 支持AI检索匹配链接
+* 支持链接批量检测
 * 支持后台管理
 * 支持私有链接
 * 支持Chrome/Firefox/Edge书签批量导入
@@ -98,12 +100,13 @@ default2 主题使书签分类和链接管理更加高效，所有的添加、�
 **Docker部署：**
 
 ```bash
-docker run -itd --name="onenav" -p 80:80 \
+docker run -itd --name="onenav" -p 3080:80 \
     -v /data/onenav:/data/wwwroot/default/data \
     helloz/onenav
 ```
-* 第一个`80`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
+* 第一个`3080`是自定义访问端口，可以自行修改，第二个`80`是容器端口，请勿修改
 * `/data/onenav`：本机挂载目录，用于持久存储Onenav数据
+* `/data/wwwroot/default/data`：容器内部路径，请勿修改，否则会造成数据丢失！
 
 > 更多说明，请参考帮助文档：https://dwz.ovh/onenav
 
@@ -119,7 +122,7 @@ docker run -itd --name="onenav" -p 80:80 \
 
 ## 鸣谢
 
-感谢`@百素`/`@itushan`的代码贡献及主题开发，以及其它OneNav贡献者和使用者，名字太多无法一一列举，还请谅解。
+感谢`@itushan`的代码贡献及主题开发，以及其它OneNav贡献者和使用者，名字太多无法一一列举，还请谅解。
 
 OneNav诞生离不开以下项目，在此表示感谢（排名不分先后）。
 

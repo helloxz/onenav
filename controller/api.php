@@ -37,7 +37,7 @@ $deny_func = [
     'set_option',
     'set_option_bool',
     'update_link_status',
-    'send_to_ai'
+    'get_options'
 ];
 // 判断是否在屏蔽列表中
 if( in_array($var_func,$deny_func) ) {
