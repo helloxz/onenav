@@ -593,8 +593,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
   form.on('submit(set_subscribe)', function(data){
     var order_id = data.field.order_id;
     var index = layer.load(1);
-    $.get('https://onenav.xiaoz.top/v1/check_subscribe.php',data.field,function(data,status){
-      
+    $.get('index.php?c=api&method=forward_order',data.field,function(data,status){
       if(data.code == 200) {
         //order_id = data.data.order_id;
         email = data.data.email;
@@ -619,8 +618,13 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
         layer.msg(data.msg, {icon: 5});
       }
 
+    })
+    .error(function(xhr,status,error){
+        // 关闭加载
+        layer.closeAll('loading');
+        layer.msg("请求失败，请检查服务器网络或联系售后！",{icon:5});
     });
-    console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+    // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
   });
   //清空订阅信息

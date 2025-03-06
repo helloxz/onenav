@@ -25,7 +25,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label" style = "width:130px;">API域名</label>
             <div class="layui-input-inline">
-                <input style = "width:400px;" type="text" readonly="readonly" id="api_domain" name="api_domain" value = "<?php echo getCurrentUrlDomain(); ?>" autocomplete="off" placeholder="OneNav API域名" class="layui-input">
+                <input style = "width:400px;" type="text" readonly="readonly" id="api_domain" name="api_domain" autocomplete="off" placeholder="OneNav API域名" class="layui-input">
             </div>
         </div>
 
@@ -58,3 +58,12 @@
 </div>
     
 <?php include_once(dirname(__DIR__).'/footer.php'); ?>
+
+<script>
+function get_api_domain(){
+    var api_domain = window.location.origin;
+    $("#api_domain").val(api_domain);
+}
+
+get_api_domain();
+</script>

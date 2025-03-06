@@ -21,6 +21,7 @@
       <div class="setting-msg">
         <p>1. 系统检测到您的域名为<strong style="color:#31BDEC;"><code><?php echo get_host(); ?></code></strong>，购买订阅时请填写此域名！</p>
         <p>2. 若域名填写错误或更换域名，请前往 <a title = "修改OneNav订阅域名" href="https://dwz.ovh/p6u2w" target="_blank">https://dwz.ovh/p6u2w</a> 修改订阅！</p>
+        <p>3. 如果遇到问题无法解决，可联系售后微信：<code>xiaozme</code>（仅限订阅用户）</p>
         <!-- <p>3. Docker用户或IP访问的用户，请参考<a href="https://dwz.ovh/cve3d" target="_blank">没有域名购买订阅</a></p> -->
       </div>
     </div>
