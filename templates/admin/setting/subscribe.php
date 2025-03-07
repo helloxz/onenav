@@ -144,9 +144,11 @@
     //获取可更新版本
     function available_version() {
         var current_version = $("#current_version").val();
-        $.get("https://onenav.xiaoz.top/v1/get_version.php",{version:current_version},function(data,status){
+        $.get("/index.php?c=api&method=getNextVersion",{version:current_version},function(data,status){
+            // console.log(data);
             $("#new_version").val(data);
         });
+        
     }
     available_version();
     //立即更新按钮
