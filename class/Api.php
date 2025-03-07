@@ -1,16 +1,27 @@
 <?php
 /**
  * name:API核心类
- * update:2024/01
+ * update:2025/03
  * author:xiaoz<xiaoz93@outlook.com>
  * blog:xiaoz.me
  */
 //载入通用函数
 require("./functions/helper.php");
-define("API_URL","https://onenav.xiaoz.top");
 class Api {
     protected $db;
     public function __construct($db){
+        // 设置API地址（xiaoz）
+        $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYueGlhb3oudG9w");
+        // 获取API服务器状态码，超时时间为2s
+        $http_code = $this->GetHeadCode($api_url,2);
+        // 如果状态码为0、301、302均视为失败
+        if( $http_code === 0 || $http_code === 301 || $http_code === 302 ) {
+            // 失败了则设置备用API地址（rss）
+            $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYucnNzLmluaw==");
+        }
+        // $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYucnNzLmluaw==");
+        // 设置常量
+        define("API_URL",$api_url);
         // 修改默认获取模式为关联数组
         $db->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $this->db = $db;
@@ -2850,6 +2861,11 @@ class Api {
         $url = $api->url;
         $key = $api->sk;
         $model = $api->model;
+        // 如果model = custom，则使用自定义模型
+        if( $model === 'custom' ) {
+            $model = $api->custom_model;
+        }
+
 
         while (ob_get_level()) {
             ob_end_flush();
@@ -3035,6 +3051,62 @@ class Api {
         $result = json_decode($options);
         // 获取成功
         $this->return_json(200,$result,'success');
+    }
+
+    /**
+     * name：后端检查验证授权
+     */
+    public function forward_order(){
+        //验证token是否合法
+        $this->auth($token);
+        // 声明一个空数组，作为请求体
+        $data = [];
+        if (!empty($_GET)) {
+            // 使用 http_build_query() 函数生成查询字符串
+            $query_string = http_build_query($_GET);
+            // 向https://onenav.xiaoz.top/v1/check_subscribe.php 发起GET请求，然后返回内容
+            // 拼接完整的 URL
+            $target_url = API_URL . '/v1/check_subscribe.php?' . $query_string;
+            echo curl_get($target_url);
+
+        } else {
+            // 返回错误
+            $this->return_json(-2000,'','参数不能为空！');
+        }
+    }
+
+    /**
+     * name:封装header方法
+     */
+    private function GetHeadCode($url, $timeout = 5) {
+        $ch = curl_init($url);
+    
+        // 设置请求方法为 HEAD
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+    
+        // 设置超时时间
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    
+        // 设置连接超时时间
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+    
+        // 忽略 SSL 证书校验
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    
+        // 执行请求
+        $result = curl_exec($ch);
+    
+        // 获取 HTTP 状态码
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+        // 获取错误信息
+        $error = curl_error($ch);
+    
+        // 关闭 curl 资源
+        curl_close($ch);
+    
+        return $httpCode;
     }
     
 }
