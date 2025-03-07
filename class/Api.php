@@ -10,15 +10,25 @@ require("./functions/helper.php");
 class Api {
     protected $db;
     public function __construct($db){
-        // 设置API地址（xiaoz）
-        $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYueGlhb3oudG9w");
-        // 获取API服务器状态码，超时时间为2s
-        $http_code = $this->GetHeadCode($api_url,2);
-        // 如果状态码为0、301、302均视为失败
-        if( $http_code === 0 || $http_code === 301 || $http_code === 302 ) {
-            // 失败了则设置备用API地址（rss）
-            $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYucnNzLmluaw==");
+        // 获取API服务器缓存
+        $api_url = $this->getFileCache("api_url");
+        
+        // 如果API地址为空，则设置API地址
+        if ($api_url == ""){
+            // 设置API地址（xiaoz）
+            $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYueGlhb3oudG9w");
+            // 获取API服务器状态码，超时时间为2s
+            $http_code = $this->GetHeadCode($api_url,2);
+            // 如果状态码为0、301、302均视为失败
+            if( $http_code === 0 || $http_code === 301 || $http_code === 302 ) {
+                // 失败了则设置备用API地址（rss）
+                $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYucnNzLmluaw==");
+            }
+            // 设置API地址缓存
+            $this->setFileCache("api_url",$api_url,60 * 60 * 24);
         }
+            
+        
         // $api_url = base64_decode("aHR0cHM6Ly9vbmVuYXYucnNzLmluaw==");
         // 设置常量
         define("API_URL",$api_url);
@@ -3108,7 +3118,63 @@ class Api {
     
         return $httpCode;
     }
+    // 读取缓存
+    private function getFileCache($key) {
+        // 定义缓存文件的路径
+        $cacheDir = __DIR__ . '/cache/';
+        $filePath = $cacheDir . md5($key) . '.cache';
     
+        // 检查文件是否存在
+        if (file_exists($filePath)) {
+            // 读取文件内容
+            $data = unserialize(file_get_contents($filePath));
+    
+            // 检查是否过期
+            if ($data['expire'] > time()) {
+                return $data['value'];
+            } else {
+                // 如果过期，删除文件
+                unlink($filePath);
+            }
+        }
+    
+        // 如果文件不存在或已过期，返回空字符串
+        return '';
+    }
+    // 设置缓存
+    private function setFileCache($key, $value, $ttl) {
+        // 定义缓存文件的路径
+        $cacheDir = __DIR__ . '/cache/';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
+        $filePath = $cacheDir . md5($key) . '.cache';
+    
+        // 计算过期时间戳
+        $expireTime = time() + $ttl;
+    
+        // 将数据和过期时间一起写入文件
+        file_put_contents($filePath, serialize(['value' => $value, 'expire' => $expireTime]));
+    }
+
+    // 获取相临的版本
+    public function getNextVersion(){
+        $this->auth($token);
+        // 获取当前版本
+        $version = trim($_GET['version']);
+        // 正则判断版本是否合法，只能是数组或.组成
+        $pattern = "/^[0-9.]+$/";
+        if( !preg_match($pattern,$version) ) {
+            echo "0.0.0";
+            exit;
+        }
+        // 请求：https://onenav.xiaoz.top/v1/get_version.php?version=1.1.1
+        $url = API_URL . '/v1/get_version.php?version=' . $version;
+        // 设置响应头为text类型
+        header('Content-Type: text/plain');
+        // 输出结果
+        echo curl_get($url);
+    }
 }
 
 

@@ -458,7 +458,7 @@ function create_sk($api) {
 //获取onenav最新版本号
 function get_latest_version() {
     try {
-        $curl = curl_init("https://git.xiaoz.me/xiaoz/onenav/raw/branch/main/version.txt");
+        $curl = curl_init("https://git.xiaoz.org/xiaoz/onenav/raw/branch/main/version.txt");
 
         curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36 Edg/100.0.1185.50");
         curl_setopt($curl, CURLOPT_FAILONERROR, true);
