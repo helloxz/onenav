@@ -113,6 +113,9 @@ docker run -itd --name="onenav" -p 3080:80 \
 
 * [https://dwz.ovh/qxsul](https://dwz.ovh/qxsul)
 
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/helloxz/onenav.svg?variant=adaptive)](https://starchart.cc/helloxz/onenav)
+
 ## 鸣谢
 
 感谢`@itushan`的代码贡献及主题开发，以及其它OneNav贡献者和使用者，名字太多无法一一列举，还请谅解。
