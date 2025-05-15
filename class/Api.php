@@ -156,9 +156,26 @@ class Api {
         $count = $this->db->count("on_links", [
             "fid" => $id
         ]);
+
+        // 获取分类信息
+        $category = $this->db->get("on_categorys", ["id", "fid"], ["id" => $id]);
+
+        // 如果分类不存在
+        if (empty($category)) {
+            $this->err_msg(-1007, 'The category does not exist!');
+        }
+
+        //检查该分类下是否还存在子分类
+        $sub_category_count = $this->db->count("on_categorys", [
+            "fid" => $id
+        ]);
+        //如果存在子分类，则不允许删除
+        if($sub_category_count > 0) {
+            $this->err_msg(-2000,'请先删除下面的子分类！');
+        }
         //如果分类目录下存在数据，则不允许删除
         if($count > 0) {
-            $this->err_msg(-1006,'The category is not empty and cannot be deleted!');
+            $this->err_msg(-1006,'此分类下存在链接，不允许删除！');
         }
         else{
             $data = $this->db->delete('on_categorys',[ 'id' => $id] );
