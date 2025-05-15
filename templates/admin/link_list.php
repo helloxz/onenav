@@ -79,6 +79,8 @@
             <button class="layui-btn layui-btn-sm" lay-event="set_private">设为私有</button>
             <button class="layui-btn layui-btn-sm" lay-event="set_public">设为公有</button>
             <button class="layui-btn layui-btn-sm" lay-event="reset_query">重置查询</button>
+            <button class="layui-btn layui-btn-sm" lay-event="addCategory">添加分类</button>
+            <button class="layui-btn layui-btn-sm" lay-event="addLink">添加链接</button>
             <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
             <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
         </div>

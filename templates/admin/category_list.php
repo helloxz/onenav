@@ -22,8 +22,10 @@
     <!-- 表头工具栏 -->
     <script type="text/html" id="catToolbar">
     <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addCategory">添加分类</button>
         <button class="layui-btn layui-btn-sm" lay-event="setPrivate">设为私有</button>
         <button class="layui-btn layui-btn-sm" lay-event="setPublic">设为公开</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delSelect">删除选中</button>
     </div>
     </script>
     <!-- 表头工具栏END -->
@@ -58,6 +60,63 @@ layui.use(['table','layer','form'], function(){
         case 'setPublic':
             // 设为公开，0
             set_cat_batch(ids,0);
+        case 'addCategory':
+            // 添加分类
+            layer.open({
+                type: 2,
+                title: '添加分类',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['700px', '780px'],
+                content: '/index.php?c=admin&page=add_category_new',
+                end: function(index, layero){
+                    // 刷新分类数据页面
+                    table.reloadData('category_list', {
+                        where: {
+                            abc: '123456',
+                        },
+                        scrollPos: 'fixed',  // 保持滚动条位置不变 - v2.7.3 新增
+                    });
+                    layer.close(index);
+                }
+            });
+        case 'delSelect':
+            
+            // 删除选中
+            if( ids.length === 0 ) {
+                layer.msg("请先选择分类!",{icon:5});
+            }
+            
+            else{
+                let msg = `
+                确认删除选中的分类吗？
+                <ul>
+                    <li>此操作只会删除空分类!</li>
+                    <li>如果分类下存在链接会删除失败！</li>
+                    <li>如果分类下存在子分类会删除失败！</li>
+                </ul>
+                `;
+                layer.confirm(msg,{icon: 3, title:'温馨提示！'}, function(index){
+                    for (let i = 0; i < data.length; i++) {
+                    
+                    $.ajax({
+                        'url': '/index.php?c=api&method=del_category',
+                        'type': 'POST',
+                        'async': false,
+                        'data':{'id':ids[i]}
+                    });
+                    
+                    }
+                    layer.open({
+                        title: '温馨提醒'
+                        ,content: '选中分类已删除！',
+                        yes: function(index, layero){
+                            window.location.reload();
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                        }
+                    });
+                });
+            }
         break;
         };
     });

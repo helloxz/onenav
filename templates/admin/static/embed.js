@@ -124,7 +124,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
                 obj.del();
             }
             else{
-                layer.msg(data.err_msg);
+                layer.msg(data.err_msg,{icon:5});
             }
         });
         layer.close(index);
@@ -318,6 +318,38 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
         }
         //调用函数设为公有
         set_link_attribute(ids,0);
+        break;
+      case "addCategory":
+        //用户点击添加分类按钮,打开一个弹窗操作
+        // 添加分类
+        layer.open({
+            type: 2,
+            title: '添加分类',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['700px', '780px'],
+            content: '/index.php?c=admin&page=add_category_new'
+        });
+      break;
+     case "addLink":
+        layer.open({
+            type: 2,
+            title: '添加链接',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['1200px', '780px'],
+            content: '/index.php?c=admin&page=add_link_new',
+            end: function(index, layero){
+                  // 刷新分类数据页面
+                  table.reloadData('link_list', {
+                      where: {
+                          abc: '123456',
+                      },
+                      scrollPos: 'fixed',  // 保持滚动条位置不变 - v2.7.3 新增
+                  });
+                  layer.close(index);
+              }
+        });
         break;
       case 'isAll':
         layer.msg(checkStatus.isAll ? '全选': '未全选');
