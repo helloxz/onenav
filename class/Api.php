@@ -1250,45 +1250,171 @@ class Api {
         }
     }
     /**
-     * 获取链接信息
+         * 获取链接信息
+         */
+        /**
+     * 获取链接的标题和描述信息 (优化版)
+     *
+     * @param string $token 用于认证的令牌
+     * @param string $url   需要获取信息的URL
+     * @return void         直接输出JSON格式的返回结果
      */
-    public function get_link_info($token,$url){
+    public function get_link_info($token, $url)
+    {
         $this->auth($token);
-        //检查链接是否合法
-        $pattern = "/^(http:\/\/|https:\/\/).*/";
-        //链接不合法
-        if( empty($url) ) {
-            $this->err_msg(-2000,'URL不能为空!');
-        }
-        if( !preg_match($pattern,$url) ){
-            $this->err_msg(-1010,'只支持识别http/https协议的链接!');
-        }
-        else if( !filter_var($url, FILTER_VALIDATE_URL) ) {
-            $this->err_msg(-2000,'只支持识别http/https协议的链接!');
-        }
-        //获取网站标题
-        $c = curl_init(); 
-        curl_setopt($c, CURLOPT_URL, $url); 
-        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
-        //设置超时时间
-        curl_setopt($c , CURLOPT_TIMEOUT, 10);
-        $data = curl_exec($c); 
-        curl_close($c); 
-        $pos = strpos($data,'utf-8'); 
-        if($pos===false){$data = iconv("gbk","utf-8",$data);} 
-        preg_match("/<title>(.*)<\/title>/i",$data, $title); 
-        
-        $link['title'] =  $title[1]; 
 
-        //获取网站描述
-        $tags = get_meta_tags($url);
-        $link['description'] = $tags['description'];
+        // 步骤 1: 验证URL的有效性
+        if (empty($url)) {
+            $this->err_msg(-2000, 'URL不能为空!');
+        }
+        // 使用 filter_var 和正则表达式进行双重验证，确保是有效的http/https链接
+        if (!filter_var($url, FILTER_VALIDATE_URL) || !preg_match("/^https?:\/\//i", $url)) {
+            $this->err_msg(-1010, '只支持识别http/https协议的链接!');
+        }
+
+        // 初始化返回数据结构，确保即使获取失败也有完整的字段
+        $link = [
+            'title'       => '',
+            'description' => ''
+        ];
+
+        // 步骤 2: 使用cURL获取网页内容（已优化）
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // 返回内容但不直接输出
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // 获取HTTP头信息，用于编码检测
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        // 自动跟随重定向
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        // 最大重定向次数
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+        // 连接超时时间（秒）
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        // 总执行超时时间（秒）
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        // 设置浏览器User Agent，防止被部分网站屏蔽
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36');
+        // 兼容https，原逻辑保留，但注意在生产环境中这可能带来安全风险
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        // 性能优化：只下载前500KB内容，通常足以获取head信息
+        curl_setopt($ch, CURLOPT_RANGE, '0-512000');
         
+        $response = curl_exec($ch);
+
+        // 增加cURL错误处理
+        if (curl_errno($ch)) {
+            $this->err_msg(-2001, '链接无法访问或超时: ' . curl_error($ch));
+        }
+
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // 增加HTTP状态码判断
+        if ($http_code < 200 || $http_code >= 400) {
+            $this->err_msg(-2002, '链接返回无效的HTTP状态码: ' . $http_code);
+        }
+
+        // 分离响应头和响应体
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header_str = substr($response, 0, $header_size);
+        $body = substr($response, $header_size);
+        
+        curl_close($ch);
+
+        // 如果响应体为空，直接返回空信息
+        if (empty($body)) {
+            exit(json_encode(['code' => 0, 'data' => $link]));
+        }
+
+        // 步骤 3: 智能检测编码并转换为UTF-8
+        $encoding = '';
+        // 方法A: 从HTTP响应头中提取编码
+        if (preg_match('/charset=([\w-]+)/i', $header_str, $matches)) {
+            $encoding = strtoupper($matches[1]);
+        }
+        // 方法B: 如果响应头没有，则从HTML的meta标签中提取
+        if (empty($encoding) && preg_match('/<meta.*?charset=["\']?([\w-]+)["\']?/i', $body, $matches)) {
+            $encoding = strtoupper($matches[1]);
+        }
+        // 方法C: 如果以上都没有，则自动检测
+        if (empty($encoding)) {
+            $encoding = mb_detect_encoding($body, ['UTF-8', 'GBK', 'GB2312', 'BIG5', 'ISO-8859-1'], true);
+        }
+        // 如果检测到编码且不是UTF-8，则进行转换
+        if ($encoding && $encoding !== 'UTF-8') {
+            $body = @mb_convert_encoding($body, 'UTF-8', $encoding);
+        }
+
+        // 步骤 4: 使用DOMDocument解析HTML，更稳定可靠
+        $doc = new DOMDocument();
+        // 抑制因HTML不规范而产生的警告
+        libxml_use_internal_errors(true);
+        // 明确告知DOMDocument以UTF-8编码加载，防止二次乱码
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $body);
+        // 清理错误缓存
+        libxml_clear_errors();
+        
+        $xpath = new DOMXPath($doc);
+
+        // 步骤 5: 提取标题（带后备方案）
+        // 方案1: 获取 <title> 标签
+        $title_node = $xpath->query('//title')->item(0);
+        if ($title_node) {
+            $link['title'] = trim($title_node->nodeValue);
+        }
+        // 方案2: 获取 og:title
+        if (empty($link['title'])) {
+            $og_title_node = $xpath->query('//meta[@property="og:title"]/@content')->item(0);
+            if ($og_title_node) {
+                $link['title'] = trim($og_title_node->nodeValue);
+            }
+        }
+        // 方案3: 获取第一个 <h1> 标签
+        if (empty($link['title'])) {
+            $h1_node = $xpath->query('//h1')->item(0);
+            if ($h1_node) {
+                $link['title'] = trim($h1_node->nodeValue);
+            }
+        }
+
+        // 步骤 6: 提取描述（带后备方案）
+        // 方案1: 获取 <meta name="description">
+        $desc_node = $xpath->query('//meta[@name="description"]/@content')->item(0);
+        if ($desc_node) {
+            $link['description'] = trim($desc_node->nodeValue);
+        }
+        // 方案2: 获取 og:description
+        if (empty($link['description'])) {
+            $og_desc_node = $xpath->query('//meta[@property="og:description"]/@content')->item(0);
+            if ($og_desc_node) {
+                $link['description'] = trim($og_desc_node->nodeValue);
+            }
+        }
+        // 方案3: 获取第一个有意义的 <p> 标签内容
+        if (empty($link['description'])) {
+            $p_nodes = $xpath->query('//p');
+            foreach ($p_nodes as $p_node) {
+                $p_text = trim($p_node->nodeValue);
+                // 选取一个长度较长的段落作为描述
+                if (mb_strlen($p_text, 'UTF-8') > 30) {
+                    $link['description'] = $p_text;
+                    break;
+                }
+            }
+        }
+        
+        // 对获取到的结果进行HTML实体解码，使显示更友好
+        if($link['title']) {
+            $link['title'] = html_entity_decode($link['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+        if($link['description']) {
+            $link['description'] = html_entity_decode($link['description'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        // 步骤 7: 按指定格式返回成功结果
         $data = [
-            'code'      =>  0,
-            'data'      =>  $link
+            'code'    =>  0,
+            'data'    =>  $link
         ];
         exit(json_encode($data));
     }
@@ -1610,6 +1736,23 @@ class Api {
         }
         
         $this->return_json(200,$theme_config,"");
+    }
+
+    // 获取设置的主题
+    public function get_themes() {
+        $theme = $this->db->get("on_options","value",[
+            "key"   =>  "s_themes"
+        ]);
+        // 字符串转换为数组
+        $theme = json_decode($theme, true);
+        //如果主题不存在，则返回默认主题
+        if( empty($theme) ) {
+            $theme = [
+                "pc_theme"   =>  "default2",
+                "mobile_theme"   =>  "default2"
+            ];
+        }
+        $this->return_json(200,$theme,"");
     }
     /**
      * 通用json消息返回

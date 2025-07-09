@@ -204,10 +204,36 @@ else{
 
 
 // 载入前台首页模板
-//查询主题设置
-$template = $db->get("on_options","value",[
-    "key"   =>  "theme"
+//查询用户设置的主题，区分PC和手机
+$templates = $db->get("on_options","value",[
+    "key"   =>  "s_themes"
 ]);
+// 获取UA
+$userAgent = $_SERVER['HTTP_USER_AGENT'];
+$mobileKeywords = [
+    'mobile', 'android', 'iphone'
+];
+
+// 如果查询结果是空的
+if (empty($templates)) {
+    // 设置默认主题
+    $template = 'default2';
+} else {
+    // 不为空，则根据情况使用不同主题
+    foreach ($mobileKeywords as $keyword) {
+        if (stripos($userAgent, $keyword) !== false) {
+            // 设置主题
+            $template = json_decode($templates)->mobile_theme;
+            break;
+        }
+        else{
+            // 设置主题
+            $template = json_decode($templates)->pc_theme;
+        }
+    }
+}
+
+
 //获取用户传递的主题参数
 $theme = trim( @$_GET['theme'] );
 //如果用户传递了主题参数
