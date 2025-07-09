@@ -16,7 +16,40 @@
     <!-- 说明提示框END -->
     <div class="layui-col-lg12">
         <div class="layui-row layui-col-space24">
-            
+        
+        <!-- 主题设置 -->
+        <div class="setting">
+            <form class="layui-form layui-form-pane" lay-filter="themes" action="">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">PC主题</label>
+                        <div class="layui-input-inline">
+                        <select name="pc_theme" lay-filter="aihao">
+                            <?php foreach ($themes as $key => $theme) { ?>
+                                <option value="<?php echo $key; ?>"><?php echo $key; ?></option>
+                            <?php } ?>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">手机主题</label>
+                        <div class="layui-input-inline">
+                        <select name="mobile_theme" lay-filter="aihao">
+                            <?php foreach ($themes as $key => $theme) { ?>
+                                <option value="<?php echo $key; ?>"><?php echo $key; ?></option>
+                            <?php } ?>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn" lay-submit lay-filter="s_themes">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- 主题设置选项 -->
+
+        <h2>已下载</h2>
 
             <!-- 主题列表new -->
             <?php foreach ($themes as $key => $theme) {
@@ -43,16 +76,14 @@
                         <!-- 主题图片 -->
                         <div class = "screenshot">
                             <p><img layer-src="<?php echo $theme['info']->screenshot; ?>" src="<?php echo $theme['info']->screenshot; ?>" alt=""></p>
-                            <?php if( $current_them == $key ) { ?>
-                                <div class="in-use">使用中</div>
-                            <?php } ?>
+                            
                         </div>
                         
                         <!-- 主题图片END -->
                         <hr>
                         <div class = "thme-btns">
                             <div class="layui-btn-group">
-                                <button type="button" class="layui-btn layui-btn-sm" onclick = "set_theme('<?php echo $key; ?>')">使用</button>
+                                <!-- <button type="button" class="layui-btn layui-btn-sm" onclick = "set_theme('<?php echo $key; ?>')">使用</button> -->
                                 <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_detail('<?php echo $key; ?>')">详情</button>
                                 <button type="button" class="layui-btn layui-btn-sm" onclick = "theme_config('<?php echo $key; ?>')">参数设置</button>
                                 <button type="button" class="layui-btn layui-btn-sm" onclick = "update_theme('<?php echo $key; ?>','<?php echo $theme['info']->version; ?>')">更新</button>
@@ -72,7 +103,7 @@
     <hr>
     <!-- 在线主题 -->
     <div class="layui-col-lg12">
-        <h2 style = "padding-bottom:16px;padding-top:8px;">在线主题：</h2>
+        <h2 style = "padding-bottom:16px;padding-top:8px;">在线主题</h2>
         <div class="layui-row layui-col-space24">
         <?php foreach ($theme_list as $key => $theme) {
                 //var_dump($theme['info']->name);
@@ -110,8 +141,43 @@
 </div>
 <?php include_once(dirname(__DIR__).'/footer.php'); ?>
 <script>
-layui.use('layer', function(){
+layui.use(['layer','form'], function(){
     var layer = layui.layer;
+    var form = layui.form;
+
+    // 监听主题设置的提交
+    form.on('submit(s_themes)', function(data){
+        //console.log(data.field);
+        let value = JSON.stringify(data.field);
+        $.post("/index.php?c=api&method=set_theme",{value:value},function(res){
+            if( res.code == 0 ) {
+                layer.msg(res.data, {icon: 1});
+                // setTimeout(() => {
+                //     location.reload();
+                // }, 2000);
+            }
+            else{
+                layer.msg(res.err_msg, {icon: 5});
+            }
+        });
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+
+    // 请求API接口获取当前设置的主题
+    $.get("/index.php?c=api&method=get_themes",function(data,status){
+        if( data.code == 200 ) {
+            let value = data.data;
+            //console.log(themes);
+            //设置主题下拉框的值
+            form.val('themes', {
+                'pc_theme': value.pc_theme,
+                'mobile_theme': value.mobile_theme
+            });
+        }
+        else{
+            layer.msg(data.err_msg, {icon: 5});
+        }
+    });
 });
 function theme_detail(name){
     layer.open({
@@ -229,7 +295,7 @@ function update_theme(name,version){
 
 //遍历所有主题，检查是否有更新
 function check_update(){
-    console.log('fdsfsdf');
+    // console.log('fdsfsdf');
     //请求远程主题列表
     $.get("https://onenav.xiaoz.top/v1/theme_list.php",function(data,status){
         let result = data.data;

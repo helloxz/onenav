@@ -27,7 +27,7 @@
       <li class="layui-nav-item"><a href="/index.php?c=admin&page=link_list"><i class="layui-icon layui-icon-link"></i> 我的链接</a></li>
       <li class="layui-nav-item"><a href="/index.php?c=admin&page=add_link"><i class="layui-icon layui-icon-add-circle-fine"></i> 添加链接</a></li> -->
       <li class="layui-nav-item"><a title = "加入OneNav交流群" target = "_blank" href="https://dwz.ovh/qxsul"><i class="layui-icon layui-icon-group"></i> 交流群</a></li>
-      <li class="layui-nav-item"><a onclick = "support()" title = "请求OneNav技术支持" href="javascript:;"><i class="layui-icon layui-icon-help"></i> 技术支持</a></li>
+      <!-- <li class="layui-nav-item"><a onclick = "support()" title = "请求OneNav技术支持" href="javascript:;"><i class="layui-icon layui-icon-help"></i> 技术支持</a></li> -->
       
     </ul>
     <ul class="layui-nav layui-layout-right">

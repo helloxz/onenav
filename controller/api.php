@@ -324,8 +324,8 @@ function exe_sql($api) {
 
 //设置options表
 function set_theme($api) {
-    $key = 'theme';
-    $value = htmlspecialchars($_POST['value']);
+    $key = 's_themes';
+    $value = $_POST['value'];
     $api->set_option($key,$value);
 }
 
