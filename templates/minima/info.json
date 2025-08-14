@@ -1,0 +1,20 @@
+{
+    "name": "Minima简约主题",
+    "description": "基于 Bootstrap 4 的现代化、响应式 OneNav 主题，让简约回归本质。",
+    "homepage": "https://www.onenav.top",
+    "help_url": "https://www.onenav.top",
+    "version": "1.0.0",
+    "update": "2025/08/14",
+    "author": "xiaoz",
+    "screenshot": "https://img.rss.ink/imgs/2025/08/14/10f90c5e185321a8.png",
+    "demo": "",
+    "require": {
+        "min": "1.1.4",
+        "max": ""
+    },
+    "config": {
+        "full_width_mode": "off",
+        "link_description": "show",
+        "favicon": "online"
+    }
+}

@@ -8,6 +8,7 @@ $site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
 $site = unserialize($site);
 // 获取链接数量,默认为30
 $link_num = empty( $site['link_num'] ) ? 30 : intval($site['link_num']);
+// var_dump($link_num);
 
 
 //如果已经登录，获取所有分类和链接
@@ -134,6 +135,7 @@ else{
     //根据category id查询有限链接
     function get_limit_links($fid) {
         global $db;
+        global $link_num;
         $fid = intval($fid);
         $links = $db->select('on_links','*',[ 
                 'fid'   =>  $fid,
@@ -342,6 +344,7 @@ if( $info_json ) {
 // 该分类下可见的链接数量
 function get_links_number($fid){
     $number = count(get_links($fid));
+    // var_dump($number);
     return $number;
 }
 
