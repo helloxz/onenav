@@ -72,14 +72,12 @@ layui.use(['table','layer','form'], function(){
                 end: function(index, layero){
                     // 刷新分类数据页面
                     table.reloadData('category_list', {
-                        where: {
-                            abc: '123456',
-                        },
                         scrollPos: 'fixed',  // 保持滚动条位置不变 - v2.7.3 新增
                     });
                     layer.close(index);
                 }
             });
+            break;
         case 'delSelect':
             
             // 删除选中

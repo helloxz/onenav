@@ -97,7 +97,7 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
           }
           
       }} 
-      ,{field: 'weight', title: '权重', width: 100}
+      ,{field: 'weight', title: '权重', width: 100,sort:true}
       ,{field: 'property', title: '是否私有', width: 120, sort: true,templet: function(d){
             if(d.property == 1) {
                 return '<button type="button" class="layui-btn layui-btn-xs">是</button>';
