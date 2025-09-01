@@ -698,6 +698,8 @@ layui.use(['element','table','layer','form','upload','iconHhysFa'], function(){
 
   //添加分类目录
   form.on('submit(add_category)', function(data){
+    // console.log(data);
+    // return;
     $.post('/index.php?c=api&method=add_category',data.field,function(data,status){
       //如果添加成功
       if(data.code == 0) {

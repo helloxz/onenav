@@ -72,9 +72,14 @@
       <div class="layui-input-inline" style = "width:240px;">
           <input name="font_icon" type="text" id="iconHhys2" value="<?php echo $category_one['font_icon']; ?>" lay-filter="iconHhys2" class="layui-input">
       </div>
-      <div class="layui-form-mid layui-word-aux">
-        图标对照表可参考：<a rel = "nofollow" target = "_blank" href="https://fontawesome.dashgame.com/">FontAwesome4</a>
+      <div class="layui-input-inline">
+        <button onclick="del_font_icon()" type="button" class="layui-btn layui-btn-primary">
+          <i class="layui-icon layui-icon-delete"></i>
+        </button>
       </div>
+      <!-- <div class="layui-form-mid layui-word-aux">
+        图标对照表可参考：<a rel = "nofollow" target = "_blank" href="https://fontawesome.dashgame.com/">FontAwesome4</a>
+      </div> -->
   </div>
 
   <div class="layui-form-item">
@@ -113,6 +118,11 @@
   
 <?php include_once('footer.php'); ?>
 <script>
+  // 清空id=iconHhys2的value
+  function del_font_icon(){
+    $("#iconHhys2").val("");
+    layer.msg("图标已取消，添加或更新后将不再显示图标！",{icon:1});
+  }
   //参考：https://gitee.com/luckygyl/iconFonts
   layui.use(['iconHhysFa'], function(){
   var iconHhysFa = layui.iconHhysFa;

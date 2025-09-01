@@ -183,7 +183,7 @@ function theme_detail(name){
     layer.open({
         title: name,
         type:2,
-        area: ['60%', '59%'],
+        area: ['1200px', '680px'],
         content:'/index.php?c=admin&page=setting/theme_detail&name=' + name
     });   
 }
@@ -192,7 +192,7 @@ function theme_detail_online(name){
     layer.open({
         title: name,
         type:2,
-        area: ['60%', '59%'],
+        area: ['1200px', '680px'],
         content:'/index.php?c=admin&page=setting/theme_detail&name=' + name
     });   
 }
