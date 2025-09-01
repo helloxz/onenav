@@ -738,38 +738,66 @@ class Api {
     }
 
     /**
-     * 导出HTML链接进行备份
+     * 导出HTML链接进行备份（支持二级分类）
+     * 返回结构：
+     * [
+     *   [
+     *     'id'=>1,'name'=>'父分类','links'=>[...],
+     *     'children'=>[
+     *        ['id'=>2,'name'=>'子分类','links'=>[...]],
+     *        ...
+     *     ]
+     *   ],
+     *   ...
+     * ]
      */
     public function export_link(){
         //鉴权
         $this->auth($token);
-        //查询所有分类
-        $categorys = $this->db->select("on_categorys","*");
-        
-        //定义一个空数组用来存储查询后的数据
-        $data = [];
-        
-        //遍历分类
-        foreach ($categorys as $key => $category) {
-            //查询该分类下的所有链接
-            $links = $this->db->select("on_links","*",[
-                "fid"      =>  $category['id']
-            ]);
-            // echo $category['name'];
-            // var_dump($links);
-            // exit;
-            //组合为一个一维数组
-            
-            $arr[$category['name']] = $links;
-            // var_dump();
-            // exit;
-            $data[$category['name']] = $arr[$category['name']];
-            
-            //清除临时数据
-            unset($arr);
+        // 一次性获取所有分类与链接，减少查询次数
+        $categories = $this->db->select("on_categorys", [
+            "id","name","fid","weight","add_time"
+        ]);
+        $links = $this->db->select("on_links", [
+            "id","fid","title","url","add_time","weight"
+        ],[
+            "ORDER" => ["weight"=>"DESC","id"=>"DESC"]
+        ]);
+
+        // 预分配链接到分类
+        $linksByCat = [];
+        foreach ($links as $l) {
+            $linksByCat[$l['fid']][] = $l;
         }
-        //返回数据
-        return $data;
+
+        // 构建分类映射
+        $catMap = [];
+        foreach ($categories as $c) {
+            $catMap[$c['id']] = [
+                'id'        => $c['id'],
+                'name'      => $c['name'],
+                'fid'       => $c['fid'],
+                'links'     => isset($linksByCat[$c['id']]) ? $linksByCat[$c['id']] : [],
+                'children'  => []
+            ];
+        }
+
+        // 组装层级（仅两级：fid=0 为顶级，其它挂到父类 children）
+        $tree = [];
+        foreach ($catMap as $id => &$node) {
+            if ($node['fid'] == 0) {
+                $tree[] = &$node;
+            } else {
+                if (isset($catMap[$node['fid']])) {
+                    $catMap[$node['fid']]['children'][] = &$node;
+                } else {
+                    // 父分类缺失时降级为顶级
+                    $tree[] = &$node;
+                }
+            }
+        }
+        unset($node);
+        return $tree;
     }
     /**
      * name:修改链接
@@ -2852,6 +2880,7 @@ class Api {
         set_time_limit(1200); // 设置执行最大时间为20分钟
         // 验证授权
         $this->auth($token);
+
         // 验证订阅
         $this->check_is_subscribe();
 
@@ -3116,7 +3145,7 @@ class Api {
             $messages = [
                 [
                     "role" => "system",
-                    "content" => "请自动检测用户输入的语言。当输入内容是中文时，翻译成英文；当输入内容不是中文时，翻译成中文。只需返回翻译后的内容，不需要额外解释或描述。"
+                    "content" => "请自动检测用户输入的语言。当输入内容是中文时，翻译成英文；当输入内容不属于中文时，翻译成中文。只需返回翻译后的内容，不需要额外解释或描述。"
                 ],
                 [
                     "role" => "user",

@@ -519,7 +519,86 @@ function get_theme_config($api) {
     $api->get_theme_config();
 }
 
-//批量设置链接私有属性
+//导出链接数据
+function export_link($api) {
+    header('Content-Type: text/html; charset=UTF-8');
+
+    // 若已有树结构（之前的 export_link 方法），复用；否则自行构建。
+    $tree = [];
+    if (method_exists($api,'export_link')) {
+        $tree = $api->export_link();
+    }
+
+    // 兜底：没有返回结构则直接结束
+    if (!is_array($tree)) { $tree = []; }
+
+    $now = time();
+
+    // 递归输出函数（模仿 Chrome 导出格式，目录在前，链接在后）
+    $printCategory = function ($cat, $depth = 2) use (&$printCategory, $now) {
+        $indent = str_repeat('    ', $depth);
+        $indentInner = str_repeat('    ', $depth + 1);
+
+        $name = $cat['name'];
+        // 特殊处理默认分类名称
+        if ($name === '默认分类') {
+            $name = 'OneNav默认分类';
+        }
+        $name = htmlspecialchars($name, ENT_QUOTES);
+        $add_date = isset($cat['add_time']) && intval($cat['add_time'])>0 ? intval($cat['add_time']) : $now;
+        $last_mod = $add_date;
+
+        echo "{$indent}<DT><H3 ADD_DATE=\"{$add_date}\" LAST_MODIFIED=\"{$last_mod}\">{$name}</H3>\n";
+        echo "{$indent}<DL><p>\n";
+
+        // 子目录
+        if (!empty($cat['children'])) {
+            foreach ($cat['children'] as $sub) {
+                $printCategory($sub, $depth + 1);
+            }
+        }
+
+        // 链接
+        if (!empty($cat['links'])) {
+            foreach ($cat['links'] as $link) {
+                $title = htmlspecialchars($link['title'], ENT_QUOTES);
+                $url   = htmlspecialchars($link['url'], ENT_QUOTES);
+                $l_add = isset($link['add_time']) && intval($link['add_time'])>0 ? intval($link['add_time']) : $now;
+                echo "{$indentInner}<DT><A HREF=\"{$url}\" ADD_DATE=\"{$l_add}\">{$title}</A>\n";
+            }
+        }
+
+        echo "{$indent}</DL><p>\n";
+    };
+
+    // 输出头部（保持与 Chrome/Edge 格式一致）
+    echo <<<HTML
+<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<!-- This is an automatically generated file.
+     It will be read and overwritten.
+     DO NOT EDIT! -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Bookmarks</TITLE>
+<H1>Bookmarks</H1>
+<DL><p>
+
+HTML;
+
+    // 构造根目录“书签栏”包裹所有顶级分类
+    $rootAdd  = $now;
+    $rootMod  = $now;
+    echo "    <DT><H3 ADD_DATE=\"{$rootAdd}\" LAST_MODIFIED=\"{$rootMod}\" PERSONAL_TOOLBAR_FOLDER=\"true\">OneNav</H3>\n";
+    echo "    <DL><p>\n";
+
+    foreach ($tree as $topCat) {
+        $printCategory($topCat, 2);
+    }
+
+    echo "    </DL><p>\n";
+    echo "</DL><p>\n";
+}
+
+// 批量设置链接私有属性
 function set_link_attribute($api) {
     $ids = $_POST['ids'];
     $property = intval( $_POST['property'] );
@@ -528,33 +607,6 @@ function set_link_attribute($api) {
         "property" =>   $property
     ];
     $api->set_link_attribute($data);
-}
-
-//导出链接数据
-function export_link($api) {
-    header('Content-Type: text/html;charset=utf8');
-    $data = $api->export_link();
-    //当前时间
-    $current = time();
-    echo <<< EOF
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>从OneNav导出的书签</TITLE>
-<H1>Bookmarks</H1>
-EOF;
-    //遍历结果
-    foreach ($data as $key => $value) {
-        echo "<DT><H3 ADD_DATE=\"$current\" LAST_MODIFIED=\"$current\">$key</H3>\n";
-        echo "<DL><P></P>\n";
-        foreach ($value as $link) {
-            $title = $link['title'];
-            $add_time = $link['add_time'];
-            $url = $link['url'];
-            echo "<DT><A HREF=\"$url\" ADD_DATE=\"$add_time\" ICON=\"\">$title</a></DT>\n";
-        }
-        echo "<P></P></DL>\n";
-        echo "</DT>\n";
-
-    }
 }
 
 //获取用户登录状态
