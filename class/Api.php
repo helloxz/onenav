@@ -1871,14 +1871,25 @@ class Api {
         }
         //查询当前使用中的主题
         $current_theme = $this->db->get('on_options','value',[ 'key'  =>  "theme" ]);
+        //前台实际使用 s_themes 区分 PC/手机主题，这里一并检查
+        $themes_json = $this->db->get('on_options','value',[ 'key'  =>  "s_themes" ]);
+        $themes = is_string($themes_json) ? json_decode($themes_json, true) : [];
+        $in_use = ( $current_theme == $name )
+            || ( is_array($themes) && (
+                (($themes['pc_theme'] ?? '') === $name) ||
+                (($themes['mobile_theme'] ?? '') === $name)
+            ) );
         //如果是当前使用中的主题也不允许删除
-        if ( $current_theme == $name ) {
+        if ( $in_use ) {
             $this->return_json(-2000,'',"使用中的主题不允许删除！");
         }
-        //删除主题
-        $this->deldir("templates/".$name);
-        
-        $this->deldir("data/templates/".$name);
+        //删除主题，只处理实际存在的目录，避免对不存在的目录调用 opendir/readdir
+        if ( is_dir("templates/".$name) ) {
+            $this->deldir("templates/".$name);
+        }
+        if ( is_dir("data/templates/".$name) ) {
+            $this->deldir("data/templates/".$name);
+        }
         //判断主题文件夹是否还存在
         if( is_dir("templates/".$name) || is_dir("data/templates/".$name) ) {
             $this->return_json(-2000,'',"删除失败，可能是权限不足！");
@@ -1891,26 +1902,33 @@ class Api {
      * 删除一个目录
      */
     protected function deldir($dir) {
+        //目录不存在时直接返回，避免 PHP 8 下 readdir(false) 抛 TypeError
+        if ( !is_dir($dir) ) {
+            return false;
+        }
+
+        $dh = opendir($dir);
+        if ( !$dh ) {
+            return false;
+        }
+
         //先删除目录下的文件：
-        $dh=opendir($dir);
-        while ($file=readdir($dh)) {
-          if($file!="." && $file!="..") {
-            $fullpath=$dir."/".$file;
-            if(!is_dir($fullpath)) {
-                unlink($fullpath);
-            } else {
+        while ( ($file = readdir($dh)) !== false ) {
+            if ( $file === '.' || $file === '..' ) {
+                continue;
+            }
+            $fullpath = $dir.'/'.$file;
+            if ( is_dir($fullpath) ) {
                 $this->deldir($fullpath);
             }
-          }
+            else {
+                @unlink($fullpath);
+            }
         }
-       
+
         closedir($dh);
         //删除当前文件夹：
-        if(rmdir($dir)) {
-          return true;
-        } else {
-          return false;
-        }
+        return rmdir($dir);
     }
     /**
      * 获取主题参数
