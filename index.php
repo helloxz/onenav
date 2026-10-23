@@ -7,7 +7,7 @@ header("content-Type: text/html; charset=Utf-8");
 //获取控制器
 $c = @$_GET['c'];
 //进行过滤
-$c = strip_tags($c);
+$c = strip_tags($c ?? '');
 //读取版本号
 //$version = @file_get_contents("./functions/version.txt");
 //载入配置文件

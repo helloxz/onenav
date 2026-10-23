@@ -11,10 +11,42 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Access-Control-Allow-Private-Network,Content-Type, AccessToken, X-CSRF-Token, Authorization, Token,X-Token,X-Cid");
 require('./class/Api.php');
 
+/**
+ * 读取请求参数，缺失时返回默认值
+ * 避免 PHP 8 下未定义索引和 null 传入字符串函数的弃用警告
+ */
+function req_param($key, $default = '')
+{
+    if ( array_key_exists($key, $_POST) ) {
+        return $_POST[$key];
+    }
+    if ( array_key_exists($key, $_GET) ) {
+        return $_GET[$key];
+    }
+    if ( array_key_exists($key, $_REQUEST) ) {
+        return $_REQUEST[$key];
+    }
+    return $default;
+}
+
+/**
+ * 获取 API token，POST 优先，其次 GET
+ */
+function req_token()
+{
+    if ( !empty($_POST['token']) ) {
+        return $_POST['token'];
+    }
+    if ( isset($_GET['token']) ) {
+        return $_GET['token'];
+    }
+    return '';
+}
+
 $api = new Api($db);
 
 //获取请求方法
-$method = $_GET['method'];
+$method = $_GET['method'] ?? '';
 //可变函数变量
 $var_func = htmlspecialchars(trim($method),ENT_QUOTES);
 // 屏蔽的方法，让其不调用class/Api.php 中的方法
@@ -37,7 +69,9 @@ $deny_func = [
     'set_option',
     'set_option_bool',
     'update_link_status',
-    'get_options'
+    'get_options',
+    'req_param',
+    'req_token'
 ];
 // 判断是否在屏蔽列表中
 if( in_array($var_func,$deny_func) ) {
@@ -66,21 +100,21 @@ if ( function_exists($var_func) ) {
  */
 function add_category($api){
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取分类名称
-    $name = $_POST['name'];
+    $name = req_param('name', '');
     //获取私有属性
     $property = empty($_POST['property']) ? 0 : 1;
     //获取分级ID
-    $fid = intval($_POST['fid']);
+    $fid = intval(req_param('fid', ''));
     //获取权重
-    $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
+    $weight = empty($_POST['weight']) ? 0 : intval(req_param('weight', ''));
     //获取描述
-    $description = empty($_POST['description']) ? '' : $_POST['description'];
+    $description = empty($_POST['description']) ? '' : req_param('description', '');
     //描述过滤
     $description = htmlspecialchars($description);
     //获取字体图标
-    $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    $font_icon = htmlspecialchars(req_param('font_icon', ''),ENT_QUOTES);
     //搜索字体图标是否包含'fa '，如果不包含则自动加上
     if( !strstr($font_icon,'fa ') ) {
         $font_icon = 'fa '.$font_icon;
@@ -92,23 +126,23 @@ function add_category($api){
  */
 function edit_category($api){
     //获取ID
-    $id = intval($_POST['id']);
+    $id = intval(req_param('id', ''));
     //获取父级ID
-    $fid = intval($_POST['fid']);
+    $fid = intval(req_param('fid', ''));
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取分类名称
-    $name = $_POST['name'];
+    $name = req_param('name', '');
     //获取私有属性
     $property = empty($_POST['property']) ? 0 : 1;
     //获取权重
-    $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
+    $weight = empty($_POST['weight']) ? 0 : intval(req_param('weight', ''));
     //获取描述
-    $description = empty($_POST['description']) ? '' : $_POST['description'];
+    $description = empty($_POST['description']) ? '' : req_param('description', '');
     //描述过滤
     $description = htmlspecialchars($description);
     //字体图标
-    $font_icon = htmlspecialchars($_POST['font_icon'],ENT_QUOTES);
+    $font_icon = htmlspecialchars(req_param('font_icon', ''),ENT_QUOTES);
     //搜索字体图标是否包含'fa '，如果不包含则自动加上
     if( !strstr($font_icon,'fa ') ) {
         $font_icon = 'fa '.$font_icon;
@@ -120,9 +154,9 @@ function edit_category($api){
  */
 function del_category($api){
     //获取ID
-    $id = intval($_POST['id']);
+    $id = intval(req_param('id', ''));
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     $api->del_category($token,$id);
 }
 /**
@@ -131,17 +165,17 @@ function del_category($api){
 function add_link($api){
     //add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0)
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     
     //获取fid
-    $fid = intval(@$_POST['fid']);
-    $title = $_POST['title'];
-    $url = $_POST['url'];
-    $url_standby = $_POST['url_standby'];
-    $description = empty($_POST['description']) ? '' : $_POST['description'];
-    $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
+    $fid = intval(req_param('fid', ''));
+    $title = req_param('title', '');
+    $url = req_param('url', '');
+    $url_standby = req_param('url_standby', '');
+    $description = empty($_POST['description']) ? '' : req_param('description', '');
+    $weight = empty($_POST['weight']) ? 0 : intval(req_param('weight', ''));
     $property = empty($_POST['property']) ? 0 : 1;
-    $font_icon = empty($_POST['font_icon']) ? '' : $_POST['font_icon'];
+    $font_icon = empty($_POST['font_icon']) ? '' : req_param('font_icon', '');
 
     $api->add_link($token,$fid,$title,$url,$description,$weight,$property,$url_standby,$font_icon);
     
@@ -152,18 +186,18 @@ function add_link($api){
 function edit_link($api){
     //add_link($token,$fid,$title,$url,$description = '',$weight = 0,$property = 0)
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
-    $id = intval(@$_POST['id']);
+    $token = req_token();
+    $id = intval(req_param('id', ''));
     
     //获取fid
-    $fid = intval(@$_POST['fid']);
-    $title = $_POST['title'];
-    $url = $_POST['url'];
-    $url_standby = $_POST['url_standby'];
-    $description = empty($_POST['description']) ? '' : $_POST['description'];
-    $weight = empty($_POST['weight']) ? 0 : intval($_POST['weight']);
+    $fid = intval(req_param('fid', ''));
+    $title = req_param('title', '');
+    $url = req_param('url', '');
+    $url_standby = req_param('url_standby', '');
+    $description = empty($_POST['description']) ? '' : req_param('description', '');
+    $weight = empty($_POST['weight']) ? 0 : intval(req_param('weight', ''));
     $property = empty($_POST['property']) ? 0 : 1;
-    $font_icon = empty($_POST['font_icon']) ? '' : $_POST['font_icon'];
+    $font_icon = empty($_POST['font_icon']) ? '' : req_param('font_icon', '');
 
     $api->edit_link($token,$id,$fid,$title,$url,$description,$weight,$property,$url_standby,$font_icon);
     
@@ -173,16 +207,16 @@ function edit_link($api){
  * 删除链接
  */
 function del_link($api){
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
-    $id = intval(@$_POST['id']);
+    $token = req_token();
+    $id = intval(req_param('id', ''));
     $api->del_link($token,$id);
 }
 /**
  * 查询分类目录列表
  */
 function category_list($api){
-    $page = empty(intval($_GET['page'])) ? 1 : intval($_GET['page']);
-    $limit = empty(intval($_GET['limit'])) ? 10 : intval($_GET['limit']);
+    $page = empty(intval(req_param('page', ''))) ? 1 : intval(req_param('page', ''));
+    $limit = empty(intval(req_param('limit', ''))) ? 10 : intval(req_param('limit', ''));
     $api->category_list($page,$limit);
 }
 
@@ -190,12 +224,12 @@ function category_list($api){
  * 查询链接列表
  */
 function link_list($api){
-    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
-    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
+    $page = empty(intval(req_param('page', ''))) ? 1 : intval(req_param('page', ''));
+    $limit = empty(intval(req_param('limit', ''))) ? 10 : intval(req_param('limit', ''));
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取分类ID
-    $category_id = empty($_POST['category_id']) ? null : intval($_POST['category_id']);
+    $category_id = empty($_POST['category_id']) ? null : intval(req_param('category_id', ''));
     $data = [
         'page'          =>  $page,
         'limit'         =>  $limit,
@@ -209,12 +243,12 @@ function link_list($api){
  * 查询分类下的链接
  */
 function q_category_link($api){
-    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
-    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
+    $page = empty(intval(req_param('page', ''))) ? 1 : intval(req_param('page', ''));
+    $limit = empty(intval(req_param('limit', ''))) ? 10 : intval(req_param('limit', ''));
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取分类ID
-    $category_id = empty($_REQUEST['category_id']) ? null : intval($_REQUEST['category_id']);
+    $category_id = empty($_REQUEST['category_id']) ? null : intval(req_param('category_id', ''));
     $data = [
         'page'          =>  $page,
         'limit'         =>  $limit,
@@ -229,9 +263,9 @@ function q_category_link($api){
  */
 function get_link_info($api) {
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取URL
-    $url = @$_POST['url'];
+    $url = req_param('url', '');
     $api->get_link_info($token,$url);
 }
 
@@ -240,9 +274,9 @@ function get_link_info($api) {
  */
 function get_a_category($api) {
     //获取token
-    $data['token'] = @empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $data['token'] = req_token();
     //获取分类ID
-    $data['id'] = intval(trim($_POST['id']));
+    $data['id'] = intval(trim(req_param('id', '')));
     //var_dump($data);
     $api->get_a_category($data);
 }
@@ -252,9 +286,9 @@ function get_a_category($api) {
  */
 function get_a_link($api) {
     //获取token
-    $data['token'] = htmlspecialchars(empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token']);
+    $data['token'] = htmlspecialchars(req_token());
     //获取链接的ID
-    $data['id'] = intval(htmlspecialchars($_GET['id']));
+    $data['id'] = intval(htmlspecialchars(req_param('id', '')));
     $api->get_a_link($data);
 }
 
@@ -263,50 +297,50 @@ function get_a_link($api) {
  */
 function add_js($api) {
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
-    $content = @$_POST['content'];
+    $token = req_token();
+    $content = req_param('content', '');
     $api->add_js($token,$content);
 }
 // 上传书签
 function upload($api){
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取上传类型
-    $type = $_GET['type'];
+    $type = req_param('type', '');
     $api->upload($token,$type);
 }
 // 上传图标
 function uploadImages(){
     global $api;
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取上传类型
     $api->uploadImages($token);
 }
 //书签导入
 function imp_link($api) {
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取书签路径
-    $filename = trim($_POST['filename']);
-    $fid = intval($_POST['fid']);
-    $property = intval(@$_POST['property']);
+    $filename = trim(req_param('filename', ''));
+    $fid = intval(req_param('fid', ''));
+    $property = intval(req_param('property', ''));
     $api->imp_link($token,$filename,$fid,$property);
 }
 //新版书签批量导入并自动创建分类
 function import_link($api) {
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     //获取书签路径
-    $filename = trim($_POST['filename']);
-    $fid = intval($_POST['fid']);
-    $property = intval(@$_POST['property']);
+    $filename = trim(req_param('filename', ''));
+    $fid = intval(req_param('fid', ''));
+    $property = intval(req_param('property', ''));
     $api->import_link($filename,$property);
 }
 //检查弱密码
 function check_weak_password($api) {
     //获取token
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     $api->check_weak_password($token);
 }
 
@@ -318,14 +352,14 @@ function get_sql_update_list($api){
 
 //执行SQL更新
 function exe_sql($api) {
-    $data['name'] = htmlspecialchars(trim($_GET['name']));
+    $data['name'] = htmlspecialchars(trim(req_param('name', '')));
     $api->exe_sql($data);
 }
 
 //设置options表
 function set_theme($api) {
     $key = 's_themes';
-    $value = $_POST['value'];
+    $value = req_param('value', '');
     $api->set_option($key,$value);
 }
 
@@ -333,23 +367,23 @@ function set_theme($api) {
 function set_site($api) {
     //获取传递过来的参数
     //获取网站标题
-    $data['title'] = htmlspecialchars($_POST['title']);
+    $data['title'] = htmlspecialchars(req_param('title', ''));
     //获取网站logo
-    $data['logo'] = htmlspecialchars($_POST['logo']);
+    $data['logo'] = htmlspecialchars(req_param('logo', ''));
     //获取副标题
-    $data['subtitle'] = htmlspecialchars($_POST['subtitle']);
+    $data['subtitle'] = htmlspecialchars(req_param('subtitle', ''));
     //获取关键词
-    $data['keywords'] = htmlspecialchars($_POST['keywords']);
+    $data['keywords'] = htmlspecialchars(req_param('keywords', ''));
     //获取描述
-    $data['description'] = htmlspecialchars($_POST['description']);
+    $data['description'] = htmlspecialchars(req_param('description', ''));
     //获取自定义header
-    $data['custom_header'] = $_POST['custom_header'];
+    $data['custom_header'] = req_param('custom_header', '');
     //获取自定义footer
-    $data['custom_footer'] = $_POST['custom_footer'];
+    $data['custom_footer'] = req_param('custom_footer', '');
     //获取链接模式
-    $data['link_model'] = $_POST['link_model'];
+    $data['link_model'] = req_param('link_model', '');
     // 获取链接数量
-    $data['link_num'] = $_POST['link_num'];
+    $data['link_num'] = req_param('link_num', '');
     //序列化存储
     $value = serialize($data);
 
@@ -390,11 +424,11 @@ function _deny_set($content,$err_msg) {
 //设置订阅信息
 function set_subscribe($api) {
     //获取订单ID
-    $data['order_id'] = htmlspecialchars( trim($_POST['order_id']) );
+    $data['order_id'] = htmlspecialchars( trim(req_param('order_id', '')) );
     //获取邮箱
-    $data['email'] = htmlspecialchars( trim($_POST['email']) );
+    $data['email'] = htmlspecialchars( trim(req_param('email', '')) );
     //到期时间
-    $data['end_time'] = htmlspecialchars( trim($_POST['end_time']) );
+    $data['end_time'] = htmlspecialchars( trim(req_param('end_time', '')) );
     //重置订阅状态
     session_start();
     $_SESSION['subscribe'] = NULL;
@@ -415,7 +449,7 @@ function up_updater($api) {
 }
 //验证当前版本是否匹配
 function check_version($api) {
-    $version = $_REQUEST['version'];
+    $version = req_param('version', '');
     $api->check_version($version);
 }
 
@@ -423,18 +457,18 @@ function check_version($api) {
 function set_transition_page($api) {
     //获取传递过来的参数
     //获取开关
-    $data['control'] = htmlspecialchars(trim($_POST['control']));
+    $data['control'] = htmlspecialchars(trim(req_param('control', '')));
     //获取游客停留时间
-    $data['visitor_stay_time'] = intval($_POST['visitor_stay_time']);
+    $data['visitor_stay_time'] = intval(req_param('visitor_stay_time', ''));
     //获取管理员停留时间
-    $data['admin_stay_time'] = intval($_POST['admin_stay_time']);
+    $data['admin_stay_time'] = intval(req_param('admin_stay_time', ''));
     //获取菜单
-    $data['menu'] = $_POST['menu'];
+    $data['menu'] = req_param('menu', '');
     //获取footer
-    $data['footer'] = $_POST['footer'];
+    $data['footer'] = req_param('footer', '');
     //获取广告
-    $data['a_d_1'] = $_POST['a_d_1'];
-    $data['a_d_2'] = $_POST['a_d_2'];
+    $data['a_d_1'] = req_param('a_d_1', '');
+    $data['a_d_2'] = req_param('a_d_2', '');
     
 
     //验证订阅
@@ -490,9 +524,9 @@ function get_latest_version() {
 //批量修改链接分类
 function batch_modify_category($api) {
     //获取id列表
-    $id = $_POST['id'];
+    $id = req_param('id', '');
     //获取分类ID
-    $fid = intval($_POST['fid']);
+    $fid = intval(req_param('fid', ''));
 
     $data = [
         'id'    =>  $id,
@@ -616,8 +650,8 @@ function export_json($api) {
 
 // 批量设置链接私有属性
 function set_link_attribute($api) {
-    $ids = $_POST['ids'];
-    $property = intval( $_POST['property'] );
+    $ids = req_param('ids', []);
+    $property = intval( req_param('property', '') );
     $data = [
         "ids"      =>   $ids,
         "property" =>   $property
@@ -627,23 +661,23 @@ function set_link_attribute($api) {
 
 //获取用户登录状态
 function check_login($api) {
-    $token = trim($_REQUEST['token']);
+    $token = trim(req_param('token'));
     $api->check_login($token);
 }
 
 //删除主题
 function delete_theme($api) {
-    $name = $_REQUEST['name'];
+    $name = req_param('name', '');
     $api->delete_theme($name);
 }
 
 //下载主题
 function down_theme() {
     global $api;
-    $data['name'] = trim($_GET['name']);
-    $data['key'] = trim( $_GET['key'] );
-    $data['value'] = trim( $_GET['value'] );
-    $data['type'] = trim( $_GET['type'] );
+    $data['name'] = trim(req_param('name', ''));
+    $data['key'] = trim( req_param('key', '') );
+    $data['value'] = trim( req_param('value', '') );
+    $data['type'] = trim( req_param('type', '') );
 
     $api->down_theme($data);
 }
@@ -663,20 +697,20 @@ function backup_db_list() {
 //删除单个数据库备份
 function del_backup_db() {
     global $api;
-    $name = @$_GET['name'];
+    $name = req_param('name', '');
     $api->del_backup_db($name);
 }
 
 //回滚数据库
 function restore_db() {
     global $api;
-    $name = @$_REQUEST['name'];
+    $name = req_param('name', '');
     $api->restore_db($name);
 }
 
 //获取APPINFO
 function app_info() {
-    $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+    $token = req_token();
     global $api;
     
     $api->app_info($token);
@@ -685,7 +719,7 @@ function app_info() {
 //下载数据库
 function down_db() {
     global $api;
-    $name = $_GET['name'];
+    $name = req_param('name', '');
     $api->down_db($name);
 }
 
@@ -694,10 +728,10 @@ function create_share() {
     global $api;
 
     $data['add_time'] = date("Y-m-d H:i:s",time());
-    $data['expire_time'] = $_POST['expire_time'];
-    $data['password'] = trim($_POST['password']);
-    $data['cid'] = intval($_POST['cid']);
-    $data['note'] = $_POST['note'];
+    $data['expire_time'] = req_param('expire_time', '');
+    $data['password'] = trim(req_param('password', ''));
+    $data['cid'] = intval(req_param('cid', ''));
+    $data['note'] = req_param('note', '');
 
     $api->create_share($data);
 }
@@ -705,8 +739,8 @@ function create_share() {
 //分享列表
 function share_list() {
     global $api;
-    $page = empty(intval($_REQUEST['page'])) ? 1 : intval($_REQUEST['page']);
-    $limit = empty(intval($_REQUEST['limit'])) ? 10 : intval($_REQUEST['limit']);
+    $page = empty(intval(req_param('page', ''))) ? 1 : intval(req_param('page', ''));
+    $limit = empty(intval(req_param('limit', ''))) ? 10 : intval(req_param('limit', ''));
 
     $data = [
         'page'          =>  $page,
@@ -719,15 +753,15 @@ function share_list() {
 //获取SID下的链接
 function get_sid_links() {
     global $api;
-    $data['sid'] = trim($_POST['sid']);
-    $data['password'] = trim($_POST['password']);
+    $data['sid'] = trim(req_param('sid', ''));
+    $data['password'] = trim(req_param('password', ''));
     $api->get_sid_links($data);
 }
 
 //删除分享
 function del_share() {
     global $api;
-    $data['id'] = intval($_GET['id']);
+    $data['id'] = intval(req_param('id', ''));
     //var_dump($data['id']);
 
     $api->del_share($data);
@@ -753,8 +787,8 @@ function edit_link_row(){
 
 // 批量修改分类属性
 function set_cat_batch() {
-    $data['ids'] = $_POST['ids'];
-    $data['property'] = $_POST['property'];
+    $data['ids'] = req_param('ids', []);
+    $data['property'] = req_param('property', '');
     global $api;
     $api->set_cat_batch($data);
 }

@@ -17,16 +17,16 @@ function getIP() {
     $ip = getenv('HTTP_FORWARDED'); 
   } 
   else { 
-      $ip = $_SERVER['REMOTE_ADDR']; 
+      $ip = $_SERVER['REMOTE_ADDR'] ?? '';
   } 
       return $ip; 
   }
 
 
 function is_login(){
-    $key = md5(USER.ENCRYPTED_PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
+    $key = md5(USER.ENCRYPTED_PASSWORD.'onenav'.($_SERVER['HTTP_USER_AGENT'] ?? ''));
     //获取session
-    $session = $_COOKIE['key'];
+    $session = $_COOKIE['key'] ?? '';
     //如果已经成功登录
     if($session === $key) {
         return true;
@@ -37,6 +37,29 @@ function is_login(){
 }
 
 //后续全局函数全部以g_命名开头
+/**
+ * 获取站点设置，并补齐旧版本/种子库缺失的字段
+ */
+function get_site_setting() {
+    global $db;
+    $site = $db->get('on_options','value',[ 'key'  =>  's_site' ]);
+    $site = is_string($site) ? @unserialize($site) : $site;
+    if ( !is_array($site) ) {
+        $site = [];
+    }
+    return array_merge([
+        'title'         =>  'OneNav',
+        'logo'          =>  'OneNav',
+        'subtitle'      =>  '',
+        'keywords'      =>  '',
+        'description'   =>  '',
+        'custom_header' =>  '',
+        'custom_footer' =>  '',
+        'link_model'    =>  'jump',
+        'link_num'      =>  30
+    ], $site);
+}
+
 function g_extend_js() {
     //载入js扩展
     if( file_exists('data/extend.js') ) {
@@ -102,7 +125,7 @@ function GetRandStr($len)
 
 //跳转到手机版页面
 function jump_mobile() {
-    $ua = $_SERVER['HTTP_USER_AGENT'];
+    $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
     if( stristr($ua,'iphone') || stristr($ua,'android') ) {
         header("Location: /index.php?c=mobile#/");
@@ -132,7 +155,7 @@ function get_all_themes() {
                 case 'admin':
                 case 'mobile':
                 case 'universal':
-                    continue;
+                    continue 2;
                     break;
                 default:
                     array_push($tpl_one,$value);
@@ -155,7 +178,7 @@ function get_all_themes() {
                     case '.':
                     case '..':
                     case 'admin':
-                        continue;
+                        continue 2;
                         break;
                     default:
                         array_push($tpl_two,$value);
@@ -178,7 +201,7 @@ function get_all_themes() {
 
 // 获取HOST，需要去除端口号
 function get_host(){
-    $host = $_SERVER['HTTP_HOST'];
+    $host = $_SERVER['HTTP_HOST'] ?? '';
     $parsed_host = parse_url($host);
     //var_dump($parsed_host);
     if (isset($parsed_host['port']) && $parsed_host['port'] != 80 && $parsed_host['port'] != 443) {
@@ -190,7 +213,9 @@ function get_host(){
 // 获取当前域名，比如https://nav.rss.ink
 function getCurrentUrlDomain() {
 
-    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $host . $request_uri;
     
     $url_parts = parse_url($url);
     

@@ -12,7 +12,7 @@ function check_env() {
     $ext = get_loaded_extensions();
     //检查PHP版本，最低要求7.2，兼容8.x
     $php_version = PHP_VERSION;
-    $uri = $_SERVER["REQUEST_URI"];
+    $uri = $_SERVER["REQUEST_URI"] ?? '';
 
     // var_dump($uri);
     
@@ -138,9 +138,9 @@ check_env();
 
 if ( $c == 'init' ) {
     //接收POST参数
-    $email = htmlspecialchars(trim($_POST['email']));
-    $username = htmlspecialchars(trim($_POST['username']));
-    $password = htmlspecialchars(trim($_POST['password']));
+    $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+    $username = htmlspecialchars(trim($_POST['username'] ?? ''));
+    $password = htmlspecialchars(trim($_POST['password'] ?? ''));
     $data = [
         "email"     =>  $email,
         "username"  =>  $username,

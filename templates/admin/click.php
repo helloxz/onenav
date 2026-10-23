@@ -1,3 +1,23 @@
+<?php
+// 兼容直接通过后台页面参数加载模板的情况，保证变量和字段存在
+$link = array_merge([
+    'title'         =>  '',
+    'url'           =>  '',
+    'url_standby'   =>  '',
+    'description'   =>  ''
+], (isset($link) && is_array($link)) ? $link : []);
+$site = array_merge([
+    'title'         =>  'OneNav',
+    'custom_header' =>  ''
+], (isset($site) && is_array($site)) ? $site : []);
+$transition_page = array_merge([
+    'visitor_stay_time' =>  5,
+    'admin_stay_time'   =>  1,
+    'a_d_1'             =>  '',
+    'a_d_2'             =>  ''
+], (isset($transition_page) && is_array($transition_page)) ? $transition_page : []);
+$is_login = isset($is_login) ? $is_login : FALSE;
+?>
 <!DOCTYPE html>
 <html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -104,13 +124,8 @@
 			$visitor_stay_time = $transition_page['visitor_stay_time'];
 			//管理员停留时间
 			$admin_stay_time = $transition_page['admin_stay_time'];
-			
-			if ($is_login) {
-				header("Refresh:$admin_stay_time;url=".$link['url']);
-			}
-			else{
-				header("Refresh:$visitor_stay_time;url=".$link['url']);
-			}
+			$refresh_time = $is_login ? $admin_stay_time : $visitor_stay_time;
+			echo '<meta http-equiv="refresh" content="'.intval($refresh_time).';url='.htmlspecialchars($link['url'], ENT_QUOTES).'">';
 		}
 		
 	?>

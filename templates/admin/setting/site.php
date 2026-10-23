@@ -48,7 +48,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">直链模式</label>
             <div class="layui-input-inline">
-                <?php if( $site['link_model'] === 'direct' ) { ?>
+                <?php if( ($site['link_model'] ?? 'jump') === 'direct' ) { ?>
                     <input type="radio" name="link_model" value="jump" title="关闭">
                     <input type="radio" name="link_model" value="direct" title="开启" checked>
                 <?php }else{ ?>
@@ -62,7 +62,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">链接数量</label>
             <div class="layui-input-inline">
-                <input type="number" name="link_num" value = "<?php echo $site['link_num']; ?>" autocomplete="off" placeholder="分类需要展示的链接数量" class="layui-input">
+                <input type="number" name="link_num" value = "<?php echo $site['link_num'] ?? 30; ?>" autocomplete="off" placeholder="分类需要展示的链接数量" class="layui-input">
             </div>
             <div class="layui-form-mid layui-word-aux">指的是首页单个分类下需要展示的链接数量，默认30，值越低，性能越好</div>
         </div>
@@ -84,7 +84,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">自定义footer(支持HTML代码，订阅可用)</label>
             <div class="layui-input-block">
-                <textarea name = "custom_footer" placeholder="自定义站点底部信息，请填写HTML代码" class="layui-textarea"><?php echo $site['custom_footer']; ?></textarea>
+                <textarea name = "custom_footer" placeholder="自定义站点底部信息，请填写HTML代码" class="layui-textarea"><?php echo $site['custom_footer'] ?? ''; ?></textarea>
             </div>
         </div>
 

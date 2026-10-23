@@ -138,7 +138,7 @@
       // 每页显示数量，默认12
       limit: 30,
       // 点击回调
-      value:'<?php echo str_replace("fa ","",$category_one["font_icon"]); ?>', //自定义默认图标
+      value:'<?php echo str_replace("fa ","",$category_one["font_icon"] ?? ''); ?>', //自定义默认图标
       click: function(data) {
           console.log(data);
       },

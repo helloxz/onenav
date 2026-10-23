@@ -9,8 +9,7 @@ require('functions/helper.php');
 $version = new_get_version();
 
 //获取当前站点信息
-$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
-$site = unserialize($site);
+$site = get_site_setting();
 
 
 //载入视图

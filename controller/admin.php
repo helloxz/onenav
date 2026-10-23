@@ -41,10 +41,11 @@ if( $page == 'index' ) {
 //如果页面是修改edit_category
 if ( ($page == 'edit_category') || ($page == 'edit_category_new') || ($page == 'add_category_new') ) {
     //获取id
-    $id = intval($_GET['id']);
+    $id = intval($_GET['id'] ?? 0);
     //查询单条分类信息
     $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname FROM on_categorys AS a WHERE id = $id";
-    $category_one = $db->query($sql)->fetchAll()[0];
+    $category_rows = $db->query($sql)->fetchAll();
+    $category_one = $category_rows[0] ?? [];
     //$category_one = $db->get('on_categorys','*',[ 'id'  =>  $id ]);
     //查询父级分类
     $categorys = $db->select('on_categorys','*',[
@@ -52,7 +53,7 @@ if ( ($page == 'edit_category') || ($page == 'edit_category_new') || ($page == '
         'ORDER' =>  ['weight'    =>  'DESC'] 
     ]);
     //checked按钮
-    if( $category_one['property'] == 1 ) {
+    if( !empty($category_one['property']) ) {
         $category_one['checked'] = 'checked';
     }
     else{
@@ -63,7 +64,7 @@ if ( ($page == 'edit_category') || ($page == 'edit_category_new') || ($page == '
 //如果是主题设置页面
 if ( $page == "setting/theme_config" ){
     //获取主题名称
-    $name = trim($_GET['name']);
+    $name = trim($_GET['name'] ?? '');
     //获取主题目录
     if ( is_dir("templates/".$name) ) {
         $theme_dir = "templates/".$name;
@@ -77,11 +78,14 @@ if ( $page == "setting/theme_config" ){
         $config_content = @file_get_contents("data/templates/".$name."/info.json");
     }
     $configs = json_decode($config_content);
-    $configs = $configs->config;
+    $configs = ( is_object($configs) && isset($configs->config) ) ? $configs->config : (object) [];
     //获取当前的配置参数
-    $current_configs = file_get_contents($theme_dir."/config.json");
+    $current_configs = @file_get_contents($theme_dir."/config.json");
     
     $current_configs = json_decode($current_configs);
+    if ( !is_object($current_configs) ) {
+        $current_configs = (object) [];
+    }
 
     
     //var_dump($current_configs);
@@ -99,7 +103,8 @@ if ( $page == 'add_category' ) {
 //API设置页面
 if( $page == 'setting/api' ) {
     //查询SecretKey
-    $SecretKey = $db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
+    $secret_row = $db->get('on_options','*',[ 'key'  =>  'SecretKey' ]);
+    $SecretKey = $secret_row['value'] ?? '';
     
 }
 
@@ -114,15 +119,16 @@ if ( ( $page == 'edit_link' ) || ( $page === 'edit_link_new' ) ) {
     //查询所有分类信息，用于分类框选择
     $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weigth'    =>  'DESC'] ]);
     //获取id
-    $id = intval($_GET['id']);
+    $id = intval($_GET['id'] ?? 0);
     //查询单条链接信息
     $link = $db->get('on_links','*',[ 'id'  =>  $id ]);
+    $link = $link ?: [];
     //查询单个分类信息
-    $cat_name = $db->get('on_categorys',['name'],[ 'id' =>  $link['fid'] ]);
-    $cat_name = $cat_name['name'];
+    $cat_name = $db->get('on_categorys',['name'],[ 'id' =>  $link['fid'] ?? 0 ]);
+    $cat_name = $cat_name['name'] ?? '';
     
     //checked按钮
-    if( $link['property'] == 1 ) {
+    if( !empty($link['property']) ) {
         $link['checked'] = 'checked';
     }
     else{
@@ -141,7 +147,7 @@ if ( ($page == 'add_link') || ($page == 'add_link_tpl') || ($page == 'add_quick_
     //查询所有分类信息
     $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weight'    =>  'DESC'] ]);
     //checked按钮
-    if( $category['property'] == 1 ) {
+    if( !empty($category['property']) ) {
         $category['checked'] = 'checked';
     }
     else{
@@ -154,7 +160,7 @@ if ( $page == 'imp_link' ) {
     //查询所有分类信息
     $categorys = $db->select('on_categorys','*',[ 'ORDER'  =>  ['weight'    =>  'DESC'] ]);
     //checked按钮
-    if( $category['property'] == 1 ) {
+    if( !empty($category['property']) ) {
         $category['checked'] = 'checked';
     }
     else{
@@ -176,6 +182,16 @@ if ( $page == 'setting/theme_detail' ) {
         $info = file_get_contents($tpl_dir2.'/info.json');
     }
     $theme = json_decode($info);
+    $theme_defaults = [
+        'name'          =>  '',
+        'screenshot'    =>  '',
+        'description'   =>  '',
+        'author'        =>  '',
+        'update'        =>  '',
+        'help_url'      =>  '',
+        'homepage'      =>  ''
+    ];
+    $theme = (object) array_merge($theme_defaults, is_object($theme) ? (array) $theme : []);
     //var_dump($theme);
 }
 
@@ -201,7 +217,7 @@ if( $page == 'setting/theme' ) {
                 case 'admin':
                 case 'mobile':
                 case 'universal':
-                    continue;
+                    continue 2;
                     break;
                 default:
                     array_push($tpl_one,$value);
@@ -224,7 +240,7 @@ if( $page == 'setting/theme' ) {
                     case '.':
                     case '..':
                     case 'admin':
-                        continue;
+                        continue 2;
                         break;
                     default:
                         array_push($tpl_two,$value);
@@ -272,8 +288,7 @@ if( $page == 'setting/theme' ) {
 //站点设置页面
 if( $page == 'setting/site' ) {
     //获取当前站点信息
-    $site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
-    $site = unserialize($site);
+    $site = get_site_setting();
 }
 
 //站点订阅页面
@@ -281,7 +296,15 @@ if( $page == 'setting/subscribe' ) {
     //获取当前站点信息
     $subscribe = $db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
     
-    $subscribe = unserialize($subscribe);
+    $subscribe = is_string($subscribe) ? unserialize($subscribe) : [];
+    if ( !is_array($subscribe) ) {
+        $subscribe = [];
+    }
+    $subscribe = array_merge([
+        'order_id'  =>  '',
+        'email'     =>  '',
+        'end_time'  =>  ''
+    ], $subscribe);
 
     //获取当前版本信息
     $current_version = explode("-",file_get_contents("version.txt"));

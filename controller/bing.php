@@ -6,9 +6,9 @@ header('Content-Type:application/json; charset=utf-8');
 // 载入辅助函数
 require('functions/helper.php');
 //获取当前主机名
-$host = $_SERVER['HTTP_HOST'];
+$host = $_SERVER['HTTP_HOST'] ?? '';
 //获取reffrer
-$referer = $_SERVER['HTTP_REFERER'];
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
 
 //如果referer和主机名不匹配，则禁止调用
 if ( ( !empty($referer) ) && ( !strstr($referer,$host)  ) ) {

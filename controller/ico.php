@@ -77,13 +77,13 @@ function hsv2rgb($h, $s, $v)
  */
 function output_ico() {
     //获取文字
-    $text = @trim($_GET['text']);
+    $text = trim($_GET['text'] ?? '');
     $text = empty($text) ? '空' : $text;
     
     //获取当前主机名
-    $host = $_SERVER['HTTP_HOST'];
+    $host = $_SERVER['HTTP_HOST'] ?? '';
     //获取reffrer
-    $referer = $_SERVER['HTTP_REFERER'];
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
 
     //如果referer和主机名不匹配，则禁止调用
     if ( ( !empty($referer) ) && ( !strstr($referer,$host)  ) ) {
