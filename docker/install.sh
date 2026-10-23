@@ -28,6 +28,7 @@ mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
 
 #复制配置文件
+mkdir -p /etc/nginx/conf.d/
 cp /root/site.conf /etc/nginx/conf.d/
 cp /root/www.conf /etc/php83/php-fpm.d/
 cp /root/nginx.conf /etc/nginx/
