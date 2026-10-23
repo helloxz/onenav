@@ -53,7 +53,7 @@
         <div class="layui-form-item" style = "display:none;">
             <label class="layui-form-label">域名</label>
             <div class="layui-input-block">
-                <input type="text" name="domain" id = "domain" value = "<?php echo $_SERVER['HTTP_HOST']; ?>" autocomplete="off" placeholder="网站域名" class="layui-input">
+                <input type="text" name="domain" id = "domain" value = "<?php echo $_SERVER['HTTP_HOST'] ?? ''; ?>" autocomplete="off" placeholder="网站域名" class="layui-input">
             </div>
         </div>
 

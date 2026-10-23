@@ -213,13 +213,22 @@ class Api {
     protected function auth($token){
         // 当方法没有传递token的时候，则先尝试通过POST/GET获取token
         if( empty($token) ) {
-            $token = empty( $_POST['token'] ) ? $_GET['token'] : $_POST['token'];
+            if ( !empty($_POST['token']) ) {
+                $token = $_POST['token'];
+            }
+            else if ( isset($_GET['token']) ) {
+                $token = $_GET['token'];
+            }
+            else {
+                $token = '';
+            }
         }
         //计算正确的token：用户名 + TOKEN
-        $SecretKey = @$this->db->get('on_options','*',[ 'key'  =>  'SecretKey' ])['value'];
+        $secret_row = $this->db->get('on_options','*',[ 'key'  =>  'SecretKey' ]);
+        $SecretKey = $secret_row['value'] ?? '';
         $token_yes = md5(USER.$SecretKey);
         //获取header中的X-token
-        $xtoken = $_SERVER['HTTP_X_TOKEN'];
+        $xtoken = $_SERVER['HTTP_X_TOKEN'] ?? '';
 
         //如果通过header传递token，且验证通过
         if( !empty($xtoken) && ($xtoken === $token_yes) ) {
@@ -300,7 +309,7 @@ class Api {
      * 批量修改链接分类
      */
     public function batch_modify_category($data) {
-        $this->auth($token);
+        $this->auth(null);
         //获取链接ID，是一个数组
         $id = implode(',',$data['id']);
         //获取分类ID
@@ -331,7 +340,7 @@ class Api {
      * 批量修改链接属性为公有或私有
      */
     public function set_link_attribute($data) {
-        $this->auth($token);
+        $this->auth(null);
         //获取链接ID，是一个数组
         $ids = implode(',',$data['ids']);
         $property = intval($data['property']);
@@ -352,7 +361,7 @@ class Api {
      * 
      */
     public function set_cat_batch($data) {
-        $this->auth($token);
+        $this->auth(null);
         //获取链接ID，是一个数组
         $ids = implode(',',$data['ids']);
         $property = intval($data['property']);
@@ -466,7 +475,7 @@ class Api {
         //过滤$filename
         $filename = str_replace('../','',$filename);
         $filename = str_replace('./','',$filename);
-        $this->auth($token);
+        $this->auth(null);
         //检查文件是否存在
         if ( !file_exists($filename) ) {
             $this->err_msg(-1016,'File does not exist!');
@@ -623,7 +632,7 @@ class Api {
      */
     public function general_upload($path,$suffixs){
         // 验证权限
-        $this->auth($token);
+        $this->auth(null);
         // 存在错误，上传失败
         if ($_FILES["file"]["error"] > 0)
         {
@@ -1043,7 +1052,7 @@ class Api {
      */
     public function edit_link_row(){
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         
         // 获取POST请求中的JSON数据
         $json_data = file_get_contents('php://input');
@@ -1164,11 +1173,11 @@ class Api {
         $offset = ($page - 1) * $limit;
 
         // 验证登录或 token
-        if ($this->is_login() || (!empty($token) && $this->auth($token))) {
+        if ($this->is_login() || (!empty($token) && $this->auth(null))) {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY fid ASC, weight DESC, id ASC";
             $count = $this->db->count('on_categorys', '*');
         } elseif (!empty($token)) {
-            $this->auth($token);
+            $this->auth(null);
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = a.fid LIMIT 1) AS fname,(SELECT COUNT(id) FROM on_links WHERE fid = a.id) AS link_num FROM on_categorys as a ORDER BY fid ASC, weight DESC, id ASC";
             $count = $this->db->count('on_categorys', '*');
         } else {
@@ -1253,12 +1262,12 @@ class Api {
         $count = $this->db->count('on_links','*');
         
         //如果成功登录，但token为空，获取所有
-        if( $this->is_login() || ( !empty($token) && $this->auth($token) ) ){
+        if( $this->is_login() || ( !empty($token) && $this->auth(null) ) ){
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         
         //如果token验证通过
-        elseif( (!empty($token)) && ($this->auth($token)) ) {
+        elseif( (!empty($token)) && ($this->auth(null)) ) {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         //如果通过header传递的token验证成功，则获取所有
@@ -1320,7 +1329,7 @@ class Api {
         // }
         
         //如果token验证通过
-        elseif( (!empty($token)) && ($this->auth($token)) ) {
+        elseif( (!empty($token)) && ($this->auth(null)) ) {
             $sql = "SELECT *,(SELECT name FROM on_categorys WHERE id = on_links.fid) AS category_name FROM on_links WHERE fid = $fid ORDER BY weight DESC,id DESC LIMIT {$limit} OFFSET {$offset}";
         }
         //如果即没有登录成功，又没有token，则默认为游客,游客查询链接属性为公有，分类为公有，不查询私有
@@ -1365,7 +1374,7 @@ class Api {
             //分类属性为1，则说明是私有链接，则未认证用户不允许查询
             if( $category_property === 1 ){
                 //进行认证
-                $this->auth($token);
+                $this->auth(null);
             }
             $datas = [
                 'code'      =>  0,
@@ -1375,7 +1384,7 @@ class Api {
         }
         //如果是私有链接，并且认证通过
         elseif( $link_info['property'] == "1" ) {
-            if ( ( $this->auth($token) ) || ( $this->is_login() ) ) {
+            if ( ( $this->auth(null) ) || ( $this->is_login() ) ) {
                 $datas = [
                     'code'      =>  0,
                     'data'      =>  $link_info
@@ -1418,7 +1427,7 @@ class Api {
         }
         //如果是私有链接，并且认证通过
         elseif( $category_info['property'] == "1" ) {
-            if ( ( $this->auth($token) ) || ( $this->is_login() ) ) {
+            if ( ( $this->auth(null) ) || ( $this->is_login() ) ) {
                 $datas = [
                     'code'      =>  0,
                     'data'      =>  $category_info
@@ -1441,9 +1450,9 @@ class Api {
      * 验证是否登录
      */
     protected function is_login(){
-        $key = md5(USER.ENCRYPTED_PASSWORD.'onenav'.$_SERVER['HTTP_USER_AGENT']);
+        $key = md5(USER.ENCRYPTED_PASSWORD.'onenav'.($_SERVER['HTTP_USER_AGENT'] ?? ''));
         //获取session
-        $session = $_COOKIE['key'];
+        $session = $_COOKIE['key'] ?? '';
         //如果已经成功登录
         if($session == $key) {
             return true;
@@ -1675,7 +1684,7 @@ class Api {
     public function check_weak_password($token){
         $this->auth($token);
         //如果用户名、密码为初始密码，则提示修改
-        if ( ( USER == 'xiaoz' ) && ( PASSWORD == 'xiaoz.me' ) ) {
+        if ( defined('PASSWORD') && USER == 'xiaoz' && PASSWORD == 'xiaoz.me' ) {
             $this->err_msg(-1,'Weak password!');
         }
     }
@@ -1806,7 +1815,7 @@ class Api {
             if( $insert_re ) {
                 $data = [
                     "code"      =>  0,
-                    "data"      =>  $name."更新完成！总数${num}，成功：${init_num}"
+                    "data"      =>  $name."更新完成！总数{$num}，成功：{$init_num}"
                 ];
                 exit(json_encode($data));
             }
@@ -1822,7 +1831,7 @@ class Api {
      * 保存主题参数
      */
     public function save_theme_config($data) {
-        $this->auth($token);
+        $this->auth(null);
         //获取主题名称
         $name = $data['name'];
         //获取config参数,是一个对象
@@ -1850,7 +1859,7 @@ class Api {
      */
     public function delete_theme($name) {
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         //正则判断主题名称是否合法
         $pattern = "/^[a-zA-Z0-9][a-zA-Z0-9-_]+[a-zA-Z0-9]$/";
         if ( !preg_match($pattern,$name) ) {
@@ -1973,7 +1982,7 @@ class Api {
      */
     public function set_option($key,$value = '') {
         // 验证授权
-        $this->auth($token);
+        $this->auth(null);
         $key = htmlspecialchars(trim($key));
         //如果key是空的
         if( empty($key) ) {
@@ -2025,7 +2034,7 @@ class Api {
      */
     public function new_set_option(){
         // 验证授权
-        $this->auth($token);
+        $this->auth(null);
         // 获取key
         $key = trim(@$_POST['key']);
         // 获取value
@@ -2132,7 +2141,7 @@ class Api {
      */
     public function check_subscribe() {
         //验证token是否合法
-        $this->auth($token);
+        $this->auth(null);
         //获取订阅信息
         //获取当前站点信息
         $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
@@ -2191,9 +2200,9 @@ class Api {
         $key = $data['key'];
         $value = $data['value'];
         //拼接主题URL
-        $url = API_URL."/v1/down_theme.php?name=${name}&key=${key}&value=${value}";
+        $url = API_URL."/v1/down_theme.php?name={$name}&key={$key}&value={$value}";
         //验证token是否合法
-        $this->auth($token);
+        $this->auth(null);
         //检查主题是否已经存在
         if ( $data['type'] == 'download' ) {
             $theme1 = "templates/".$name;
@@ -2223,7 +2232,7 @@ class Api {
             $theme_dir = "templates";
         }
         //主题完整压缩包路径
-        $file_name = $theme_dir."/${name}.tar.gz";
+        $file_name = $theme_dir."/{$name}.tar.gz";
         if( !is_dir($theme_dir) ) {
             mkdir($theme_dir,0755);
         }
@@ -2233,7 +2242,7 @@ class Api {
             //下载主题，并设置超时时间为120s
             $content = $this->curl_get($url,120);
             //写入主题
-            $re = file_put_contents($theme_dir."/${name}.tar.gz",$content);
+            $re = file_put_contents($theme_dir."/{$name}.tar.gz",$content);
             //如果写入主题失败了，说明权限不粗糙
             if( !$re ) {
                 $this->return_json(-2000,'','主题写入失败，请检查目录权限！');
@@ -2242,7 +2251,7 @@ class Api {
                 //解压文件
                 $phar = new PharData($file_name);
                 //路径 要解压的文件 是否覆盖
-                $phar->extractTo($theme_dir."/${name}", null, true);
+                $phar->extractTo($theme_dir."/{$name}", null, true);
                 //删除主题
                 unlink($file_name);
                 $this->return_json(200,'','主题下载成功！');
@@ -2263,16 +2272,19 @@ class Api {
         //获取订阅SESSION状态
         session_start();
         //获取session订阅状态
-        $is_subscribe = $_SESSION['subscribe'];
+        $is_subscribe = $_SESSION['subscribe'] ?? null;
         //如果订阅是空的，则请求接口获取订阅状态
         if ( !isset($is_subscribe) ) {
             //获取当前站点信息
             $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
-            $domain = $_SERVER['HTTP_HOST'];
+            $domain = $_SERVER['HTTP_HOST'] ?? '';
         
-            $subscribe = unserialize($subscribe);
+            $subscribe = is_string($subscribe) ? unserialize($subscribe) : [];
+            if ( !is_array($subscribe) ) {
+                $subscribe = [];
+            }
             //api请求地址
-            $api_url = API_URL."/v1/check_subscribe.php?order_id=".$subscribe['order_id']."&email=".$subscribe['email']."&domain=".$domain;
+            $api_url = API_URL."/v1/check_subscribe.php?order_id=".($subscribe['order_id'] ?? '')."&email=".($subscribe['email'] ?? '')."&domain=".$domain;
             // echo $api_url;
             try {
                 #GET HTTPS
@@ -2466,7 +2478,7 @@ class Api {
      */
     public function backup_db(){
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         //验证订阅
         $this->check_is_subscribe();
@@ -2500,15 +2512,25 @@ class Api {
      */
     public function backup_db_list() {
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
         //验证订阅
         $this->check_is_subscribe();
 
         //备份目录
         $backup_dir = 'data/backup/';
 
+        //目录不存在时先创建，避免 scandir 返回 false 后 count() 在 PHP 8 下抛 TypeError
+        if ( !is_dir($backup_dir) ) {
+            if ( !mkdir($backup_dir, 0755, true) ) {
+                $this->return_json(-2000, '', '备份目录创建失败，请检查目录权限！');
+            }
+        }
+
         //遍历备份列表
         $dbs = scandir($backup_dir);
+        if ( !is_array($dbs) ) {
+            $dbs = [];
+        }
         $newdbs = $dbs;
         
         //去除.和..
@@ -2567,7 +2589,7 @@ class Api {
      */
     public function del_backup_db($name) {
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         //验证订阅
         $this->check_is_subscribe();
@@ -2597,7 +2619,7 @@ class Api {
      */
     public function restore_db($name) {
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         //验证订阅
         $this->check_is_subscribe();
@@ -2649,7 +2671,7 @@ class Api {
      */
     public function down_db($name) {
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         //使用正则表达式判断数据库名称是否合法
         $pattern = '/^onenav_[0-9\-]+_[0-9.]+(db3)$/';
@@ -2694,7 +2716,7 @@ class Api {
      */
     public function create_share($data) {
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         //如果订阅不存在
         if ( $this->is_subscribe() === FALSE ) {
@@ -2743,7 +2765,7 @@ class Api {
      */
     public function share_list($data){
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         $limit = $data['limit'];
         $offset = ($data['page'] - 1) * $data['limit'];
@@ -2846,7 +2868,7 @@ class Api {
      */
     public function del_share($data) {
         //验证请求
-        $this->auth($token);
+        $this->auth(null);
 
         $id = $data['id'];
 
@@ -2884,7 +2906,7 @@ class Api {
      */
     public function del_link_icon(){
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
 
         //获取图标路径
         $icon_path = trim($_POST['icon_path']);
@@ -2919,7 +2941,7 @@ class Api {
         } elseif(isset($_GET[$param])) {
             return $_GET[$param];
         } else {
-            return null;
+            return '';
         }
     }
 
@@ -2928,7 +2950,7 @@ class Api {
      */
     public function global_search() {
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         // 获取关键词
         $keyword = htmlspecialchars( $this->getData("keyword") );
 
@@ -2989,7 +3011,7 @@ class Api {
      */
     public function update_link_order(){
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         // 获取分类ID
         $cid = intval($this->getData("category_id"));
         // 获取json对象数据
@@ -3021,7 +3043,7 @@ class Api {
      */
     public function get_subscribe() {
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         //获取当前站点信息
         $subscribe = $this->db->get('on_options','value',[ 'key'  =>  "s_subscribe" ]);
         $subscribe = unserialize($subscribe);
@@ -3035,7 +3057,7 @@ class Api {
     public function get_subscribe_status(){
         // var_dump($_SERVER['HTTP_HOST']);
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         // 获取订阅结果
         $result = $this->is_subscribe();
 
@@ -3054,7 +3076,7 @@ class Api {
     public function batch_check_links(){
         set_time_limit(1200); // 设置执行最大时间为20分钟
         // 验证授权
-        $this->auth($token);
+        $this->auth(null);
 
         // 验证订阅
         $this->check_is_subscribe();
@@ -3216,7 +3238,7 @@ class Api {
         // 设置超时时间为120s
         set_time_limit(120);
         // 验证授权
-        $this->auth($token);
+        $this->auth(null);
 
         // 验证订阅
         $this->check_is_subscribe();
@@ -3396,7 +3418,7 @@ class Api {
      */
     private function get_options($key) {
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         //获取当前站点信息
         $options = $this->db->get('on_options','value',[ 'key'  =>  $key ]);
         // 判断查询结果是否为空
@@ -3414,7 +3436,7 @@ class Api {
      */
     public function get_option_base(){
         //验证授权
-        $this->auth($token);
+        $this->auth(null);
         // 获取key 
         $key = htmlspecialchars( trim( $_GET['key'] ));
         $options = $this->db->get('on_options','value',[ 'key'  =>  $key ]);
@@ -3432,7 +3454,7 @@ class Api {
      */
     public function forward_order(){
         //验证token是否合法
-        $this->auth($token);
+        $this->auth(null);
         // 声明一个空数组，作为请求体
         $data = [];
         if (!empty($_GET)) {
@@ -3523,7 +3545,7 @@ class Api {
 
     // 获取相临的版本
     public function getNextVersion(){
-        $this->auth($token);
+        $this->auth(null);
         // 获取当前版本
         $version = trim($_GET['version']);
         // 正则判断版本是否合法，只能是数组或.组成

@@ -27,7 +27,7 @@
 </head>
 <?php
 	// 根据cookie来设置mdui主题
-	$md_theme = $_COOKIE['docs-theme-layout'];
+	$md_theme = $_COOKIE['docs-theme-layout'] ?? '';
 	if( empty($md_theme) || ( $md_theme == "light" ) ) {
 		$md_theme = "";
 	}
@@ -172,6 +172,9 @@
             <?php foreach ( $categorys as $category ) {
                 $fid = $category['id'];
                 $links = $get_links($fid);
+                if ( !is_array($links) ) {
+                    $links = [];
+                }
 				$font_icon = empty($category['font_icon']) ? '' : "<i class='{$category['font_icon']}'></i> ";
                 //如果分类是私有的
                 if( $category['property'] == 1 ) {
@@ -192,7 +195,7 @@
 					$link['description'] = empty($link['description']) ? '作者很懒，没有填写描述。' : $link['description'];
 					$id = $link['id'];
 					//直链模式
-					if( $site['link_model'] === 'direct' ) {
+					if( ($site['link_model'] ?? 'jump') === 'direct' ) {
 						$url = $link['url'];
 					}
 					else{

@@ -1,4 +1,3 @@
-<?php echo $transition_page['control']; ?>
 <!-- API页面设置 -->
 <?php require_once(dirname(__DIR__).'/header.php'); ?>
 <?php include_once(dirname(__DIR__).'/left.php'); ?>

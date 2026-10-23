@@ -10,32 +10,32 @@
 function check_env() {
     //获取组件信息
     $ext = get_loaded_extensions();
-    //检查PHP版本，需要大于7.0小于8.0
-    $php_version = floatval(PHP_VERSION);
-    $uri = $_SERVER["REQUEST_URI"];
+    //检查PHP版本，最低要求7.2，兼容8.x
+    $php_version = PHP_VERSION;
+    $uri = $_SERVER["REQUEST_URI"] ?? '';
 
     // var_dump($uri);
     
-    if( ( $php_version < 7 ) || ( $php_version > 8 ) ) {
-        exit("当前PHP版本{$php_version}不满足要求，需要7.0 <= PHP <= 7.4");
+    if ( version_compare($php_version, '7.2.0', '<') ) {
+        exit("当前PHP版本{$php_version}不满足要求，需要PHP >= 7.2");
     }
     
     //检查是否支持pdo_sqlite
-    if ( !array_search('pdo_sqlite',$ext) ) {
+    if ( !in_array('pdo_sqlite', $ext, true) ) {
         exit("不支持PDO_SQLITE组件，请先开启!");
     }
 
-    if ( !array_search('openssl', $ext) ) {
+    if ( !in_array('openssl', $ext, true) ) {
         exit("不支持OPENSSL组件，请先开启!");
     }
     
     //检查是否支持zlib
-    if ( !array_search('zlib', $ext) ) {
+    if ( !in_array('zlib', $ext, true) ) {
         exit("不支持ZLIB组件，请先开启!");
     }
     
     //检查是否支持curl
-    if ( !array_search('curl', $ext) ) {
+    if ( !in_array('curl', $ext, true) ) {
         exit("不支持CURL组件，请先开启!");
     }
 
@@ -138,9 +138,9 @@ check_env();
 
 if ( $c == 'init' ) {
     //接收POST参数
-    $email = htmlspecialchars(trim($_POST['email']));
-    $username = htmlspecialchars(trim($_POST['username']));
-    $password = htmlspecialchars(trim($_POST['password']));
+    $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+    $username = htmlspecialchars(trim($_POST['username'] ?? ''));
+    $password = htmlspecialchars(trim($_POST['password'] ?? ''));
     $data = [
         "email"     =>  $email,
         "username"  =>  $username,

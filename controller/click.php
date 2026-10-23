@@ -3,7 +3,7 @@
 require('functions/helper.php');
 
 //获取link.id
-$id = intval($_GET['id']);
+$id = intval($_GET['id'] ?? 0);
 
 //如果链接为空
 if(empty($id)) {
@@ -28,8 +28,10 @@ if( !$link ){
 $category = $db->get('on_categorys',['id','property'],[
     'id'    =>  $link['fid']
 ]);
+$category = $category ?: [];
 
 //判断用户是否登录
+$is_login = FALSE;
 if( is_login() ) {
     $is_login = TRUE;
 }
@@ -37,13 +39,22 @@ if( is_login() ) {
 //查询过渡页设置
 $transition_page = $db->get('on_options','value',[ 'key'  =>  "s_transition_page" ]);
 $transition_page = unserialize($transition_page);
+if ( !is_array($transition_page) ) {
+    $transition_page = [];
+}
+$transition_page = array_merge([
+    'control'           =>  'on',
+    'visitor_stay_time' =>  5,
+    'admin_stay_time'   =>  1,
+    'a_d_1'             =>  '',
+    'a_d_2'             =>  ''
+], $transition_page);
 
 //获取当前站点信息
-$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
-$site = unserialize($site);
+$site = get_site_setting();
 
 //link.id为公有，且category.id为公有
-if( ( $link['property'] == 0 ) && ($category['property'] == 0) ){
+if( ( $link['property'] == 0 ) && ( ($category['property'] ?? 0) == 0) ){
     //增加link.id的点击次数
     $click = $link['click'] + 1;
     //更新数据库

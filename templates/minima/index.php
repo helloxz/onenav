@@ -127,6 +127,9 @@
                 <?php foreach ($categorys as $category) {
                     $fid = $category['id'];
                     $links = $get_links($fid);
+                    if ( !is_array($links) ) {
+                        $links = [];
+                    }
                     $font_icon = empty($category['font_icon']) ? 'fa fa-folder' : $category['font_icon'];
                     
                     // 如果分类是私有的
@@ -152,7 +155,7 @@
                             $id = $link['id'];
                             
                             // 直链模式
-                            if( $site['link_model'] === 'direct' ) {
+                            if( ($site['link_model'] ?? 'jump') === 'direct' ) {
                                 $url = $link['url'];
                             } else {
                                 $url = '/index.php?c=click&id='.$link['id'];

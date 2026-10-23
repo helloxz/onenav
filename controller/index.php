@@ -3,17 +3,17 @@
  * 首页模板入口
  */
 
+// 载入辅助函数
+require('functions/helper.php');
+
 //获取当前站点信息
-$site = $db->get('on_options','value',[ 'key'  =>  "s_site" ]);
-$site = unserialize($site);
+$site = get_site_setting();
 // 获取链接数量,默认为30
 $link_num = empty( $site['link_num'] ) ? 30 : intval($site['link_num']);
 // var_dump($link_num);
 
 
 //如果已经登录，获取所有分类和链接
-// 载入辅助函数
-require('functions/helper.php');
 // 明文密码检查
 unSafe();
 
@@ -211,7 +211,7 @@ $templates = $db->get("on_options","value",[
     "key"   =>  "s_themes"
 ]);
 // 获取UA
-$userAgent = $_SERVER['HTTP_USER_AGENT'];
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $mobileKeywords = [
     'mobile', 'android', 'iphone'
 ];
@@ -237,7 +237,7 @@ if (empty($templates)) {
 
 
 //获取用户传递的主题参数
-$theme = trim( @$_GET['theme'] );
+$theme = trim( $_GET['theme'] ?? '' );
 //如果用户传递了主题参数
 if( !empty($theme) ) {
     //获取所有主题
@@ -274,11 +274,15 @@ $config_content = @file_get_contents($config_file);
 //如果是info.json,则特殊处理下
 if ( strstr($config_file,"info.json") ) {
     $config_content = json_decode($config_content);
-    $theme_config = $config_content->config;
+    $theme_config = ( is_object($config_content) && isset($config_content->config) )
+        ? $config_content->config
+        : (object) [];
 }
 else{
-    $config_content = $config_content;
     $theme_config = json_decode($config_content);
+}
+if ( !is_object($theme_config) ) {
+    $theme_config = (object) [];
 }
 
 
@@ -327,8 +331,14 @@ $search_engines = [
 //获取主题的最低版本要求
 $info_json = @file_get_contents($tpl_dir.$template."/info.json");
 
+$info = (object) [
+    'version' => ''
+];
 if( $info_json ) {
-    $info = json_decode($info_json);
+    $decoded_info = json_decode($info_json);
+    if ( is_object($decoded_info) ) {
+        $info = (object) array_merge( (array) $info, (array) $decoded_info );
+    }
     
     $min_version = @$info->require->min;
     //获取到了最低版本
@@ -343,7 +353,8 @@ if( $info_json ) {
 
 // 该分类下可见的链接数量
 function get_links_number($fid){
-    $number = count(get_links($fid));
+    $links = get_links($fid);
+    $number = is_array($links) ? count($links) : 0;
     // var_dump($number);
     return $number;
 }

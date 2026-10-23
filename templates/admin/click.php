@@ -1,3 +1,23 @@
+<?php
+// 兼容直接通过后台页面参数加载模板的情况，保证变量和字段存在
+$link = array_merge([
+    'title'         =>  '',
+    'url'           =>  '',
+    'url_standby'   =>  '',
+    'description'   =>  ''
+], (isset($link) && is_array($link)) ? $link : []);
+$site = array_merge([
+    'title'         =>  'OneNav',
+    'custom_header' =>  ''
+], (isset($site) && is_array($site)) ? $site : []);
+$transition_page = array_merge([
+    'visitor_stay_time' =>  5,
+    'admin_stay_time'   =>  1,
+    'a_d_1'             =>  '',
+    'a_d_2'             =>  ''
+], (isset($transition_page) && is_array($transition_page)) ? $transition_page : []);
+$is_login = isset($is_login) ? $is_login : FALSE;
+?>
 <!DOCTYPE html>
 <html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -104,13 +124,8 @@
 			$visitor_stay_time = $transition_page['visitor_stay_time'];
 			//管理员停留时间
 			$admin_stay_time = $transition_page['admin_stay_time'];
-			
-			if ($is_login) {
-				header("Refresh:$admin_stay_time;url=".$link['url']);
-			}
-			else{
-				header("Refresh:$visitor_stay_time;url=".$link['url']);
-			}
+			$refresh_time = $is_login ? $admin_stay_time : $visitor_stay_time;
+			echo '<meta http-equiv="refresh" content="'.intval($refresh_time).';url='.htmlspecialchars($link['url'], ENT_QUOTES).'">';
 		}
 		
 	?>
@@ -137,13 +152,13 @@
 					<div class="notice-title">即将跳转到外部网站</div>
 					<div class="notice-des">安全性未知，是否继续</div>
 					<div class="link" title="主链接">
-						<span class="icon"><?xml?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.2401 16.373L17.1001 7.23303C14.4388 4.57168 10.0653 4.6303 7.33158 7.36397C4.59791 10.0976 4.53929 14.4712 7.20064 17.1325L15.1359 25.0678" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M32.9027 23.0031L40.838 30.9384C43.4994 33.5998 43.4407 37.9733 40.7071 40.707C37.9734 43.4407 33.5999 43.4993 30.9385 40.8379L21.7985 31.6979" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M26.1093 26.1416C28.843 23.4079 28.9016 19.0344 26.2403 16.373" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M21.7989 21.7984C19.0652 24.5321 19.0066 28.9056 21.6679 31.5669" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/></svg></span>
+						<span class="icon"><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26.2401 16.373L17.1001 7.23303C14.4388 4.57168 10.0653 4.6303 7.33158 7.36397C4.59791 10.0976 4.53929 14.4712 7.20064 17.1325L15.1359 25.0678" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M32.9027 23.0031L40.838 30.9384C43.4994 33.5998 43.4407 37.9733 40.7071 40.707C37.9734 43.4407 33.5999 43.4993 30.9385 40.8379L21.7985 31.6979" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M26.1093 26.1416C28.843 23.4079 28.9016 19.0344 26.2403 16.373" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M21.7989 21.7984C19.0652 24.5321 19.0066 28.9056 21.6679 31.5669" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/></svg></span>
 						<a href="<?php echo $link['url']; ?>" rel = "nofollow" title = "<?php echo $link['title']; ?>"><?php echo $link['url']; ?></a>
 					</div>
 					<?php if( !empty( $link['url_standby'] ) ) { ?>
 					<div class="link" title = "备用链接">
 						<span class="icon">
-						<?xml?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 19H20C15.5817 19 12 22.5817 12 27C12 31.4183 15.5817 35 20 35H36C40.4183 35 44 31.4183 44 27C44 24.9711 43.2447 23.1186 42 21.7084" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M6 24.2916C4.75527 22.8814 4 21.0289 4 19C4 14.5817 7.58172 11 12 11H28C32.4183 11 36 14.5817 36 19C36 23.4183 32.4183 27 28 27H18" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/></svg>
+						<svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 19H20C15.5817 19 12 22.5817 12 27C12 31.4183 15.5817 35 20 35H36C40.4183 35 44 31.4183 44 27C44 24.9711 43.2447 23.1186 42 21.7084" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/><path d="M6 24.2916C4.75527 22.8814 4 21.0289 4 19C4 14.5817 7.58172 11 12 11H28C32.4183 11 36 14.5817 36 19C36 23.4183 32.4183 27 28 27H18" stroke="#f3f3f3" stroke-width="4" stroke-linecap="round" stroke-linejoin="bevel"/></svg>
 						</span>
 						<a href="<?php echo $link['url_standby']; ?>" rel = "nofollow" title = "<?php echo $link['title']; ?>"><?php echo $link['url_standby']; ?></a>
 					</div>
