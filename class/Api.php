@@ -1675,7 +1675,7 @@ class Api {
     public function check_weak_password($token){
         $this->auth($token);
         //如果用户名、密码为初始密码，则提示修改
-        if ( ( USER == 'xiaoz' ) && ( PASSWORD == 'xiaoz.me' ) ) {
+        if ( defined('PASSWORD') && USER == 'xiaoz' && PASSWORD == 'xiaoz.me' ) {
             $this->err_msg(-1,'Weak password!');
         }
     }
@@ -2507,8 +2507,18 @@ class Api {
         //备份目录
         $backup_dir = 'data/backup/';
 
+        //目录不存在时先创建，避免 scandir 返回 false 后 count() 在 PHP 8 下抛 TypeError
+        if ( !is_dir($backup_dir) ) {
+            if ( !mkdir($backup_dir, 0755, true) ) {
+                $this->return_json(-2000, '', '备份目录创建失败，请检查目录权限！');
+            }
+        }
+
         //遍历备份列表
         $dbs = scandir($backup_dir);
+        if ( !is_array($dbs) ) {
+            $dbs = [];
+        }
         $newdbs = $dbs;
         
         //去除.和..
