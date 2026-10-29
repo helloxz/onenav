@@ -303,8 +303,24 @@ if( $page == 'setting/subscribe' ) {
     $subscribe = array_merge([
         'order_id'  =>  '',
         'email'     =>  '',
-        'end_time'  =>  ''
+        'end_time'  =>  0
     ], $subscribe);
+
+    //规范化到期时间：空值统一为0，数字视为时间戳，其它字符串尝试解析
+    $end_time = $subscribe['end_time'];
+    if ( is_numeric($end_time) ) {
+        $end_time = (int) $end_time;
+    }
+    elseif ( is_string($end_time) && $end_time !== '' ) {
+        $end_time = strtotime($end_time) ?: 0;
+    }
+    else {
+        $end_time = 0;
+    }
+    $subscribe['end_time'] = $end_time;
+
+    //是否存在订阅记录：有订单号、邮箱或到期时间即视为已填写
+    $has_subscribe = ( $subscribe['order_id'] !== '' || $subscribe['email'] !== '' || $subscribe['end_time'] > 0 );
 
     //获取当前版本信息
     $current_version = explode("-",file_get_contents("version.txt"));

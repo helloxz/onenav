@@ -57,16 +57,20 @@
             </div>
         </div>
 
+        <?php if (!empty($has_subscribe)): ?>
         <div class="layui-form-item">
             <label class="layui-form-label">到期时间</label>
             <div class="layui-input-block">
-            <input type="text" name="end_time" id = "end_time" readonly="readonly" value = "<?php echo date("Y-m-d",$subscribe['end_time']); ?>" autocomplete="off" placeholder="订阅到期时间" class="layui-input">
+            <input type="text" name="end_time" id = "end_time" readonly="readonly" value = "<?php echo $subscribe['end_time'] > 0 ? date("Y-m-d",$subscribe['end_time']) : ''; ?>" autocomplete="off" placeholder="订阅到期时间" class="layui-input">
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="layui-form-item">
             <button class="layui-btn" lay-submit="" lay-filter="set_subscribe">保存设置</button>
+            <?php if (!empty($has_subscribe)): ?>
             <button class="layui-btn" lay-submit="" lay-filter="reset_subscribe">删除订阅</button>
+            <?php endif; ?>
             <a class="layui-btn layui-btn-danger" onclick="buySubscribe('<?php echo get_host(); ?>')" rel = "nofollow" title = "点此购买订阅" href="javascript:;"><i class="fa fa-shopping-cart"></i> 购买订阅</a>
             <a class="layui-btn layui-btn-danger" onclick="openRedeem()" rel = "nofollow" title = "点此使用兑换码" href="javascript:;"><i class="layui-icon layui-icon-gift"></i> 使用兑换码</a>
         </div>

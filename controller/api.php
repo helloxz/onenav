@@ -427,8 +427,9 @@ function set_subscribe($api) {
     $data['order_id'] = htmlspecialchars( trim(req_param('order_id', '')) );
     //获取邮箱
     $data['email'] = htmlspecialchars( trim(req_param('email', '')) );
-    //到期时间
-    $data['end_time'] = htmlspecialchars( trim(req_param('end_time', '')) );
+    //到期时间：统一存为整型时间戳，空值存0
+    $end_time = trim(req_param('end_time', ''));
+    $data['end_time'] = is_numeric($end_time) ? (int) $end_time : 0;
     //重置订阅状态
     session_start();
     $_SESSION['subscribe'] = NULL;
